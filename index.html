@@ -1549,7 +1549,7 @@ async function signOut(){
       <div style="margin-bottom:8px;">
         <label style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--d2);font-weight:500;display:block;margin-bottom:8px;">Mot de passe</label>
         <div class="ew">
-          <input class="inp inp-pw" id="pwin" type="password" placeholder="••••••••" autocomplete="current-password">
+          <input class="inp inp-pw" id="pwin" type="password" minlength="8" maxlength="128" placeholder="••••••••" autocomplete="current-password">
           <button class="eye" onclick="togglePw()">
             <svg aria-hidden="true" id="eo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             <svg aria-hidden="true" id="ec" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
@@ -1882,7 +1882,7 @@ async function signOut(){
 
     <!-- Champ nom -->
     <label style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--d2);font-weight:600;display:block;margin-bottom:8px;">Nom du dossier</label>
-    <input id="folder-name-inp" class="inp" type="text" placeholder="ex: Maison, Voiture, Pro…" style="margin-bottom:20px;" oninput="updateFolderPreview(this.value)">
+    <input id="folder-name-inp" class="inp" type="text" maxlength="40" placeholder="ex: Maison, Voiture, Pro…" style="margin-bottom:20px;" oninput="updateFolderPreview(this.value)">
 
     <!-- Choisir une icône -->
     <label style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--d2);font-weight:600;display:block;margin-bottom:12px;">Icône</label>
@@ -2246,20 +2246,20 @@ async function signOut(){
       <!-- Marchand -->
       <div style="margin-bottom:16px;">
         <label class="sl" style="display:block;margin-bottom:8px;">Marchand</label>
-        <input id="ao-brand" class="inp" type="text" placeholder="Amazon, Zara, Apple…" aria-label="Marchand">
+        <input id="ao-brand" class="inp" type="text" maxlength="80" placeholder="Amazon, Zara, Apple…" aria-label="Marchand">
       </div>
 
       <!-- Produit -->
       <div style="margin-bottom:16px;">
         <label class="sl" style="display:block;margin-bottom:8px;">Produit</label>
-        <input id="ao-name" class="inp" type="text" placeholder="Nom du produit ou de la commande" aria-label="Produit">
+        <input id="ao-name" class="inp" type="text" maxlength="120" required placeholder="Nom du produit ou de la commande" aria-label="Produit">
       </div>
 
       <!-- Montant + Statut -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
         <div>
           <label class="sl" style="display:block;margin-bottom:8px;">Montant (€)</label>
-          <input id="ao-amt" class="inp" type="number" placeholder="0.00" step="0.01" min="0">
+          <input id="ao-amt" class="inp" type="number" max="9999999" inputmode="decimal" placeholder="0.00" step="0.01" min="0">
         </div>
         <div>
           <label class="sl" style="display:block;margin-bottom:8px;">Statut</label>
@@ -2277,7 +2277,7 @@ async function signOut(){
       <!-- Numéro de suivi -->
       <div style="margin-bottom:16px;">
         <label class="sl" style="display:block;margin-bottom:8px;">Numéro de suivi <span style="color:var(--d2);font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;">(optionnel)</span></label>
-        <input id="ao-tracking" class="inp" type="text" placeholder="1Z999AA10123456784, 7Q11111…">
+        <input id="ao-tracking" class="inp" type="text" maxlength="60" placeholder="1Z999AA10123456784, 7Q11111…">
       </div>
 
       <!-- Date -->
@@ -2346,20 +2346,20 @@ async function signOut(){
       <!-- Nom -->
       <div style="margin-bottom:16px;">
         <label class="sl" style="display:block;margin-bottom:8px;">Nom du service</label>
-        <input id="as-name" class="inp" type="text" placeholder="Netflix, Engie, Macif, Bail…">
+        <input id="as-name" class="inp" type="text" maxlength="80" required placeholder="Netflix, Engie, Macif, Bail…">
       </div>
 
       <!-- Description -->
       <div style="margin-bottom:16px;">
         <label class="sl" style="display:block;margin-bottom:8px;">Détail / Formule</label>
-        <input id="as-sub" class="inp" type="text" placeholder="Standard 4K, Forfait gaz, Appartement T3…">
+        <input id="as-sub" class="inp" type="text" maxlength="120" placeholder="Standard 4K, Forfait gaz, Appartement T3…">
       </div>
 
       <!-- Montant + Fréquence -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
         <div>
           <label class="sl" style="display:block;margin-bottom:8px;">Montant (€)</label>
-          <input id="as-amt" class="inp" type="number" placeholder="0.00" step="0.01" min="0">
+          <input id="as-amt" class="inp" type="number" max="9999999" inputmode="decimal" placeholder="0.00" step="0.01" min="0">
         </div>
         <div>
           <label class="sl" style="display:block;margin-bottom:8px;">Fréquence</label>
