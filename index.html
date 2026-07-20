@@ -2,6 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://jwvhqtrofwmozhiajwip.supabase.co wss://jwvhqtrofwmozhiajwip.supabase.co https://api.anthropic.com https://api.brevo.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -5160,22 +5162,7 @@ function selectPeriod(period){
 }
 
 async function connectGmail(){
-  if(!supa){ toast('Connexion en cours…'); return }
-  try{
-    const { data, error } = await supa.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        scopes: 'https://www.googleapis.com/auth/gmail.readonly',
-        redirectTo: window.location.origin + '?gmail=connected',
-        queryParams: { access_type: 'offline', prompt: 'consent' }
-      }
-    })
-    if(error){ toast('❌ ' + error.message); return }
-    // La redirection se fait automatiquement
-  }catch(e){
-    toast('❌ Erreur connexion Gmail')
-    console.error(e)
-  }
+  toast('⏳ Connexion Gmail bientôt disponible')
 }
 
 async function startGmailImport(){
@@ -5274,6 +5261,13 @@ window.addEventListener('load', function(){
 })
 
 
+
+
+/* ══ SÉCURITÉ XSS ════════════════════════════════════ */
+function escapeHtml(str){
+  if(typeof str !== 'string') return str ?? ''
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;')
+}
 
 /* ══ FAB MENU ════════════════════════════════════════════ */
 function toggleFabMenu(id){
