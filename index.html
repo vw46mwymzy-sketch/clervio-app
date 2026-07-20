@@ -1381,8 +1381,6 @@ async function signOut(){
   <div class="ls-spinner"></div>
 </div>
 
-
-
 <!-- SPLASH -->
 <div class="pg on" id="p-splash" style="background:#08080C;align-items:center;justify-content:center;">
   <div style="text-align:center;padding:20px;">
@@ -4042,8 +4040,6 @@ function loadSavedSubs(){
   } catch(e){}
 }
 
-
-
 /* ══ SUPABASE DATA LAYER ════════════════════════════════ */
 
 // ── Authentification email : connexion et création de compte sur le même écran
@@ -4292,8 +4288,6 @@ function subscribeToRealtime(){
     )
     .subscribe()
 }
-
-
 
 /* ══ LOAD EMAIL SOURCES IN PROFILE ══════════════════════ */
 async function loadEmailSourcesCount(){
@@ -5161,25 +5155,6 @@ async function callAIEdge(msg, context){
 
 /* ══ CONCIERGE IA ══════════════════════════════════════ */
 
-function buildUserContext(){
-  const lines = []
-  if(ORDS?.length){
-    lines.push('COMMANDES (' + ORDS.length + ') :')
-    ORDS.slice(0,10).forEach(o => {
-      lines.push('- ' + o.brand + ' "' + o.name + '" : ' + o.amt + '€, ' + o.st + ', ' + o.dt + (o.warr?' garantie '+o.warr+'mois':''))
-    })
-  } else lines.push('COMMANDES : Aucune.')
-  if(SUBS?.length){
-    lines.push('\nABONNEMENTS :')
-    SUBS.forEach(s => lines.push('- ' + s.name + ' : ' + s.amt + '€/' + s.freq))
-  }
-  if(WARR?.length){
-    lines.push('\nGARANTIES :')
-    WARR.forEach(w => lines.push('- ' + w.brand + ' ' + w.name + ' expire ' + w.exp))
-  }
-  return lines.join('\n') || 'Aucune donnée.'
-}
-
 function displayAIResponse(msgs, text){
   const formatted = text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').split('\n').join('<br/>')
   msgs.innerHTML += '<div style="margin-bottom:14px;">' +
@@ -5190,22 +5165,6 @@ function displayAIResponse(msgs, text){
     '<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px 16px 16px 4px;padding:14px 16px;font-size:13px;color:var(--d1);line-height:1.7;">' + formatted + '</div>' +
   '</div>'
   msgs.scrollTop = msgs.scrollHeight
-}
-
-async function callAIEdge(msg, context){
-  if(!supa || !currentUser) return null
-  try{
-    const { data: { session } } = await supa.auth.getSession()
-    if(!session) return null
-    const res = await fetch('https://jwvhqtrofwmozhiajwip.supabase.co/functions/v1/ai-concierge', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
-      body: JSON.stringify({ message: msg, context })
-    })
-    if(!res.ok) return null
-    const data = await res.json()
-    return data.reply || null
-  }catch(e){ return null }
 }
 
 async function sendAI(){
@@ -5241,117 +5200,6 @@ async function sendAI(){
   }
 }
 
-
-function selectPeriod(period){
-  selectedPeriod = period
-  // Mettre à jour l'UI
-  const is3m = period === '3months'
-
-  // Radio buttons
-  document.getElementById('period-3m').style.border = is3m
-    ? '1.5px solid rgba(201,168,76,.4)' : '1.5px solid rgba(255,255,255,.08)'
-  document.getElementById('period-3m').style.background = is3m
-    ? 'rgba(201,168,76,.06)' : ''
-  document.getElementById('dot-3m').style.background = is3m ? 'var(--g)' : 'transparent'
-  document.getElementById('dot-3m').parentElement.style.border = is3m
-    ? '2px solid var(--g)' : '2px solid rgba(255,255,255,.2)'
-
-  document.getElementById('period-12m').style.border = !is3m
-    ? '1.5px solid rgba(201,168,76,.4)' : '1.5px solid rgba(255,255,255,.08)'
-  document.getElementById('period-12m').style.background = !is3m
-    ? 'rgba(201,168,76,.06)' : ''
-  document.getElementById('dot-12m').style.background = !is3m ? 'var(--g)' : 'transparent'
-  document.getElementById('dot-12m').parentElement.style.border = !is3m
-    ? '2px solid var(--g)' : '2px solid rgba(255,255,255,.2)'
-
-  // Mettre à jour le texte du bouton
-  const btn = document.getElementById('start-import-btn')
-  if(btn) btn.textContent = is3m ? 'Analyser mes emails (3 mois)' : 'Analyser mes emails (12 mois)'
-}
-
-async function connectGmail(){
-  toast('⏳ Connexion Gmail bientôt disponible')
-}
-
-async function startGmailImport(){
-  if(!currentUser || !supa){ toast("Connectez-vous d'abord"); return }
-
-  // Récupérer le token Gmail depuis la session
-  const { data: { session } } = await supa.auth.getSession()
-  const gmailToken = session?.provider_token
-
-  if(!gmailToken){
-    toast("❌ Token Gmail introuvable — reconnectez Gmail")
-    return
-  }
-
-  // Afficher la progression
-  const progressEl = document.getElementById('import-progress')
-  const periodSection = document.getElementById('import-period-section')
-  if(progressEl) progressEl.style.display = 'block'
-  if(periodSection) periodSection.style.display = 'none'
-
-  const updateProgress = (text, detail, pct) => {
-    const t = document.getElementById('import-status-text')
-    const d = document.getElementById('import-progress-detail')
-    const b = document.getElementById('import-progress-bar')
-    if(t) t.textContent = text
-    if(d) d.textContent = detail
-    if(b) b.style.width = pct + '%'
-  }
-
-  try{
-    updateProgress('Connexion à Gmail…', 'Vérification des permissions…', 10)
-
-    const res = await fetch('https://jwvhqtrofwmozhiajwip.supabase.co/functions/v1/ingest-gmail', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + session.access_token
-      },
-      body: JSON.stringify({
-        access_token: gmailToken,
-        period: selectedPeriod
-      })
-    })
-
-    updateProgress('Analyse en cours…', 'Filtrage des emails pertinents…', 40)
-
-    if(!res.ok){
-      const err = await res.json().catch(()=>({}))
-      throw new Error(err.error || 'Erreur serveur')
-    }
-
-    updateProgress('Traitement…', 'Extraction des commandes et abonnements…', 75)
-
-    const data = await res.json()
-    const stats = data.stats || {}
-
-    updateProgress('Terminé !', 
-      `${stats.kept || 0} emails analysés sur ${stats.total_found || 0} trouvés`, 
-      100)
-
-    setTimeout(async ()=>{
-      if(progressEl) progressEl.style.display = 'none'
-      // Rafraîchir les données
-      await loadVaultData()
-      await fetchOrders()
-      renderOrds('all')
-      renderVault('all')
-      renderHomePriorities()
-      toast('✓ Import terminé — ' + (stats.processed || 0) + ' éléments ajoutés')
-    }, 2000)
-
-  }catch(e){
-    updateProgress('Erreur', e.message, 0)
-    toast('❌ ' + e.message)
-    setTimeout(()=>{
-      if(progressEl) progressEl.style.display = 'none'
-      if(periodSection) periodSection.style.display = 'block'
-    }, 3000)
-  }
-}
-
 // Détecter le retour après connexion Gmail
 window.addEventListener('load', function(){
   const params = new URLSearchParams(window.location.search)
@@ -5367,9 +5215,6 @@ window.addEventListener('load', function(){
     }, 800)
   }
 })
-
-
-
 
 /* ══ HAPTIC FEEDBACK iOS ═══════════════════════════ */
 window.haptic = function(type){
