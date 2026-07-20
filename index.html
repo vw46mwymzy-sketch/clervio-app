@@ -1012,7 +1012,7 @@ function initSupabase(){
       go('p-ob1')
     }
 
-    setTimeout(resolveSession, 100)
+    window._appStartTime = Date.now(); setTimeout(resolveSession, 100)
 
     // ── Timer de sécurité splash : 2.5s max puis ob1 quoi qu'il arrive
     setTimeout(function(){
