@@ -5329,6 +5329,35 @@ window.addEventListener('load', function(){
 
 
 
+/* ══ SESSION TIMEOUT — 30 min inactivité ═══════════ */
+;(function initSessionTimeout(){
+  const TIMEOUT_MS = 30 * 60 * 1000
+  const WARN_MS = 2 * 60 * 1000
+  let timer = null, warnTimer = null, warned = false
+
+  function resetTimer(){
+    clearTimeout(timer); clearTimeout(warnTimer); warned = false
+    if(typeof currentUser === "undefined" || !currentUser) return
+    warnTimer = setTimeout(() => {
+      warned = true
+      if(typeof toast === "function") toast("⏱️ Déconnexion dans 2 minutes par inactivité")
+    }, TIMEOUT_MS - WARN_MS)
+    timer = setTimeout(async () => {
+      try{
+        if(typeof supa !== "undefined" && supa) await supa.auth.signOut()
+        if(typeof toast === "function") toast("Session expirée — reconnectez-vous")
+        if(typeof go === "function") go("p-login")
+      }catch(e){}
+    }, TIMEOUT_MS)
+  }
+
+  const events = ["mousedown","keydown","touchstart","scroll","click"]
+  events.forEach(evt => document.addEventListener(evt, resetTimer, { passive: true }))
+  document.addEventListener("visibilitychange", () => { if(!document.hidden) resetTimer() })
+  window.addEventListener("load", resetTimer)
+  resetTimer()
+})()
+
 /* ══ SÉCURITÉ XSS ════════════════════════════════════ */
 function escapeHtml(str){
   if(typeof str !== 'string') return str ?? ''
