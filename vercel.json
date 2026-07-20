@@ -1,1 +1,1 @@
-{"rewrites":[{"source":"/((?!api/.*).*)", "destination":"/index.html"}],"headers":[{"source":"/(.*)", "headers":[{"key":"Cache-Control","value":"no-cache"}]}]}
+{"rewrites":[{"source":"/((?!icons/.*|sw.js|manifest.json).*)", "destination":"/index.html"}],"headers":[{"source":"/(.*)", "headers":[{"key":"Cache-Control","value":"no-cache"}]}]}
