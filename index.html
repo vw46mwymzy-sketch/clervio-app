@@ -978,7 +978,7 @@ function initSupabase(){
       sessionState = 'authenticated'
       clearTimeout(sessionTimeout)
       const ls = document.getElementById('loading-screen')
-      if(ls){ ls.classList.add('hidden'); setTimeout(()=>ls.remove(), 400) }
+      const _elapsed = Date.now()-(window._appStartTime||0); const _wait=Math.max(0,3000-_elapsed); setTimeout(()=>{if(ls){ls.classList.add('hidden');setTimeout(()=>ls.remove(),400)}},_wait)
 
       const isDemo = sessionStorage.getItem('clervio-demo-mode') === '1' ||
                      (currentUser && ['demo@clervio.app','demo@vaulto.app'].includes(currentUser.email))
@@ -1008,7 +1008,7 @@ function initSupabase(){
       sessionState = 'unauthenticated'
       clearTimeout(sessionTimeout)
       const ls = document.getElementById('loading-screen')
-      if(ls){ ls.classList.add('hidden'); setTimeout(()=>ls.remove(), 400) }
+      const _elapsed = Date.now()-(window._appStartTime||0); const _wait=Math.max(0,3000-_elapsed); setTimeout(()=>{if(ls){ls.classList.add('hidden');setTimeout(()=>ls.remove(),400)}},_wait)
       go('p-ob1')
     }
 
@@ -1027,7 +1027,7 @@ function initSupabase(){
       const current = document.querySelector('.pg.on')
       if(!current || current.id === 'p-splash' || current.id === 'loading-screen'){
         const ls = document.getElementById('loading-screen')
-        if(ls){ ls.classList.add('hidden'); setTimeout(()=>ls.remove(), 400) }
+        const _elapsed = Date.now()-(window._appStartTime||0); const _wait=Math.max(0,3000-_elapsed); setTimeout(()=>{if(ls){ls.classList.add('hidden');setTimeout(()=>ls.remove(),400)}},_wait)
         go('p-ob1')
       }
     }, 5000)
