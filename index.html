@@ -906,6 +906,34 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 /* ══ TAP HIGHLIGHT ═══════════════════════ */
 *{-webkit-tap-highlight-color:transparent}
 
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ══ SKELETON SCREENS ═══════════════════════════════ */
+.skeleton{
+  background:linear-gradient(90deg,rgba(255,255,255,.03) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.03) 75%);
+  background-size:200% 100%;
+  animation:skeleton-shimmer 1.5s infinite;
+  border-radius:12px;
+}
+@keyframes skeleton-shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skeleton-card{height:88px;margin-bottom:12px}
+.skeleton-line{height:14px;margin-bottom:8px}
+.skeleton-line.short{width:60%}
+
+/* ══ SPRING BUTTON PRESS ════════════════════════════ */
+button:active,.tp:active,.cd.tp:active{
+  transform:scale(0.97);
+  transition:transform 0.1s cubic-bezier(0.34,1.56,0.64,1);
+}
+.bg:active{
+  transform:scale(0.98);
+}
+
+/* ══ SMOOTH PAGE TRANSITIONS ════════════════════════ */
+.pg{
+  transition:opacity 0.35s cubic-bezier(0.4,0,0.2,1),transform 0.35s cubic-bezier(0.4,0,0.2,1);
+}
 </style>
 
   <!-- Supabase SDK — chargement async non-bloquant -->
