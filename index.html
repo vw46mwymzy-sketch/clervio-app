@@ -1542,7 +1542,7 @@ async function signOut(){
       <!-- Email field -->
       <div style="margin-bottom:16px;">
         <label style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--d2);font-weight:500;display:block;margin-bottom:8px;">Adresse email</label>
-        <input class="inp" id="email-auth-email" type="email" placeholder="votre@email.com" autocomplete="email">
+        <input class="inp" id="email-auth-email" type="email" placeholder="votre@email.com" maxlength="254" autocomplete="email" autocomplete="email">
       </div>
 
       <!-- Password field -->
@@ -2527,7 +2527,7 @@ async function signOut(){
     <p style="font-size:13px;color:var(--d2);line-height:1.7;margin-bottom:32px;">Entrez votre adresse email. Vous recevrez un lien pour créer un nouveau mot de passe.</p>
 
     <label class="sl" style="display:block;margin-bottom:8px;">Adresse email</label>
-    <input id="forgot-email" class="inp" type="email" placeholder="votre@email.com" aria-label="Adresse email" autocomplete="email" style="margin-bottom:24px;">
+    <input id="forgot-email" class="inp" type="email" placeholder="votre@email.com" maxlength="254" autocomplete="email" aria-label="Adresse email" autocomplete="email" style="margin-bottom:24px;">
 
     <button class="bg fw lg" onclick="sendResetEmail()">Envoyer le lien</button>
     <button class="bt" onclick="go('p-login')" style="margin-top:10px;">Retour à la connexion</button>
