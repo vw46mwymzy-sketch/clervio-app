@@ -2900,8 +2900,9 @@ function addOrder(order){
 
 let ORDS = loadOrders()
 async function renderOrds(f){
-  ORDS = await fetchOrders()
   const el=document.getElementById('olist');if(!el)return
+  try{
+  ORDS = await fetchOrders()
   const totalEl = document.getElementById('orders-total')
   if(totalEl) totalEl.textContent = ORDS.length + ' total'
   const filt=ORDS.filter(o => {
@@ -2924,6 +2925,10 @@ async function renderOrds(f){
       <div style="text-align:right;flex-shrink:0;"><div class="sr" style="font-size:1.15rem;color:var(--g);font-weight:300;margin-bottom:5px;">${amount.toFixed(2).replace('.00','')} €</div><span class="ba ba-${escapeHTML(o.sc || 'b')}">${escapeHTML(o.st)}</span></div>
     </div>`
   }).join('')
+  }catch(err){
+    console.error('renderOrds:', err)
+    if(el) el.innerHTML='<div class="empty-state"><div class="es-icon">⚠️</div><h3>Impossible de charger</h3><p>Vérifiez votre connexion, puis réessayez.</p><button class="bgh" onclick="renderOrds(&#39;all&#39;)" style="font-size:13px;">Réessayer</button></div>'
+  }
 }
 function fO(f,b){document.querySelectorAll('#p-orders .tab').forEach(t=>t.classList.remove('on'));b?.classList.add('on');renderOrds(f)}
 function showOrd(id){
@@ -5119,6 +5124,7 @@ async function updatePendingBadge(){
 /* ══ CONCIERGE IA ══════════════════════════════════════ */
 
 function buildUserContext(){
+  try{
   const lines = []
   if(ORDS?.length){
     lines.push('COMMANDES (' + ORDS.length + ') :')
@@ -5135,6 +5141,10 @@ function buildUserContext(){
     WARR.forEach(w => lines.push('- ' + w.brand + ' ' + w.name + ' expire ' + w.exp))
   }
   return lines.join('\n') || 'Aucune donnée.'
+  }catch(err){
+    console.error('buildUserContext:', err)
+    return 'Aucune donnée exploitable pour le moment.'
+  }
 }
 
 async function callAIEdge(msg, context){
