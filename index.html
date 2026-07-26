@@ -3961,7 +3961,7 @@ async function submitOrder(){
   const order = {
     id:Date.now(), brand, name, amt, st:status, sc:scMap[status]||'b',
     dt:formatDateFR(dateVal), orderDate:dateVal,
-    warr:warrVal ? parseInt(warrVal) : null,
+    warr:(warrVal && !isNaN(parseInt(warrVal))) ? parseInt(warrVal) : null,
     tracking:tracking||null, manual:true
   }
 
