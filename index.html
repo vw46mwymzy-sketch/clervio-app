@@ -4159,7 +4159,7 @@ async function saveOrderToSupabase(order){
     tracking_number: order.tracking || null,
     source:          order.manual ? 'manual' : 'scan'
   })
-  if(error){ toast('❌ Erreur sauvegarde'); console.error(error); return false }
+  if(error){ toast('❌ ' + (error.message || 'Erreur sauvegarde')); console.error(error); return false }
   toast('✓ Commande sauvegardée dans le cloud')
   return true
 }
