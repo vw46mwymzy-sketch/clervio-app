@@ -1389,6 +1389,12 @@ async function signOut(){
   <div class="ls-logo">CLERVIO</div>
   <div class="ls-spinner"></div>
 </div>
+<script>
+(function(){
+  var _kill=function(){var ls=document.getElementById('loading-screen');if(ls){ls.classList.add('hidden');ls.style.opacity='0';ls.style.pointerEvents='none';setTimeout(function(){if(ls&&ls.parentNode)ls.remove();},500);}};
+  setTimeout(_kill,6000);
+})();
+</script>
 
 <!-- SPLASH -->
 <div class="pg on" id="p-splash" style="background:#08080C;align-items:center;justify-content:center;">
