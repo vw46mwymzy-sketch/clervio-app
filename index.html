@@ -4088,7 +4088,21 @@ function loadSavedSubs(){
 // ── Authentification email : connexion et création de compte sur le même écran
 let emailAuthMode = 'login'
 
-function openEmailAuth(mode = 'login'){
+function openSocialAuth(mode = 'signup'){
+  socialAuthMode = mode === 'login' ? 'login' : 'signup'
+  const isLogin = socialAuthMode === 'login'
+  const kicker = document.getElementById('ob2-kicker')
+  const title = document.getElementById('ob2-title')
+  const subtitle = document.getElementById('ob2-subtitle')
+  const appleLbl = document.getElementById('ob2-apple-lbl')
+  const googleLbl = document.getElementById('ob2-google-lbl')
+  const noteText = document.getElementById('ob2-note-text')
+  if(kicker) kicker.textContent = isLogin ? 'Se connecter' : 'Créer votre compte'
+  if(title) title.innerHTML = isLogin ? 'Bon retour.' : 'Votre espace<br/><em style="color:var(--g);display:block;padding-bottom:6px;">sécurisé</em>'
+  if(subtitle) subtitle.textContent = isLogin ? 'Retrouvez votre coffre CLERVIO.' : 'Créez votre compte CLERVIO. Vous connecterez vos emails à l\u2019étape suivante, ou plus tard.'
+  if(appleLbl) appleLbl.textContent = isLogin ? 'Continuer avec Apple' : 'Se connecter avec Apple'
+  if(googleLbl) googleLbl.textContent = isLogin ? 'Continuer avec Google' : 'Se connecter avec Google'
+  if(noteText) noteText.innerHTML = isLogin\n    ? '🔐 <strong style="color:var(--cr);">Vous vous reconnectez à votre compte existant.</strong><br/>Vos données et vos boîtes email connectées seront retrouvées automatiquement.'\n    : '🔐 <strong style="color:var(--cr);">Cette étape crée uniquement votre compte CLERVIO.</strong><br/>La connexion à vos boîtes email (Gmail, Outlook) est optionnelle et se configure à l\u2019étape suivante.'\n  go('p-ob2')\n}\n\nfunction openEmailAuth(mode = 'login'){
   emailAuthMode = mode === 'signup' ? 'signup' : 'login'
   const isSignup = emailAuthMode === 'signup'
   const kicker = document.getElementById('email-auth-kicker')
