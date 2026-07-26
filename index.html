@@ -1628,7 +1628,7 @@ async function signOut(){
       </div>
 
       <!-- Back to social login -->
-      <button class="bgh fw" onclick="go('p-ob2')" style="font-size:13px;">
+      <button class="bgh fw" onclick="openSocialAuth('login')" style="font-size:13px;">
         Continuer avec Apple / Google
       </button>
 
@@ -4087,6 +4087,7 @@ function loadSavedSubs(){
 
 // ── Authentification email : connexion et création de compte sur le même écran
 let emailAuthMode = 'login'
+let socialAuthMode = 'signup'
 
 function openSocialAuth(mode = 'signup'){
   socialAuthMode = mode === 'login' ? 'login' : 'signup'
