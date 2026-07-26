@@ -4857,9 +4857,12 @@ async function beginMailOAuth(provider){
     let result=typeof supa.auth.linkIdentity==='function'
       ? await supa.auth.linkIdentity({provider:oauthProvider,options})
       : await supa.auth.signInWithOAuth({provider:oauthProvider,options})
-    if(result.error && /already|linked|identity/i.test(String(result.error.message||''))){
-      // Le même compte peut déjà servir à la connexion CLERVIO : on redemande alors
-      // le consentement avec les scopes mail sans créer un second utilisateur.
+    if(result.error){
+      // Le même compte peut déjà servir à la connexion CLERVIO (ou linkIdentity peut
+      // échouer pour d'autres raisons : 404, session expirée, etc). Dans tous les cas,
+      // on retente via signInWithOAuth qui redemande le consentement avec les scopes mail
+      // sans jamais créer de second utilisateur.
+      console.warn('linkIdentity a échoué, repli sur signInWithOAuth:', result.error)
       result=await supa.auth.signInWithOAuth({provider:oauthProvider,options})
     }
     if(result.error) throw result.error
