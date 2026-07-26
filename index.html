@@ -1104,7 +1104,16 @@ function initSupabase(){
       const stats = await fetchDashboardStats().catch(()=>null)
       updateDashboardStats(stats || buildLocalDashboardStats())
 
-      if(!localStorage.getItem('clervio-faceid-seen')) go('p-faceid-prompt')
+      const _pendingMailImport = sessionStorage.getItem('clervio_pending_import') === '1'
+      if(_pendingMailImport){
+        sessionStorage.removeItem('clervio_pending_import')
+        go('p-email-sources')
+        const _ps = document.getElementById('import-period-section')
+        if(_ps) _ps.style.display='block'
+        // Lancer l'import tout de suite : le provider_token n'est valable que maintenant.
+        setTimeout(()=>{ try{ startMailImport() }catch(_e){ toast('Touchez « Analyser mes emails » pour lancer l’import') } }, 400)
+      }
+      else if(!localStorage.getItem('clervio-faceid-seen')) go('p-faceid-prompt')
       else go('p-home')
 
       subscribeToRealtime()
@@ -4994,13 +5003,8 @@ window.addEventListener('load',function(){
   if(params.get('mail')==='connected'){
     activeMailProvider=params.get('provider')==='outlook'?'outlook':'gmail'
     sessionStorage.setItem('clervio_active_mail_provider',activeMailProvider)
+    sessionStorage.setItem('clervio_pending_import','1')
     history.replaceState({},'',window.location.pathname)
-    setTimeout(()=>{
-      go('p-email-sources')
-      const periodSection=document.getElementById('import-period-section')
-      if(periodSection) periodSection.style.display='block'
-      toast('✓ '+(activeMailProvider==='outlook'?'Outlook':'Gmail')+' connecté — choisissez la période d’import')
-    },1000)
   }
 })
 
@@ -5211,20 +5215,7 @@ async function sendAI(){
 }
 
 // Détecter le retour après connexion Gmail
-window.addEventListener('load', function(){
-  const params = new URLSearchParams(window.location.search)
-  if(params.get('gmail') === 'connected'){
-    // Nettoyer l'URL
-    history.replaceState({}, '', window.location.pathname)
-    // Aller vers la page email-sources et montrer le sélecteur de période
-    setTimeout(()=>{
-      go('p-email-sources')
-      const periodSection = document.getElementById('import-period-section')
-      if(periodSection) periodSection.style.display = 'block'
-      toast("✓ Gmail connecté — choisissez la période d'import")
-    }, 800)
-  }
-})
+window.addEventListener('load',function(){/* doublon gmail=connected retiré : géré par mail=connected */}))
 
 /* ══ HAPTIC FEEDBACK iOS ═══════════════════════════ */
 window.haptic = function(type){
