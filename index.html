@@ -3003,7 +3003,7 @@ function showOrd(id){
   html+='<h2 style="font-family:Cormorant Garamond,serif;font-size:2rem;font-weight:300;color:var(--cr);margin-bottom:4px;">'+escapeHTML(o.name)+'</h2>'
   html+='<div style="font-family:''Cormorant Garamond'',serif;font-size:2.1rem;font-weight:400;margin-bottom:16px;background:linear-gradient(135deg,var(--gh),var(--g));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">'+amount.toFixed(2).replace('.00','')+' €</div>'
   html+='<span class="ba ba-'+escapeHTML(o.sc||'b')+'">'+escapeHTML(o.st)+'</span>'
-  html+='<div style="margin:26px 0 22px;">'+stepsHtml+'</div>'
+  html+='<div style="margin:20px 0 22px;background:var(--s2);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:16px 12px;">'+stepsHtml+'</div>'
 
   if(o.invoiceUrl){
     html+='<div class="cd tp" data-url="'+escapeHTML(o.invoiceUrl)+'" onclick="openDocumentUrl(this.dataset.url)" style="display:flex;align-items:center;gap:12px;margin-bottom:10px;"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg><span style="font-size:13px;color:var(--d1);flex:1;">Facture</span><span style="font-size:11px;color:var(--g);">Ouvrir →</span></div>'
