@@ -4858,6 +4858,37 @@ function selectPeriod(period){
   if(btn) btn.textContent=is3m?'Analyser mes emails (3 mois)':'Analyser mes emails (12 mois)'
 }
 
+let _mailIntroPendingProvider=null
+
+function showMailIntroModal(provider){
+  _mailIntroPendingProvider=provider
+  const overlay=document.getElementById('mail-intro-overlay')
+  const card=document.getElementById('mail-intro-card')
+  const btn=document.getElementById('mail-intro-confirm-btn')
+  const icon=document.getElementById('mail-intro-icon')
+  if(!overlay||!card||!btn) return
+  const isGmail=provider==='gmail'
+  btn.textContent=isGmail?'Connecter Gmail':'Connecter Outlook'
+  icon.style.background=isGmail?'rgba(201,168,76,.1)':'rgba(0,164,239,.12)'
+  overlay.style.display='flex'
+  requestAnimationFrame(()=>{ card.style.transform='translateY(0)' })
+}
+
+function closeMailIntroModal(){
+  const overlay=document.getElementById('mail-intro-overlay')
+  const card=document.getElementById('mail-intro-card')
+  if(!overlay||!card) return
+  card.style.transform='translateY(100%)'
+  setTimeout(()=>{ overlay.style.display='none' },320)
+  _mailIntroPendingProvider=null
+}
+
+function confirmMailIntro(){
+  const provider=_mailIntroPendingProvider
+  closeMailIntroModal()
+  if(provider) beginMailOAuth(provider)
+}
+
 async function beginMailOAuth(provider){
   if(!supa || !currentUser){ toast('Connectez-vous avant de relier une boîte mail'); return }
   const isGmail=provider==='gmail'
