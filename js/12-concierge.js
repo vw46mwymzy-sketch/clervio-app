@@ -43,7 +43,7 @@ async function callAIEdge(msg, context){
 /* ══ CONCIERGE IA ══════════════════════════════════════ */
 
 function displayAIResponse(msgs, text){
-  const formatted = text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').split('\n').join('<br/>')
+  const formatted = escapeHTML(text).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').split('\n').join('<br/>')
   msgs.innerHTML += '<div style="margin-bottom:14px;">' +
     '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">' +
       '<div style="width:24px;height:24px;border-radius:8px;background:rgba(201,168,76,.15);display:flex;align-items:center;justify-content:center;font-size:12px;">V</div>' +
@@ -63,7 +63,7 @@ async function sendAI(){
   if(sugg) sugg.style.display = 'none'
   const msgs = document.getElementById('aimsgs')
   msgs.innerHTML += '<div style="display:flex;justify-content:flex-end;margin-bottom:14px;">' +
-    '<div style="background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.2);border-radius:16px 16px 4px 16px;padding:12px 16px;max-width:80%;font-size:13px;color:var(--cr);line-height:1.6;">' + msg + '</div>' +
+    '<div style="background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.2);border-radius:16px 16px 4px 16px;padding:12px 16px;max-width:80%;font-size:13px;color:var(--cr);line-height:1.6;">' + escapeHTML(msg) + '</div>' +
   '</div>'
   const loaderId = 'ai-loader-' + Date.now()
   msgs.innerHTML += '<div id="' + loaderId + '" style="display:flex;gap:6px;margin-bottom:14px;padding:4px 0;">' +
