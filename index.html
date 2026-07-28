@@ -1800,6 +1800,8 @@ async function signOut(){
         em.style.display=vide?'block':'none';
         fu.style.display=vide?'none':'block';
         w('hm-f1',o,30);w('hm-f2',g,15);w('hm-f3',s,20);
+        var gl=document.getElementById('greet-line');
+        if(gl)gl.textContent=vide?'Votre coffre est prêt.':'Tout est sous contrôle.';
       }
       window.hmSync=hmSync;
       ['.stat-orders','.stat-warr','.stat-subs'].forEach(function(sel){
