@@ -49,7 +49,7 @@
       try{ url = (typeof arguments[0]==='string') ? arguments[0] : (arguments[0] && arguments[0].url) || ''; }catch(e){}
       var court = String(url).replace(/^https?:\/\/[^\/]+/,'').slice(0,90);
       var t = Date.now(), p;
-      try { p = origFetch.apply(this, arguments); }
+      try { p = origFetch.apply(window, arguments); }
       catch(e){ push('err','réseau', court+' — '+e.message); throw e; }
       return p.then(function(res){
         push(res.ok?'net':'err','réseau', court+' → '+res.status+'  '+(Date.now()-t)+'ms');
@@ -72,7 +72,7 @@
   function wrapGo(){
     if (typeof window.go === 'function' && !window.go.__diag){
       var orig = window.go;
-      var w = function(p){ push('nav','navigation', String(p)); return orig.apply(this, arguments); };
+      var w = function(p){ push('nav','navigation', String(p)); return orig.apply(window, arguments); };
       w.__diag = true;
       window.go = w;
       push('log','diagnostic','navigation instrumentée');
