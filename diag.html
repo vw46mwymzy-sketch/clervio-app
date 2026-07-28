@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Diagnostic CLERVIO</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#111;color:#fff;padding:20px;font-size:16px;line-height:1.6}
+.line{margin-bottom:12px;padding:12px;background:#222;border-radius:8px;word-break:break-all}
+.ok{border-left:4px solid #34D058}
+.err{border-left:4px solid #FF3B30}
+.pending{border-left:4px solid #FF9500}
+img{max-width:100px;display:block;margin-top:8px}
+</style>
+</head>
+<body>
+<h2>Diagnostic icone CLERVIO</h2>
+<div id="results"></div>
+
+<script>
+const results = document.getElementById('results');
+
+function log(text, cls){
+  const div = document.createElement('div');
+  div.className = 'line ' + cls;
+  div.textContent = text;
+  results.appendChild(div);
+}
+
+log('Navigateur : ' + navigator.userAgent, 'pending');
+
+// Test 1 : fetch simple
+fetch('https://clervio-app.vercel.app/icons/apple-touch-icon.png')
+  .then(res => {
+    log('FETCH status: ' + res.status + ' | content-type: ' + res.headers.get('content-type') + ' | content-length: ' + res.headers.get('content-length'), 'ok');
+    return res.blob();
+  })
+  .then(blob => {
+    log('FETCH blob recu, taille: ' + blob.size + ' octets, type: ' + blob.type, 'ok');
+    const url = URL.createObjectURL(blob);
+    const img = document.createElement('img');
+    img.src = url;
+    img.onload = () => log('IMAGE depuis blob : chargee avec succes, dimensions ' + img.naturalWidth + 'x' + img.naturalHeight, 'ok');
+    img.onerror = (e) => log('IMAGE depuis blob : ECHEC de decodage', 'err');
+    results.appendChild(img);
+  })
+  .catch(err => {
+    log('FETCH ERREUR: ' + err.name + ' - ' + err.message, 'err');
+  });
+
+// Test 2 : balise img directe (comme le fait le navigateur normalement)
+const img2 = document.createElement('img');
+img2.style.marginTop = '10px';
+img2.onload = () => log('IMG TAG direct : chargee, dimensions ' + img2.naturalWidth + 'x' + img2.naturalHeight, 'ok');
+img2.onerror = (e) => log('IMG TAG direct : ECHEC — evenement error declenche', 'err');
+img2.src = 'https://clervio-app.vercel.app/icons/apple-touch-icon.png?t=' + Date.now();
+results.appendChild(img2);
+
+// Test 3 : verifier si un Content-Security-Policy de CETTE page (vide ici) bloque quoi que ce soit
+log('CSP de cette page de diagnostic : aucune (page neutre)', 'pending');
+
+// Capturer toute erreur JS globale
+window.onerror = function(msg, src, line, col, err){
+  log('ERREUR JS GLOBALE: ' + msg + ' (ligne ' + line + ')', 'err');
+};
+</script>
+</body>
+</html>
