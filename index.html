@@ -1417,16 +1417,41 @@ async function signOut(){
 </div>
 
 <!-- OB1 -->
+<style>
+@keyframes ob1rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes ob1draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+#p-ob1{background:#07070A;}
+#p-ob1 .sc{display:flex;flex-direction:column;}
+#p-ob1 .ob1-wrap{flex:1;min-height:100%;display:flex;flex-direction:column;padding:0 26px;}
+#p-ob1 .ob1-mark{padding-top:calc(env(safe-area-inset-top,0px) + 26px);display:flex;align-items:baseline;gap:7px;animation:ob1rise .7s var(--e2) .05s both;}
+#p-ob1 .ob1-mark .nm{font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:.34em;text-indent:.34em;color:var(--g);}
+#p-ob1 .ob1-mark .dt{width:3px;height:3px;border-radius:50%;background:var(--g);opacity:.8;}
+#p-ob1 .ob1-rule{height:1px;background:rgba(237,231,218,.10);flex-shrink:0;transform-origin:left;animation:ob1draw .9s var(--e2) .2s both;}
+#p-ob1 .ob1-rule.top{margin-top:22px;}
+#p-ob1 .ob1-rule.foot{margin:26px 0 16px;animation-delay:.95s;}
+#p-ob1 .ob1-hero{flex:1;display:flex;flex-direction:column;justify-content:center;padding:44px 0;}
+#p-ob1 .ob1-eyebrow{font-size:9px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:rgba(237,231,218,.26);margin-bottom:26px;animation:ob1rise .7s var(--e2) .35s both;}
+#p-ob1 .ob1-h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3.1rem,13vw,4.6rem);line-height:1.04;letter-spacing:-.025em;color:var(--cr);animation:ob1rise .9s var(--e2) .45s both;}
+#p-ob1 .ob1-h1 em{display:block;font-style:italic;color:var(--g);padding-top:.12em;padding-bottom:.14em;animation:ob1rise .9s var(--e2) .58s both;}
+#p-ob1 .ob1-lede{font-size:14.5px;line-height:1.75;color:rgba(237,231,218,.44);font-weight:300;max-width:27ch;margin-top:30px;animation:ob1rise .8s var(--e2) .7s both;}
+#p-ob1 .ob1-foot{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 30px);flex-shrink:0;}
+#p-ob1 .ob1-cta{display:block;width:100%;border:none;cursor:pointer;height:56px;border-radius:13px;background:linear-gradient(180deg,#D9BE68 0%,#C6A94E 52%,#B99B41 100%);color:#0A0A0C;font-family:'Inter',sans-serif;font-size:15px;font-weight:500;letter-spacing:.01em;box-shadow:none;transition:filter .25s var(--e1),transform .15s var(--e1);animation:ob1rise .8s var(--e2) .82s both;}
+#p-ob1 .ob1-cta:hover{filter:brightness(1.06);}
+#p-ob1 .ob1-cta:active{transform:scale(.99);filter:brightness(.96);}
+#p-ob1 .ob1-sec{display:block;width:100%;background:none;border:none;cursor:pointer;margin-top:20px;padding:6px 0;color:rgba(237,231,218,.44);font-size:13.5px;font-weight:400;letter-spacing:.01em;transition:color .25s var(--e1);animation:ob1rise .8s var(--e2) .9s both;}
+#p-ob1 .ob1-sec:hover{color:var(--cr);}
+#p-ob1 .ob1-sec:active{transform:none;}
+#p-ob1 .ob1-meta{display:flex;justify-content:space-between;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(237,231,218,.26);animation:ob1rise .8s var(--e2) 1s both;}
+</style>
 <div class="pg" id="p-ob1">
-  <div class="sc pb120">
+  <div class="sc">
+    <div class="ob1-wrap">
 
-    <!-- Ambient glow -->
-    <div style="position:fixed;top:-80px;right:-80px;width:320px;height:320px;background:radial-gradient(circle,rgba(201,168,76,.08) 0%,transparent 65%);border-radius:50%;pointer-events:none;animation:glp 6s ease-in-out infinite;z-index:0;"></div>
+      <div class="ob1-mark"><span class="nm">CLERVIO</span><span class="dt"></span></div>
+      <div class="ob1-rule top"></div>
 
-    <div style="padding:80px 28px 48px;position:relative;z-index:1;">
-
-      <!-- Eyebrow -->
-      <p class="sl" style="margin-bottom:20px;animation:fu .5s var(--e2) .1s both;">L'ordre silencieux</p>
+      <section class="ob1-hero">
+      <p class="ob1-eyebrow">L'ordre silencieux</p>
 
       <!-- Headline — editorial, aéré -->
       <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,11.5vw,5rem);font-weight:300;line-height:1.15;color:var(--cr);margin-bottom:0;padding-top:4px;animation:fu .8s var(--e2) .2s both;letter-spacing:-.02em;">
