@@ -1419,54 +1419,34 @@ async function signOut(){
 <!-- OB1 -->
 <style>
 @keyframes ob1rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-@keyframes ob1draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-#p-ob1{background:#07070A;}
+#p-ob1{background:#050406;}
 #p-ob1 .sc{display:flex;flex-direction:column;}
-#p-ob1 .ob1-wrap{flex:1;min-height:100%;display:flex;flex-direction:column;padding:0 26px;}
-#p-ob1 .ob1-mark{padding-top:calc(env(safe-area-inset-top,0px) + 26px);display:flex;align-items:baseline;gap:7px;animation:ob1rise .7s var(--e2) .05s both;}
-#p-ob1 .ob1-mark .nm{font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:.34em;text-indent:.34em;color:var(--g);}
-#p-ob1 .ob1-mark .dt{width:3px;height:3px;border-radius:50%;background:var(--g);opacity:.8;}
-#p-ob1 .ob1-rule{height:1px;background:rgba(237,231,218,.10);flex-shrink:0;transform-origin:left;animation:ob1draw .9s var(--e2) .2s both;}
-#p-ob1 .ob1-rule.top{margin-top:22px;}
-#p-ob1 .ob1-rule.foot{margin:26px 0 16px;animation-delay:.95s;}
-#p-ob1 .ob1-hero{flex:1;display:flex;flex-direction:column;justify-content:center;padding:44px 0;}
-#p-ob1 .ob1-eyebrow{font-size:9px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:rgba(237,231,218,.26);margin-bottom:26px;animation:ob1rise .7s var(--e2) .35s both;}
-#p-ob1 .ob1-h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3.1rem,13vw,4.6rem);line-height:1.04;letter-spacing:-.025em;color:var(--cr);animation:ob1rise .9s var(--e2) .45s both;}
-#p-ob1 .ob1-h1 em{display:block;font-style:italic;color:var(--g);padding-top:.12em;padding-bottom:.14em;animation:ob1rise .9s var(--e2) .58s both;}
-#p-ob1 .ob1-lede{font-size:14.5px;line-height:1.75;color:rgba(237,231,218,.44);font-weight:300;max-width:27ch;margin-top:30px;animation:ob1rise .8s var(--e2) .7s both;}
-#p-ob1 .ob1-foot{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 30px);flex-shrink:0;}
-#p-ob1 .ob1-cta{display:block;width:100%;border:none;cursor:pointer;height:56px;border-radius:13px;background:linear-gradient(180deg,#D9BE68 0%,#C6A94E 52%,#B99B41 100%);color:#0A0A0C;font-family:'Inter',sans-serif;font-size:15px;font-weight:500;letter-spacing:.01em;box-shadow:none;transition:filter .25s var(--e1),transform .15s var(--e1);animation:ob1rise .8s var(--e2) .82s both;}
-#p-ob1 .ob1-cta:hover{filter:brightness(1.06);}
-#p-ob1 .ob1-cta:active{transform:scale(.99);filter:brightness(.96);}
-#p-ob1 .ob1-sec{display:block;width:100%;background:none;border:none;cursor:pointer;margin-top:20px;padding:6px 0;color:rgba(237,231,218,.44);font-size:13.5px;font-weight:400;letter-spacing:.01em;transition:color .25s var(--e1);animation:ob1rise .8s var(--e2) .9s both;}
-#p-ob1 .ob1-sec:hover{color:var(--cr);}
-#p-ob1 .ob1-sec:active{transform:none;}
-#p-ob1 .ob1-meta{display:flex;justify-content:space-between;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(237,231,218,.26);animation:ob1rise .8s var(--e2) 1s both;}
+#p-ob1 .ob1-wrap{flex:1;min-height:100%;display:flex;flex-direction:column;align-items:center;padding:0 30px;position:relative;}
+#p-ob1 .ob1-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 95% 45% at 50% 36%,rgba(201,168,76,.07) 0%,transparent 72%);pointer-events:none;}
+#p-ob1 .ob1-hero{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;z-index:1;padding-bottom:24px;}
+#p-ob1 .ob1-wm{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.7rem,12.5vw,3.7rem);letter-spacing:.26em;text-indent:.26em;line-height:1;background:linear-gradient(135deg,#FFF5C0 0%,#EDD870 20%,var(--g) 50%,var(--gd) 70%,#EDD870 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:ob1rise 1s var(--e2) .1s both;}
+#p-ob1 .ob1-tag{margin-top:26px;font-family:'Inter',sans-serif;font-size:16px;font-weight:300;line-height:1.5;color:var(--d0);animation:ob1rise .9s var(--e2) .38s both;}
+#p-ob1 .ob1-tag span{display:block;color:var(--d1);}
+#p-ob1 .ob1-foot{width:100%;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 48px);position:relative;z-index:1;flex-shrink:0;}
+#p-ob1 .ob1-cta{display:block;width:100%;height:58px;border:none;border-radius:100px;cursor:pointer;background:linear-gradient(100deg,var(--gd) 0%,var(--g) 28%,#EDD870 52%,var(--g) 78%,var(--gd) 100%);color:#0A0A0C;font-family:'Inter',sans-serif;font-size:15.5px;font-weight:500;letter-spacing:.005em;box-shadow:0 4px 26px rgba(201,168,76,.16);transition:filter .25s var(--e1),transform .15s var(--e1);animation:ob1rise .8s var(--e2) .62s both;}
+#p-ob1 .ob1-cta:hover{filter:brightness(1.05);}
+#p-ob1 .ob1-cta:active{transform:scale(.99);filter:brightness(.95);}
+#p-ob1 .ob1-sec{display:block;width:100%;height:58px;margin-top:13px;border-radius:100px;cursor:pointer;background:none;border:1px solid rgba(201,168,76,.32);color:var(--cr);font-family:'Inter',sans-serif;font-size:15.5px;font-weight:400;transition:all .25s var(--e1);animation:ob1rise .8s var(--e2) .74s both;}
+#p-ob1 .ob1-sec:hover{border-color:rgba(201,168,76,.6);background:rgba(201,168,76,.05);}
+#p-ob1 .ob1-sec:active{transform:scale(.99);}
 </style>
 <div class="pg" id="p-ob1">
   <div class="sc">
     <div class="ob1-wrap">
 
-      <div class="ob1-mark"><span class="nm">CLERVIO</span><span class="dt"></span></div>
-      <div class="ob1-rule top"></div>
-
       <section class="ob1-hero">
-      <p class="ob1-eyebrow">L'ordre silencieux</p>
-
-      <h1 class="ob1-h1">Tout ce que<br/>vous achetez,<em>enfin gardé.</em></h1>
-      <p class="ob1-lede">Commandes, garanties, abonnements. Rien ne se perd, rien ne s'oublie.</p>
-
+        <h1 class="ob1-wm">CLERVIO</h1>
+        <p class="ob1-tag">L'ordre silencieux<span>de vos achats</span></p>
       </section>
 
       <footer class="ob1-foot">
         <button class="ob1-cta" onclick="go('p-ob2')">Commencer gratuitement</button>
         <button class="ob1-sec" onclick="returningUser()">J'ai déjà un compte</button>
-
-        <div class="ob1-rule foot"></div>
-        <div class="ob1-meta">
-          <span>Chiffré · Europe</span>
-          <span>4,99 € / mois</span>
-        </div>
       </footer>
 
     </div>
