@@ -51,14 +51,14 @@
   --s5:   #22200E;
 
   /* Or — multi-stop pour profondeur */
-  --g:    #E0C09A;
-  --gh:   #F4E2CB;
-  --gm:   #D3B08A;
-  --gd:   #B8946E;
-  --gl:   #7E6449;
-  --gg:   rgba(224,192,154,.1);
-  --gga:  rgba(224,192,154,.06);
-  --ggb:  rgba(224,192,154,.03);
+  --g:    #C9A84C;
+  --gh:   #EDD870;
+  --gm:   #D4B45A;
+  --gd:   #A88830;
+  --gl:   #7A5A12;
+  --gg:   rgba(201,168,76,.1);
+  --gga:  rgba(201,168,76,.06);
+  --ggb:  rgba(201,168,76,.03);
 
   /* Texte */
   --cr:   #EDE0C8;
@@ -72,8 +72,8 @@
   --b0:   rgba(255,255,255,.12);
   --b1:   rgba(255,255,255,.07);
   --b2:   rgba(255,255,255,.04);
-  --bg:   rgba(224,192,154,.18);
-  --bg2:  rgba(224,192,154,.1);
+  --bg:   rgba(201,168,76,.18);
+  --bg2:  rgba(201,168,76,.1);
 
   /* Status */
   --grn:  #34D058;
@@ -100,7 +100,7 @@ body{
 .sr{font-family:'Cormorant Garamond',serif;}
 input,button{font-family:'Inter',sans-serif;}
 ::-webkit-scrollbar{width:1.5px;}
-::-webkit-scrollbar-thumb{background:rgba(224,192,154,.3);border-radius:1px;}
+::-webkit-scrollbar-thumb{background:rgba(201,168,76,.3);border-radius:1px;}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ANIMATIONS */
 @keyframes br     {0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.18);opacity:1}}
@@ -108,8 +108,8 @@ input,button{font-family:'Inter',sans-serif;}
 /* ══ LOADING SCREEN ════════════════════════════════════ */
 #loading-screen{position:fixed;inset:0;z-index:10000;background:#06050A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .4s ease;}
 #loading-screen.hidden{opacity:0;pointer-events:none;}
-#loading-screen .ls-logo{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;letter-spacing:.2em;text-indent:.2em;background:linear-gradient(135deg,#FBF0E2,#F4E2CB,#E0C09A);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
-#loading-screen .ls-spinner{width:22px;height:22px;border:2px solid rgba(224,192,154,.2);border-top-color:var(--g);border-radius:50%;animation:sp 1s linear infinite;}
+#loading-screen .ls-logo{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;letter-spacing:.2em;text-indent:.2em;background:linear-gradient(135deg,#FFF5C0,#EDD870,#C9A84C);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+#loading-screen .ls-spinner{width:22px;height:22px;border:2px solid rgba(201,168,76,.2);border-top-color:var(--g);border-radius:50%;animation:sp 1s linear infinite;}
 /* ══ DEMO BANNER ════════════════════════════════════════ */
 #demo-banner{position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:8000;width:100%;max-width:430px;background:linear-gradient(90deg,rgba(255,149,0,.12),rgba(255,149,0,.08));border-bottom:1px solid rgba(255,149,0,.25);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:7px 16px;display:none;align-items:center;justify-content:space-between;gap:8px;}
 #demo-banner.visible{display:flex;}
@@ -143,7 +143,7 @@ input,button{font-family:'Inter',sans-serif;}
 @keyframes shimmr2{0%{transform:translateX(-120%) skewX(-20deg)}100%{transform:translateX(220%) skewX(-20deg)}}
 @keyframes numcnt {from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @keyframes cardIn {from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
-@keyframes pulse2 {0%,100%{box-shadow:0 0 0 0 rgba(224,192,154,0),0 6px 24px rgba(224,192,154,.5)}50%{box-shadow:0 0 0 10px rgba(224,192,154,.06),0 8px 32px rgba(224,192,154,.7)}}
+@keyframes pulse2 {0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0),0 6px 24px rgba(201,168,76,.5)}50%{box-shadow:0 0 0 10px rgba(201,168,76,.06),0 8px 32px rgba(201,168,76,.7)}}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ SHELL */
 #app{
@@ -172,7 +172,7 @@ input,button{font-family:'Inter',sans-serif;}
 /* Halo externe */
 .ob::after{
   content:'';position:absolute;inset:-40%;border-radius:50%;
-  background:radial-gradient(circle,rgba(224,192,154,.14) 0%,transparent 65%);
+  background:radial-gradient(circle,rgba(201,168,76,.14) 0%,transparent 65%);
   animation:br 4s ease-in-out infinite reverse;pointer-events:none;
 }
 /* Inner speculaire */
@@ -183,17 +183,17 @@ input,button{font-family:'Inter',sans-serif;}
   border-radius:50%;pointer-events:none;z-index:1;
 }
 .ob-xs{width:26px;height:26px;
-  background:radial-gradient(circle at 30% 25%,#F7E4CE 0%,var(--gm) 35%,var(--g) 60%,var(--gl) 90%);
-  box-shadow:0 0 10px rgba(224,192,154,.4),0 0 3px rgba(224,192,154,.7);}
+  background:radial-gradient(circle at 30% 25%,#FAE88A 0%,var(--gm) 35%,var(--g) 60%,var(--gl) 90%);
+  box-shadow:0 0 10px rgba(201,168,76,.4),0 0 3px rgba(201,168,76,.7);}
 .ob-s{width:44px;height:44px;
-  background:radial-gradient(circle at 30% 25%,#F7E4CE 0%,var(--gm) 35%,var(--g) 60%,var(--gl) 90%);
-  box-shadow:0 0 22px rgba(224,192,154,.45),0 0 7px rgba(224,192,154,.7);}
+  background:radial-gradient(circle at 30% 25%,#FAE88A 0%,var(--gm) 35%,var(--g) 60%,var(--gl) 90%);
+  box-shadow:0 0 22px rgba(201,168,76,.45),0 0 7px rgba(201,168,76,.7);}
 .ob-m{width:68px;height:68px;
-  background:radial-gradient(circle at 30% 25%,#F7E4CE 0%,var(--gm) 35%,var(--g) 60%,var(--gl) 90%);
-  box-shadow:0 0 40px rgba(224,192,154,.5),0 0 12px rgba(224,192,154,.75);}
+  background:radial-gradient(circle at 30% 25%,#FAE88A 0%,var(--gm) 35%,var(--g) 60%,var(--gl) 90%);
+  box-shadow:0 0 40px rgba(201,168,76,.5),0 0 12px rgba(201,168,76,.75);}
 .ob-l{width:92px;height:92px;
-  background:radial-gradient(circle at 30% 25%,#F7E4CE 0%,var(--gm) 35%,var(--g) 60%,var(--gl) 90%);
-  box-shadow:0 0 65px rgba(224,192,154,.55),0 0 18px rgba(224,192,154,.8);}
+  background:radial-gradient(circle at 30% 25%,#FAE88A 0%,var(--gm) 35%,var(--g) 60%,var(--gl) 90%);
+  box-shadow:0 0 65px rgba(201,168,76,.55),0 0 18px rgba(201,168,76,.8);}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ NAV */
 .nav{
@@ -205,7 +205,7 @@ input,button{font-family:'Inter',sans-serif;}
   border-radius:32px;
   /* Multi-border effect: gold outer, white inner highlight */
   box-shadow:
-    0 0 0 1px rgba(224,192,154,.12),
+    0 0 0 1px rgba(201,168,76,.12),
     0 0 0 1.5px rgba(255,255,255,.04),
     0 24px 64px rgba(0,0,0,.9),
     0 8px 24px rgba(0,0,0,.6),
@@ -236,11 +236,11 @@ input,button{font-family:'Inter',sans-serif;}
 /* Home FAB */
 .nc{
   width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;
-  background:linear-gradient(150deg,#F2DFC4 0%,var(--gm) 40%,var(--g) 68%,var(--gl) 100%);
+  background:linear-gradient(150deg,#F5E278 0%,var(--gm) 40%,var(--g) 68%,var(--gl) 100%);
   display:flex;align-items:center;justify-content:center;
   box-shadow:
     0 2px 0 rgba(0,0,0,.4),
-    0 8px 28px rgba(224,192,154,.65),
+    0 8px 28px rgba(201,168,76,.65),
     0 0 0 1.5px rgba(255,255,255,.18),
     inset 0 1.5px 0 rgba(255,255,255,.45),
     inset 0 -1px 0 rgba(0,0,0,.2);
@@ -253,7 +253,7 @@ input,button{font-family:'Inter',sans-serif;}
   background:radial-gradient(ellipse 60% 35% at 40% 25%,rgba(255,255,255,.45),transparent 65%);
   pointer-events:none;
 }
-.nc:hover{transform:scale(1.08) translateY(-2px);box-shadow:0 4px 0 rgba(0,0,0,.4),0 14px 36px rgba(224,192,154,.8),0 0 0 1.5px rgba(255,255,255,.25),inset 0 1.5px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.2);}
+.nc:hover{transform:scale(1.08) translateY(-2px);box-shadow:0 4px 0 rgba(0,0,0,.4),0 14px 36px rgba(201,168,76,.8),0 0 0 1.5px rgba(255,255,255,.25),inset 0 1.5px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.2);}
 .nc:active{transform:scale(.93) translateY(1px);}
 .nc.on{animation:pulse2 2.5s infinite;}
 .nc svg{width:21px;height:21px;stroke:#07060C;stroke-width:2.5;fill:none;position:relative;z-index:1;}
@@ -269,7 +269,7 @@ input,button{font-family:'Inter',sans-serif;}
   transition:all .2s var(--e1);
   backdrop-filter:blur(20px);
 }
-.bk:hover{background:rgba(255,255,255,.12);box-shadow:0 0 0 1px rgba(224,192,154,.3),0 4px 14px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1);}
+.bk:hover{background:rgba(255,255,255,.12);box-shadow:0 0 0 1px rgba(201,168,76,.3),0 4px 14px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1);}
 .bk:active{transform:scale(.9);}
 .bk svg{width:15px;height:15px;}
 
@@ -287,7 +287,7 @@ input,button{font-family:'Inter',sans-serif;}
     inset 0 -1px 0 rgba(0,0,0,.4),
     0 8px 24px rgba(0,0,0,.5),
     0 2px 6px rgba(0,0,0,.4),
-    0 0 0 0 rgba(224,192,154,0);
+    0 0 0 0 rgba(201,168,76,0);
   transition:all .3s var(--e1);
 }
 /* Ligne de lumière rasante en haut */
@@ -306,13 +306,13 @@ input,button{font-family:'Inter',sans-serif;}
 .cd.tp:hover{
   background:linear-gradient(160deg,#201A10 0%,#161618 60%,#0F0F11 100%);
   box-shadow:
-    0 0 0 1px rgba(224,192,154,.25),
+    0 0 0 1px rgba(201,168,76,.25),
     0 0 0 1.5px rgba(0,0,0,.5),
     inset 0 1px 0 rgba(255,255,255,.14),
     inset 0 -1px 0 rgba(0,0,0,.4),
     0 12px 32px rgba(0,0,0,.55),
     0 4px 8px rgba(0,0,0,.4),
-    0 0 30px rgba(224,192,154,.06);
+    0 0 30px rgba(201,168,76,.06);
   transform:translateY(-1px);
 }
 .cd.tp:active{transform:scale(.985) translateY(0);}
@@ -328,12 +328,12 @@ input,button{font-family:'Inter',sans-serif;}
 .cd.tp:hover{
   background:linear-gradient(160deg,var(--s3) 0%,var(--s2) 100%);
   box-shadow:
-    0 0 0 1px rgba(224,192,154,.2),
+    0 0 0 1px rgba(201,168,76,.2),
     inset 0 1px 0 rgba(255,255,255,.1),
     inset 0 -1px 0 rgba(0,0,0,.3),
     0 8px 28px rgba(0,0,0,.45),
     0 2px 6px rgba(0,0,0,.4),
-    0 0 20px rgba(224,192,154,.05);
+    0 0 20px rgba(201,168,76,.05);
   transform:translateY(-1px);
 }
 .cd.tp:active{transform:scale(.983) translateY(0);}
@@ -341,24 +341,24 @@ input,button{font-family:'Inter',sans-serif;}
 /* Premium glow card */
 .glcd{
   position:relative;overflow:hidden;
-  background:linear-gradient(145deg,rgba(224,192,154,.12) 0%,rgba(224,192,154,.06) 35%,#0C0C0E 100%);
+  background:linear-gradient(145deg,rgba(201,168,76,.12) 0%,rgba(201,168,76,.06) 35%,#0C0C0E 100%);
   border-radius:22px;padding:22px;
   box-shadow:
-    0 0 0 1px rgba(224,192,154,.24),
+    0 0 0 1px rgba(201,168,76,.24),
     inset 0 1px 0 rgba(255,255,255,.1),
     inset 0 -1px 0 rgba(0,0,0,.25),
     0 8px 28px rgba(0,0,0,.45),
-    0 0 50px rgba(224,192,154,.09);
+    0 0 50px rgba(201,168,76,.09);
 }
 .glcd::before{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(224,192,154,.6),transparent);
+  background:linear-gradient(90deg,transparent,rgba(201,168,76,.6),transparent);
   pointer-events:none;
 }
 .glcd::after{
   content:'';position:absolute;top:-40%;right:-20%;
   width:200px;height:200px;border-radius:50%;
-  background:radial-gradient(circle,rgba(224,192,154,.08) 0%,transparent 70%);
+  background:radial-gradient(circle,rgba(201,168,76,.08) 0%,transparent 70%);
   animation:glp 4s ease-in-out infinite;pointer-events:none;
 }
 
@@ -386,12 +386,12 @@ input,button{font-family:'Inter',sans-serif;}
   background:linear-gradient(160deg,#221C12 0%,#181819 60%,#111113 100%);
   transform:translateY(-3px);
   box-shadow:
-    0 0 0 1px rgba(224,192,154,.3),
+    0 0 0 1px rgba(201,168,76,.3),
     0 0 0 1.5px rgba(0,0,0,.5),
     inset 0 1px 0 rgba(255,255,255,.15),
     inset 0 -1px 0 rgba(0,0,0,.4),
     0 16px 40px rgba(0,0,0,.6),
-    0 0 36px rgba(224,192,154,.1);
+    0 0 36px rgba(201,168,76,.1);
 }
 .stcd:active{transform:scale(.97) translateY(0);}
 .stcd > *{position:relative;z-index:1;}
@@ -403,13 +403,13 @@ input,button{font-family:'Inter',sans-serif;}
 .stcd::after{
   content:'';position:absolute;top:-30px;left:50%;transform:translateX(-50%);
   width:120px;height:80px;border-radius:50%;
-  background:radial-gradient(ellipse,rgba(224,192,154,.06) 0%,transparent 70%);
+  background:radial-gradient(ellipse,rgba(201,168,76,.06) 0%,transparent 70%);
   pointer-events:none;transition:opacity .3s;opacity:0;
 }
 .stcd:hover{
   background:linear-gradient(150deg,var(--s3) 0%,var(--s2) 100%);
   transform:translateY(-2px);
-  box-shadow:0 0 0 1px rgba(224,192,154,.22),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.5),0 0 30px rgba(224,192,154,.08);
+  box-shadow:0 0 0 1px rgba(201,168,76,.22),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.5),0 0 30px rgba(201,168,76,.08);
 }
 .stcd:hover::after{opacity:1;}
 .stcd:active{transform:scale(.97);}
@@ -427,12 +427,12 @@ input,button{font-family:'Inter',sans-serif;}
   color:#07060C;
   /* Gradient multi-stop pour profondeur */
   background:linear-gradient(165deg,
-    #F7E9D6 0%,
-    #DCBE97 18%,
-    #E0C09A 45%,
-    #B8946E 70%,
-    #E0C09A 82%,
-    #DCBE97 100%);
+    #F8EC80 0%,
+    #E2C85A 18%,
+    #C9A84C 45%,
+    #A88830 70%,
+    #C9A84C 82%,
+    #E2C85A 100%);
   background-size:200% 100%;
   /* Shadow system */
   box-shadow:
@@ -440,8 +440,8 @@ input,button{font-family:'Inter',sans-serif;}
     0 -2px 0 rgba(0,0,0,.35) inset,
     0 0 0 1px rgba(255,255,255,.15),
     0 2px 0 rgba(0,0,0,.5),
-    0 6px 20px rgba(224,192,154,.45),
-    0 12px 40px rgba(224,192,154,.2);
+    0 6px 20px rgba(201,168,76,.45),
+    0 12px 40px rgba(201,168,76,.2);
   transition:all .3s var(--e1);
   text-shadow:0 1px 0 rgba(0,0,0,.15);
 }
@@ -467,8 +467,8 @@ input,button{font-family:'Inter',sans-serif;}
     0 -2px 0 rgba(0,0,0,.35) inset,
     0 0 0 1px rgba(255,255,255,.2),
     0 4px 0 rgba(0,0,0,.5),
-    0 10px 30px rgba(224,192,154,.65),
-    0 20px 50px rgba(224,192,154,.3);
+    0 10px 30px rgba(201,168,76,.65),
+    0 20px 50px rgba(201,168,76,.3);
 }
 .bg:hover::after{animation:shimmr2 .55s var(--e2) forwards;}
 .bg:active{
@@ -478,7 +478,7 @@ input,button{font-family:'Inter',sans-serif;}
     0 -1px 0 rgba(0,0,0,.35) inset,
     0 0 0 1px rgba(255,255,255,.1),
     0 1px 0 rgba(0,0,0,.5),
-    0 3px 10px rgba(224,192,154,.3);
+    0 3px 10px rgba(201,168,76,.3);
 }
 .bg.fw{width:100%;}
 .bg.lg{padding:18px 32px;font-size:14px;letter-spacing:.16em;}
@@ -509,11 +509,11 @@ input,button{font-family:'Inter',sans-serif;}
   color:var(--cr);
   background:rgba(255,255,255,.09);
   box-shadow:
-    0 0 0 1px rgba(224,192,154,.28),
+    0 0 0 1px rgba(201,168,76,.28),
     inset 0 1px 0 rgba(255,255,255,.1),
     inset 0 -1px 0 rgba(0,0,0,.2),
     0 6px 20px rgba(0,0,0,.4),
-    0 0 20px rgba(224,192,154,.07);
+    0 0 20px rgba(201,168,76,.07);
   transform:translateY(-1px);
 }
 .bgh:active{transform:scale(.97);}
@@ -550,7 +550,7 @@ input,button{font-family:'Inter',sans-serif;}
   pointer-events:none;border-radius:inherit;
 }
 .auth-btn:hover{
-  box-shadow:0 0 0 1px rgba(224,192,154,.28),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.25),0 8px 24px rgba(0,0,0,.45),0 0 20px rgba(224,192,154,.06);
+  box-shadow:0 0 0 1px rgba(201,168,76,.28),inset 0 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.25),0 8px 24px rgba(0,0,0,.45),0 0 20px rgba(201,168,76,.06);
   transform:translateY(-1px);
 }
 .auth-btn:active{transform:scale(.983);}
@@ -578,8 +578,8 @@ input,button{font-family:'Inter',sans-serif;}
 .inp:focus{
   background:#181819;
   box-shadow:
-    0 0 0 2px rgba(224,192,154,.6),
-    0 0 0 5px rgba(224,192,154,.09),
+    0 0 0 2px rgba(201,168,76,.6),
+    0 0 0 5px rgba(201,168,76,.09),
     inset 0 1px 0 rgba(255,255,255,.08),
     inset 0 -1px 0 rgba(0,0,0,.3),
     inset 0 3px 12px rgba(0,0,0,.2);
@@ -605,13 +605,13 @@ input,button{font-family:'Inter',sans-serif;}
 .tab:hover{color:var(--d1);background:rgba(255,255,255,.08);}
 .tab.on{
   color:#07060C;font-weight:700;letter-spacing:.05em;
-  background:linear-gradient(160deg,#F2DFC4 0%,var(--gm) 45%,var(--g) 100%);
+  background:linear-gradient(160deg,#F5E870 0%,var(--gm) 45%,var(--g) 100%);
   box-shadow:
     0 0 0 1px rgba(255,255,255,.18),
     inset 0 1px 0 rgba(255,255,255,.4),
     inset 0 -1px 0 rgba(0,0,0,.2),
     0 2px 0 rgba(0,0,0,.3),
-    0 6px 18px rgba(224,192,154,.5);
+    0 6px 18px rgba(201,168,76,.5);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ BADGES */
@@ -622,7 +622,7 @@ input,button{font-family:'Inter',sans-serif;}
   font-family:'Inter',sans-serif;
 }
 .ba-g{color:var(--grn);background:rgba(52,208,88,.1);box-shadow:0 0 0 1px rgba(52,208,88,.18);}
-.ba-o{color:var(--g);background:rgba(224,192,154,.1);box-shadow:0 0 0 1px rgba(224,192,154,.2);}
+.ba-o{color:var(--g);background:rgba(201,168,76,.1);box-shadow:0 0 0 1px rgba(201,168,76,.2);}
 .ba-b{color:var(--blu);background:rgba(10,132,255,.1);box-shadow:0 0 0 1px rgba(10,132,255,.18);}
 .ba-r{color:var(--red);background:rgba(255,59,48,.1);box-shadow:0 0 0 1px rgba(255,59,48,.18);}
 .ba-d{color:var(--d2);background:rgba(255,255,255,.05);box-shadow:0 0 0 1px rgba(255,255,255,.08);}
@@ -726,8 +726,8 @@ input,button{font-family:'Inter',sans-serif;}
   font-size:16px;color:var(--d0);line-height:1.65;font-weight:300;
 }
 .bme{
-  background:linear-gradient(160deg,rgba(224,192,154,.16),rgba(224,192,154,.09));
-  box-shadow:0 0 0 1px rgba(224,192,154,.22),inset 0 1px 0 rgba(255,255,255,.08),0 4px 16px rgba(0,0,0,.3);
+  background:linear-gradient(160deg,rgba(201,168,76,.16),rgba(201,168,76,.09));
+  box-shadow:0 0 0 1px rgba(201,168,76,.22),inset 0 1px 0 rgba(255,255,255,.08),0 4px 16px rgba(0,0,0,.3);
   border-radius:20px 20px 5px 20px;padding:15px 18px;
   max-width:80%;font-size:14px;color:var(--d1);line-height:1.62;font-weight:300;
 }
@@ -741,7 +741,7 @@ input,button{font-family:'Inter',sans-serif;}
 .toast{
   position:fixed;top:78px;left:50%;
   background:rgba(12,10,20,.97);
-  box-shadow:0 0 0 1px rgba(224,192,154,.22),0 12px 40px rgba(0,0,0,.7),0 0 20px rgba(224,192,154,.08);
+  box-shadow:0 0 0 1px rgba(201,168,76,.22),0 12px 40px rgba(0,0,0,.7),0 0 20px rgba(201,168,76,.08);
   border-radius:16px;padding:11px 18px;font-size:12px;
   color:var(--d0);z-index:9999;
   backdrop-filter:blur(28px);
@@ -763,12 +763,12 @@ input,button{font-family:'Inter',sans-serif;}
 /* Supprime le .fr qui était l'ancien design */
 .fr{display:none;}
 .fr{position:absolute;border-radius:50%;animation:ring 2.4s ease-out infinite;}
-.fr1{width:200px;height:200px;box-shadow:0 0 0 1.5px rgba(224,192,154,.15);}
-.fr2{width:154px;height:154px;animation-delay:.5s;box-shadow:0 0 0 1.5px rgba(224,192,154,.12);}
+.fr1{width:200px;height:200px;box-shadow:0 0 0 1.5px rgba(201,168,76,.15);}
+.fr2{width:154px;height:154px;animation-delay:.5s;box-shadow:0 0 0 1.5px rgba(201,168,76,.12);}
 .fframe{width:112px;height:112px;position:relative;display:flex;align-items:center;justify-content:center;}
 .fscan{display:none;position:absolute;left:6px;right:6px;height:1.5px;
-  background:linear-gradient(90deg,transparent,rgba(224,192,154,.9),transparent);
-  box-shadow:0 0 10px rgba(224,192,154,.7);
+  background:linear-gradient(90deg,transparent,rgba(201,168,76,.9),transparent);
+  box-shadow:0 0 10px rgba(201,168,76,.7);
   animation:scanln 1.8s ease-in-out infinite;}
 #fic{width:64px;height:64px;display:none;animation:fid3 .6s var(--e3) forwards;}
 #fst{font-size:14px;color:var(--d1);margin-top:30px;letter-spacing:.05em;}
@@ -779,7 +779,7 @@ input,button{font-family:'Inter',sans-serif;}
 .feat-ic{
   width:46px;height:46px;border-radius:14px;flex-shrink:0;
   background:var(--gg);
-  box-shadow:0 0 0 1px rgba(224,192,154,.2),inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(224,192,154,.1);
+  box-shadow:0 0 0 1px rgba(201,168,76,.2),inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(201,168,76,.1);
   display:flex;align-items:center;justify-content:center;margin-top:1px;
 }
 
@@ -790,10 +790,10 @@ input,button{font-family:'Inter',sans-serif;}
 .fab{
   position:fixed;bottom:94px;right:20px;z-index:50;
   width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;
-  background:linear-gradient(150deg,#F2DFC4 0%,var(--gm) 45%,var(--g) 75%,var(--gl) 100%);
+  background:linear-gradient(150deg,#F5E870 0%,var(--gm) 45%,var(--g) 75%,var(--gl) 100%);
   box-shadow:
     0 2px 0 rgba(0,0,0,.45),
-    0 8px 24px rgba(224,192,154,.65),
+    0 8px 24px rgba(201,168,76,.65),
     0 0 0 1.5px rgba(255,255,255,.18),
     inset 0 1.5px 0 rgba(255,255,255,.45),
     inset 0 -1px 0 rgba(0,0,0,.25);
@@ -806,25 +806,25 @@ input,button{font-family:'Inter',sans-serif;}
   background:radial-gradient(ellipse 60% 35% at 38% 22%,rgba(255,255,255,.45),transparent 65%);
   pointer-events:none;
 }
-.fab:hover{transform:scale(1.1) translateY(-3px);box-shadow:0 4px 0 rgba(0,0,0,.45),0 14px 36px rgba(224,192,154,.8),0 0 0 1.5px rgba(255,255,255,.25),inset 0 1.5px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.25);}
+.fab:hover{transform:scale(1.1) translateY(-3px);box-shadow:0 4px 0 rgba(0,0,0,.45),0 14px 36px rgba(201,168,76,.8),0 0 0 1.5px rgba(255,255,255,.25),inset 0 1.5px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.25);}
 .fab:active{transform:scale(.92);}
 .fab svg{position:relative;z-index:1;}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WORDMARK */
 .wm{
   background:linear-gradient(135deg,
-    #FBF0E2 0%,
-    #EFD9BC 12%,
+    #FFF5C0 0%,
+    #F0DC78 12%,
     var(--g)  35%,
     var(--gd) 55%,
     var(--g)  72%,
-    #F4E2CB  88%,
-    #FBF0E2 100%);
+    #EDD870  88%,
+    #FFF5C0 100%);
   background-size:200% auto;
   -webkit-background-clip:text;background-clip:text;
   -webkit-text-fill-color:transparent;
   animation:shimr 6s linear 2.5s infinite;
-  filter:drop-shadow(0 0 40px rgba(224,192,154,.25));
+  filter:drop-shadow(0 0 40px rgba(201,168,76,.25));
 }
 
 /* ── Orbe — specular highlight seul, propre et minimal ── */
@@ -847,7 +847,7 @@ input,button{font-family:'Inter',sans-serif;}
   content:'';
   position:absolute;
   border-radius:50%;
-  border:1px solid rgba(224,192,154,.3);
+  border:1px solid rgba(201,168,76,.3);
   animation:orbRing 3s ease-out infinite;
   pointer-events:none;
 }
@@ -856,9 +856,9 @@ input,button{font-family:'Inter',sans-serif;}
 .ob-m::after{inset:-12px;}
 .ob-l::after{inset:-16px;}
 @keyframes orbRing{
-  0%{transform:scale(.85);opacity:.6;border-color:rgba(224,192,154,.4);}
-  60%{opacity:.25;border-color:rgba(224,192,154,.2);}
-  100%{transform:scale(1.35);opacity:0;border-color:rgba(224,192,154,0);}
+  0%{transform:scale(.85);opacity:.6;border-color:rgba(201,168,76,.4);}
+  60%{opacity:.25;border-color:rgba(201,168,76,.2);}
+  100%{transform:scale(1.35);opacity:0;border-color:rgba(201,168,76,0);}
 }
 
 
@@ -1296,32 +1296,32 @@ async function signOut(){
     <div style="position:relative;width:160px;height:200px;margin-bottom:8px;">
       <svg aria-hidden="true" id="door-svg" width="160" height="200" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg">
         <!-- Cadre extérieur -->
-        <rect x="8" y="8" width="144" height="184" rx="12" stroke="rgba(224,192,154,.35)" stroke-width="1.5" fill="none"/>
+        <rect x="8" y="8" width="144" height="184" rx="12" stroke="rgba(201,168,76,.35)" stroke-width="1.5" fill="none"/>
         <!-- Fond porte gauche (panneau gauche) -->
         <rect id="door-left" x="10" y="10" width="70" height="180" rx="10" fill="url(#doorGradL)" style="transform-origin:10px 100px;transition:transform 1.2s cubic-bezier(0.4,0,0.2,1)"/>
         <!-- Fond porte droite (panneau droit) -->
         <rect id="door-right" x="80" y="10" width="70" height="180" rx="10" fill="url(#doorGradR)" style="transform-origin:150px 100px;transition:transform 1.2s cubic-bezier(0.4,0,0.2,1)"/>
 
         <!-- Rivets porte gauche -->
-        <circle cx="28" cy="35" r="3.5" fill="rgba(224,192,154,.4)" stroke="rgba(224,192,154,.6)" stroke-width=".8"/>
-        <circle cx="62" cy="35" r="3.5" fill="rgba(224,192,154,.4)" stroke="rgba(224,192,154,.6)" stroke-width=".8"/>
-        <circle cx="28" cy="165" r="3.5" fill="rgba(224,192,154,.4)" stroke="rgba(224,192,154,.6)" stroke-width=".8"/>
-        <circle cx="62" cy="165" r="3.5" fill="rgba(224,192,154,.4)" stroke="rgba(224,192,154,.6)" stroke-width=".8"/>
+        <circle cx="28" cy="35" r="3.5" fill="rgba(201,168,76,.4)" stroke="rgba(201,168,76,.6)" stroke-width=".8"/>
+        <circle cx="62" cy="35" r="3.5" fill="rgba(201,168,76,.4)" stroke="rgba(201,168,76,.6)" stroke-width=".8"/>
+        <circle cx="28" cy="165" r="3.5" fill="rgba(201,168,76,.4)" stroke="rgba(201,168,76,.6)" stroke-width=".8"/>
+        <circle cx="62" cy="165" r="3.5" fill="rgba(201,168,76,.4)" stroke="rgba(201,168,76,.6)" stroke-width=".8"/>
         <!-- Rivets porte droite -->
-        <circle cx="98" cy="35" r="3.5" fill="rgba(224,192,154,.4)" stroke="rgba(224,192,154,.6)" stroke-width=".8"/>
-        <circle cx="132" cy="35" r="3.5" fill="rgba(224,192,154,.4)" stroke="rgba(224,192,154,.6)" stroke-width=".8"/>
-        <circle cx="98" cy="165" r="3.5" fill="rgba(224,192,154,.4)" stroke="rgba(224,192,154,.6)" stroke-width=".8"/>
-        <circle cx="132" cy="165" r="3.5" fill="rgba(224,192,154,.4)" stroke="rgba(224,192,154,.6)" stroke-width=".8"/>
+        <circle cx="98" cy="35" r="3.5" fill="rgba(201,168,76,.4)" stroke="rgba(201,168,76,.6)" stroke-width=".8"/>
+        <circle cx="132" cy="35" r="3.5" fill="rgba(201,168,76,.4)" stroke="rgba(201,168,76,.6)" stroke-width=".8"/>
+        <circle cx="98" cy="165" r="3.5" fill="rgba(201,168,76,.4)" stroke="rgba(201,168,76,.6)" stroke-width=".8"/>
+        <circle cx="132" cy="165" r="3.5" fill="rgba(201,168,76,.4)" stroke="rgba(201,168,76,.6)" stroke-width=".8"/>
 
         <!-- Renfort central gauche -->
-        <rect x="55" y="30" width="8" height="140" rx="4" fill="rgba(224,192,154,.15)" stroke="rgba(224,192,154,.3)" stroke-width=".8"/>
+        <rect x="55" y="30" width="8" height="140" rx="4" fill="rgba(201,168,76,.15)" stroke="rgba(201,168,76,.3)" stroke-width=".8"/>
         <!-- Renfort central droit -->
-        <rect x="97" y="30" width="8" height="140" rx="4" fill="rgba(224,192,154,.15)" stroke="rgba(224,192,154,.3)" stroke-width=".8"/>
+        <rect x="97" y="30" width="8" height="140" rx="4" fill="rgba(201,168,76,.15)" stroke="rgba(201,168,76,.3)" stroke-width=".8"/>
 
         <!-- Serrure centrale -->
         <g id="lock-group">
           <!-- Corps serrure -->
-          <rect x="68" y="85" width="24" height="30" rx="5" fill="url(#lockGrad)" stroke="rgba(224,192,154,.8)" stroke-width="1.2"/>
+          <rect x="68" y="85" width="24" height="30" rx="5" fill="url(#lockGrad)" stroke="rgba(201,168,76,.8)" stroke-width="1.2"/>
           <!-- Anse serrure -->
           <path id="lock-shackle" d="M74 85 L74 76 Q74 68 80 68 Q86 68 86 76 L86 85" stroke="var(--g)" stroke-width="2.5" fill="none" stroke-linecap="round" style="transform-origin:80px 85px;transition:transform .6s cubic-bezier(0.4,0,0.2,1)"/>
           <!-- Trou serrure -->
@@ -1349,7 +1349,7 @@ async function signOut(){
 
         <!-- Trait central (jointure des deux panneaux) -->
         <line x1="80" y1="10" x2="80" y2="190" stroke="rgba(0,0,0,.8)" stroke-width="2"/>
-        <line x1="80" y1="10" x2="80" y2="190" stroke="rgba(224,192,154,.15)" stroke-width=".5"/>
+        <line x1="80" y1="10" x2="80" y2="190" stroke="rgba(201,168,76,.15)" stroke-width=".5"/>
 
         <!-- Highlight spéculaire gauche -->
         <rect x="14" y="14" width="3" height="172" rx="1.5" fill="rgba(255,255,255,.05)"/>
@@ -1364,7 +1364,7 @@ async function signOut(){
       </svg>
 
       <!-- Glow au sol sous la porte -->
-      <div style="position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:100px;height:12px;background:radial-gradient(ellipse,rgba(224,192,154,.25) 0%,transparent 70%);border-radius:50%;"></div>
+      <div style="position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:100px;height:12px;background:radial-gradient(ellipse,rgba(201,168,76,.25) 0%,transparent 70%);border-radius:50%;"></div>
     </div>
 
     <p id="fst" style="font-size:14px;color:var(--d1);margin-top:16px;letter-spacing:.05em;text-align:center;">Vérification en cours…</p>
@@ -1405,14 +1405,14 @@ async function signOut(){
       letter-spacing:.22em;
       text-indent:.22em;
       color:transparent;
-      background:linear-gradient(135deg,#FBF0E2 0%,#F4E2CB 20%,#E0C09A 50%,#B8946E 70%,#E0C09A 85%,#F4E2CB 100%);
+      background:linear-gradient(135deg,#FFF5C0 0%,#EDD870 20%,#C9A84C 50%,#A88830 70%,#C9A84C 85%,#EDD870 100%);
       -webkit-background-clip:text;
       background-clip:text;
       -webkit-text-fill-color:transparent;
       animation:fu 1.2s ease both;
     ">CLERVIO</h1>
-    <div style="width:120px;height:1px;background:linear-gradient(90deg,transparent,#E0C09A,transparent);margin:20px auto;animation:fu .8s ease .8s both;opacity:0;animation-fill-mode:forwards;"></div>
-    <p style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(224,192,154,.7);animation:fu .8s ease 1s both;opacity:0;animation-fill-mode:forwards;">L'ordre silencieux de vos achats.</p>
+    <div style="width:120px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:20px auto;animation:fu .8s ease .8s both;opacity:0;animation-fill-mode:forwards;"></div>
+    <p style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(201,168,76,.7);animation:fu .8s ease 1s both;opacity:0;animation-fill-mode:forwards;">L'ordre silencieux de vos achats.</p>
   </div>
 </div>
 
@@ -1435,7 +1435,7 @@ async function signOut(){
 #p-ob1 .ob1-h1 em{display:block;font-style:italic;color:var(--g);padding-top:.12em;padding-bottom:.14em;animation:ob1rise .9s var(--e2) .58s both;}
 #p-ob1 .ob1-lede{font-size:14.5px;line-height:1.75;color:rgba(237,231,218,.44);font-weight:300;max-width:27ch;margin-top:30px;animation:ob1rise .8s var(--e2) .7s both;}
 #p-ob1 .ob1-foot{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 30px);flex-shrink:0;}
-#p-ob1 .ob1-cta{display:block;width:100%;border:none;cursor:pointer;height:56px;border-radius:13px;background:linear-gradient(180deg,#E4C7A2 0%,#D3AE84 52%,#C29C72 100%);color:#0A0A0C;font-family:'Inter',sans-serif;font-size:15px;font-weight:500;letter-spacing:.01em;box-shadow:none;transition:filter .25s var(--e1),transform .15s var(--e1);animation:ob1rise .8s var(--e2) .82s both;}
+#p-ob1 .ob1-cta{display:block;width:100%;border:none;cursor:pointer;height:56px;border-radius:13px;background:linear-gradient(180deg,#D9BE68 0%,#C6A94E 52%,#B99B41 100%);color:#0A0A0C;font-family:'Inter',sans-serif;font-size:15px;font-weight:500;letter-spacing:.01em;box-shadow:none;transition:filter .25s var(--e1),transform .15s var(--e1);animation:ob1rise .8s var(--e2) .82s both;}
 #p-ob1 .ob1-cta:hover{filter:brightness(1.06);}
 #p-ob1 .ob1-cta:active{transform:scale(.99);filter:brightness(.96);}
 #p-ob1 .ob1-sec{display:block;width:100%;background:none;border:none;cursor:pointer;margin-top:20px;padding:6px 0;color:rgba(237,231,218,.44);font-size:13.5px;font-weight:400;letter-spacing:.01em;transition:color .25s var(--e1);animation:ob1rise .8s var(--e2) .9s both;}
@@ -1534,12 +1534,12 @@ async function signOut(){
         <button onclick="loginDemo()" style="
           width:100%;padding:14px;
           background:none;
-          border:1px solid rgba(224,192,154,.25);
+          border:1px solid rgba(201,168,76,.25);
           border-radius:14px;
           color:var(--g);font-size:13px;font-weight:500;
           cursor:pointer;letter-spacing:.03em;
           transition:all .2s;
-        " onmouseover="this.style.background='rgba(224,192,154,.08)'" onmouseout="this.style.background='none'">
+        " onmouseover="this.style.background='rgba(201,168,76,.08)'" onmouseout="this.style.background='none'">
           ✨ Explorer la démonstration
         </button>
         <p style="font-size:10px;color:var(--d2);margin-top:8px;line-height:1.5;">Accès immédiat · Données fictives · Sans inscription</p>
@@ -1605,9 +1605,9 @@ async function signOut(){
   <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;position:relative;">
     <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 55% at 50% 35%,rgba(100,60,5,.15) 0%,transparent 68%);pointer-events:none;"></div>
     <div style="position:relative;width:120px;height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:36px;">
-      <div style="position:absolute;width:120px;height:120px;box-shadow:0 0 0 1.5px rgba(224,192,154,.2);border-radius:50%;animation:ring 2.5s ease-out infinite;"></div>
-      <div style="position:absolute;width:90px;height:90px;box-shadow:0 0 0 1.5px rgba(224,192,154,.16);border-radius:50%;animation:ring 2.5s ease-out .5s infinite;"></div>
-      <svg aria-hidden="true" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.2" stroke-linecap="round" style="filter:drop-shadow(0 0 8px rgba(224,192,154,.4));"><path d="M4 6C4 4.9 4.9 4 6 4h2M18 4h2a2 2 0 012 2v2M20 18v2a2 2 0 01-2 2h-2M6 20H4a2 2 0 01-2-2v-2"/><circle cx="9" cy="10" r="1.3" fill="var(--g)" stroke="none"/><circle cx="15" cy="10" r="1.3" fill="var(--g)" stroke="none"/><path d="M8 15.5s1.2 2 4 2 4-2 4-2" stroke-width="1.3"/></svg>
+      <div style="position:absolute;width:120px;height:120px;box-shadow:0 0 0 1.5px rgba(201,168,76,.2);border-radius:50%;animation:ring 2.5s ease-out infinite;"></div>
+      <div style="position:absolute;width:90px;height:90px;box-shadow:0 0 0 1.5px rgba(201,168,76,.16);border-radius:50%;animation:ring 2.5s ease-out .5s infinite;"></div>
+      <svg aria-hidden="true" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.2" stroke-linecap="round" style="filter:drop-shadow(0 0 8px rgba(201,168,76,.4));"><path d="M4 6C4 4.9 4.9 4 6 4h2M18 4h2a2 2 0 012 2v2M20 18v2a2 2 0 01-2 2h-2M6 20H4a2 2 0 01-2-2v-2"/><circle cx="9" cy="10" r="1.3" fill="var(--g)" stroke="none"/><circle cx="15" cy="10" r="1.3" fill="var(--g)" stroke="none"/><path d="M8 15.5s1.2 2 4 2 4-2 4-2" stroke-width="1.3"/></svg>
     </div>
     <p class="sl" style="margin-bottom:14px;text-align:center;">Connexion rapide</p>
     <h2 class="t-title" style="text-align:center;line-height:1.1;margin-bottom:12px;">Activer<br/>Face ID ?</h2>
@@ -1622,16 +1622,16 @@ async function signOut(){
 <div class="pg" id="p-faceid-reconnect">
   <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;position:relative;">
     <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 55% at 50% 35%,rgba(100,60,5,.14) 0%,transparent 68%);pointer-events:none;"></div>
-    <div style="width:68px;height:68px;border-radius:50%;background:linear-gradient(145deg,var(--gl),var(--gga));box-shadow:0 0 0 2px rgba(224,192,154,.5),0 0 0 5px rgba(224,192,154,.07),0 0 28px rgba(224,192,154,.22);display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+    <div style="width:68px;height:68px;border-radius:50%;background:linear-gradient(145deg,var(--gl),var(--gga));box-shadow:0 0 0 2px rgba(201,168,76,.5),0 0 0 5px rgba(201,168,76,.07),0 0 28px rgba(201,168,76,.22);display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
       <span class="sr" style="font-size:1.7rem;color:var(--ink);font-weight:400;">Q</span>
     </div>
     <p style="font-size:16px;color:var(--d0);font-weight:500;margin-bottom:4px;"><span id="reconnect-name">Votre compte</span></p>
     <p class="t-micro" style="margin-bottom:44px;">Bienvenue de retour</p>
     <div style="position:relative;width:140px;height:140px;display:flex;align-items:center;justify-content:center;margin-bottom:28px;cursor:pointer;" onclick="doFaceIDReconnect()">
-      <div style="position:absolute;width:140px;height:140px;box-shadow:0 0 0 1.5px rgba(224,192,154,.17);border-radius:50%;animation:ring 2.2s ease-out infinite;"></div>
-      <div style="position:absolute;width:104px;height:104px;box-shadow:0 0 0 1.5px rgba(224,192,154,.13);border-radius:50%;animation:ring 2.2s ease-out .4s infinite;"></div>
-      <div style="width:76px;height:76px;border-radius:50%;background:rgba(224,192,154,.07);box-shadow:0 0 0 1px rgba(224,192,154,.18);display:flex;align-items:center;justify-content:center;">
-        <svg aria-hidden="true" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.3" stroke-linecap="round" style="filter:drop-shadow(0 0 6px rgba(224,192,154,.5));"><path d="M4 6C4 4.9 4.9 4 6 4h2M18 4h2a2 2 0 012 2v2M20 18v2a2 2 0 01-2 2h-2M6 20H4a2 2 0 01-2-2v-2"/><circle cx="9" cy="10" r="1.2" fill="var(--g)" stroke="none"/><circle cx="15" cy="10" r="1.2" fill="var(--g)" stroke="none"/><path d="M8 15.5s1.2 2 4 2 4-2 4-2" stroke-width="1.3"/></svg>
+      <div style="position:absolute;width:140px;height:140px;box-shadow:0 0 0 1.5px rgba(201,168,76,.17);border-radius:50%;animation:ring 2.2s ease-out infinite;"></div>
+      <div style="position:absolute;width:104px;height:104px;box-shadow:0 0 0 1.5px rgba(201,168,76,.13);border-radius:50%;animation:ring 2.2s ease-out .4s infinite;"></div>
+      <div style="width:76px;height:76px;border-radius:50%;background:rgba(201,168,76,.07);box-shadow:0 0 0 1px rgba(201,168,76,.18);display:flex;align-items:center;justify-content:center;">
+        <svg aria-hidden="true" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.3" stroke-linecap="round" style="filter:drop-shadow(0 0 6px rgba(201,168,76,.5));"><path d="M4 6C4 4.9 4.9 4 6 4h2M18 4h2a2 2 0 012 2v2M20 18v2a2 2 0 01-2 2h-2M6 20H4a2 2 0 01-2-2v-2"/><circle cx="9" cy="10" r="1.2" fill="var(--g)" stroke="none"/><circle cx="15" cy="10" r="1.2" fill="var(--g)" stroke="none"/><path d="M8 15.5s1.2 2 4 2 4-2 4-2" stroke-width="1.3"/></svg>
       </div>
     </div>
     <p class="t-sub" style="margin-bottom:32px;">Appuyez pour d&eacute;verrouiller</p>
@@ -1651,12 +1651,12 @@ async function signOut(){
 
   <!-- Hexagone rotatif externe -->
   <svg aria-hidden="true" style="position:absolute;inset:-22px;width:136px;height:136px;animation:sp 8s linear infinite;" viewBox="0 0 136 136" fill="none">
-    <polygon points="68,4 122,36 122,100 68,132 14,100 14,36" stroke="rgba(224,192,154,.22)" stroke-width="1" fill="none" stroke-dasharray="6 4"/>
+    <polygon points="68,4 122,36 122,100 68,132 14,100 14,36" stroke="rgba(201,168,76,.22)" stroke-width="1" fill="none" stroke-dasharray="6 4"/>
   </svg>
 
   <!-- Hexagone inverse -->
   <svg aria-hidden="true" style="position:absolute;inset:-12px;width:116px;height:116px;animation:sprev 5s linear infinite;" viewBox="0 0 116 116" fill="none">
-    <polygon points="58,5 105,32 105,84 58,111 11,84 11,32" stroke="rgba(224,192,154,.12)" stroke-width=".8" fill="none"/>
+    <polygon points="58,5 105,32 105,84 58,111 11,84 11,32" stroke="rgba(201,168,76,.12)" stroke-width=".8" fill="none"/>
   </svg>
 
   <!-- "CLERVIO" en arc de cercle autour de l'orbe — rotatif lent -->
@@ -1666,11 +1666,11 @@ async function signOut(){
       <path id="orb-arc-bot" d="M 152,84 A 68,68 0 1,1 16,84"/>
     </defs>
     <!-- Texte en arc haut -->
-    <text style="font-family:'Inter',sans-serif;font-size:9px;font-weight:600;letter-spacing:.38em;fill:rgba(224,192,154,.65);">
+    <text style="font-family:'Inter',sans-serif;font-size:9px;font-weight:600;letter-spacing:.38em;fill:rgba(201,168,76,.65);">
       <textPath href="#orb-arc-top" startOffset="8%">CLERVIO</textPath>
     </text>
     <!-- Séparateurs / points -->
-    <text style="font-family:'Inter',sans-serif;font-size:7px;fill:rgba(224,192,154,.35);">
+    <text style="font-family:'Inter',sans-serif;font-size:7px;fill:rgba(201,168,76,.35);">
       <textPath href="#orb-arc-bot" startOffset="12%">· · · · · · · · · · · · ·</textPath>
     </text>
   </svg>
@@ -1699,7 +1699,7 @@ async function signOut(){
 
     <!-- Header -->
     <div style="padding:64px 24px 24px;position:relative;">
-      <div style="position:absolute;top:-30px;right:-40px;width:260px;height:260px;background:radial-gradient(circle,rgba(224,192,154,.07) 0%,transparent 68%);border-radius:50%;pointer-events:none;animation:glp 5s ease-in-out infinite;"></div>
+      <div style="position:absolute;top:-30px;right:-40px;width:260px;height:260px;background:radial-gradient(circle,rgba(201,168,76,.07) 0%,transparent 68%);border-radius:50%;pointer-events:none;animation:glp 5s ease-in-out infinite;"></div>
       <div style="display:flex;align-items:flex-start;justify-content:space-between;position:relative;z-index:1;">
         <div>
           <p class="sl" style="margin-bottom:10px;">Tableau de bord</p>
@@ -1710,12 +1710,12 @@ async function signOut(){
   <div class="ob ob-s" style="position:absolute;inset:0;"></div>
   <!-- Hexagone -->
   <svg aria-hidden="true" style="position:absolute;inset:-8px;width:60px;height:60px;animation:sp 10s linear infinite;" viewBox="0 0 60 60" fill="none">
-    <polygon points="30,3 54,17 54,43 30,57 6,43 6,17" stroke="rgba(224,192,154,.18)" stroke-width=".8" fill="none" stroke-dasharray="4 3"/>
+    <polygon points="30,3 54,17 54,43 30,57 6,43 6,17" stroke="rgba(201,168,76,.18)" stroke-width=".8" fill="none" stroke-dasharray="4 3"/>
   </svg>
   <!-- "CLERVIO" en arc — très petit, discret -->
   <svg aria-hidden="true" style="position:absolute;inset:-16px;width:76px;height:76px;animation:sp 20s linear infinite;" viewBox="0 0 76 76" fill="none">
     <defs><path id="sarc" d="M 8,38 A 30,30 0 1,1 68,38"/></defs>
-    <text style="font-family:'Inter',sans-serif;font-size:5.5px;font-weight:600;letter-spacing:.3em;fill:rgba(224,192,154,.5);">
+    <text style="font-family:'Inter',sans-serif;font-size:5.5px;font-weight:600;letter-spacing:.3em;fill:rgba(201,168,76,.5);">
       <textPath href="#sarc" startOffset="6%">CLERVIO</textPath>
     </text>
   </svg>
@@ -1725,8 +1725,8 @@ async function signOut(){
 
     <!-- Carte héros économies -->
     <div style="padding:0 20px 12px;">
-      <div style="background:linear-gradient(145deg, rgba(224,192,154,.08), rgba(224,192,154,.02));border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:18px;position:relative;overflow:hidden;">
-        <div style="position:absolute;top:-40%;right:-20%;width:120px;height:120px;background:radial-gradient(circle,rgba(244,226,203,.12),transparent 70%);border-radius:50%;pointer-events:none;"></div>
+      <div style="background:linear-gradient(145deg, rgba(201,168,76,.08), rgba(201,168,76,.02));border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:18px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-40%;right:-20%;width:120px;height:120px;background:radial-gradient(circle,rgba(237,216,112,.12),transparent 70%);border-radius:50%;pointer-events:none;"></div>
         <div style="display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:1;">
           <div class="num-stat" style="font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:400;background:linear-gradient(135deg,var(--gh),var(--g));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1;" id="savings-amount-home">0<span style="font-size:.38em;vertical-align:.3em;letter-spacing:0;">€</span></div>
           <div style="font-size:9px;color:var(--d1);letter-spacing:.08em;text-transform:uppercase;text-align:right;font-weight:500;">Économies<br>réalisées</div>
@@ -1881,7 +1881,7 @@ async function signOut(){
   </div>
 
   <!-- FAB ajouter document -->
-  <button onclick="go('p-scan')" style="position:fixed;bottom:94px;right:20px;width:50px;height:50px;border-radius:50%;background:linear-gradient(150deg,#F2DFC4,var(--g),var(--gl));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 rgba(0,0,0,.45),0 8px 24px rgba(224,192,154,.6),0 0 0 1.5px rgba(255,255,255,.18),inset 0 1.5px 0 rgba(255,255,255,.45);transition:all .3s var(--e3);z-index:50;" onmouseover="this.style.transform='scale(1.08) translateY(-2px)'" onmouseout="this.style.transform=''">
+  <button onclick="go('p-scan')" style="position:fixed;bottom:94px;right:20px;width:50px;height:50px;border-radius:50%;background:linear-gradient(150deg,#F5E870,var(--g),var(--gl));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 rgba(0,0,0,.45),0 8px 24px rgba(201,168,76,.6),0 0 0 1.5px rgba(255,255,255,.18),inset 0 1.5px 0 rgba(255,255,255,.45);transition:all .3s var(--e3);z-index:50;" onmouseover="this.style.transform='scale(1.08) translateY(-2px)'" onmouseout="this.style.transform=''">
     <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#07060C" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
   </button>
 
@@ -1918,7 +1918,7 @@ async function signOut(){
 
     <!-- Preview -->
     <div style="display:flex;align-items:center;gap:14px;padding:16px 18px;background:rgba(255,255,255,.04);border-radius:16px;margin-bottom:28px;box-shadow:0 0 0 1px rgba(255,255,255,.07);">
-      <div id="folder-preview-icon" style="width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(224,192,154,.12);box-shadow:0 0 0 1px rgba(224,192,154,.2);flex-shrink:0;">📁</div>
+      <div id="folder-preview-icon" style="width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(201,168,76,.12);box-shadow:0 0 0 1px rgba(201,168,76,.2);flex-shrink:0;">📁</div>
       <div>
         <div id="folder-preview-name" style="font-size:14px;color:var(--cr);font-weight:400;">Nouveau dossier</div>
         <div style="font-size:11px;color:var(--d2);margin-top:2px;">0 document</div>
@@ -1971,16 +1971,16 @@ async function signOut(){
 
   <!-- Header fixe -->
   <div style="padding:64px 24px 18px;border-bottom:1px solid rgba(255,255,255,.05);position:relative;flex-shrink:0;">
-    <div style="position:absolute;top:-10px;right:-20px;width:150px;height:150px;background:radial-gradient(circle,rgba(224,192,154,.07) 0%,transparent 70%);border-radius:50%;pointer-events:none;animation:glp 4s ease-in-out infinite;"></div>
+    <div style="position:absolute;top:-10px;right:-20px;width:150px;height:150px;background:radial-gradient(circle,rgba(201,168,76,.07) 0%,transparent 70%);border-radius:50%;pointer-events:none;animation:glp 4s ease-in-out infinite;"></div>
     <div style="display:flex;align-items:center;gap:14px;position:relative;z-index:1;">
       <div style="position:relative;width:44px;height:44px;flex-shrink:0;">
   <div class="ob ob-s" style="position:absolute;inset:0;"></div>
   <svg aria-hidden="true" style="position:absolute;inset:-8px;width:60px;height:60px;animation:sp 10s linear infinite;" viewBox="0 0 60 60" fill="none">
-    <polygon points="30,3 54,17 54,43 30,57 6,43 6,17" stroke="rgba(224,192,154,.18)" stroke-width=".8" fill="none" stroke-dasharray="4 3"/>
+    <polygon points="30,3 54,17 54,43 30,57 6,43 6,17" stroke="rgba(201,168,76,.18)" stroke-width=".8" fill="none" stroke-dasharray="4 3"/>
   </svg>
   <svg aria-hidden="true" style="position:absolute;inset:-16px;width:76px;height:76px;animation:sp 20s linear infinite;" viewBox="0 0 76 76" fill="none">
     <defs><path id="sarc2" d="M 8,38 A 30,30 0 1,1 68,38"/></defs>
-    <text style="font-family:'Inter',sans-serif;font-size:5.5px;font-weight:600;letter-spacing:.3em;fill:rgba(224,192,154,.5);">
+    <text style="font-family:'Inter',sans-serif;font-size:5.5px;font-weight:600;letter-spacing:.3em;fill:rgba(201,168,76,.5);">
       <textPath href="#sarc2" startOffset="6%">CLERVIO</textPath>
     </text>
   </svg>
@@ -2008,7 +2008,7 @@ async function signOut(){
   <!-- Input -->
   <div style="padding:12px 16px;border-top:1px solid rgba(255,255,255,.05);display:flex;gap:10px;align-items:center;flex-shrink:0;">
     <input id="aiinp" class="inp" placeholder="Posez une question…" style="border-radius:100px;padding:13px 20px;font-size:14px;" onkeydown="if(event.key==='Enter')sAIi()">
-    <button onclick="sAIi()" style="width:46px;height:46px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;background:linear-gradient(150deg,#F2DFC4,var(--g),var(--gl));box-shadow:0 2px 0 rgba(0,0,0,.4),0 6px 20px rgba(224,192,154,.55),0 0 0 1px rgba(255,255,255,.15),inset 0 1px 0 rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;transition:all .25s;">
+    <button onclick="sAIi()" style="width:46px;height:46px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;background:linear-gradient(150deg,#F5E870,var(--g),var(--gl));box-shadow:0 2px 0 rgba(0,0,0,.4),0 6px 20px rgba(201,168,76,.55),0 0 0 1px rgba(255,255,255,.15),inset 0 1px 0 rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;transition:all .25s;">
       <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#07060C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9" fill="#07060C" stroke="none"/></svg>
     </button>
   </div>
@@ -2022,7 +2022,7 @@ async function signOut(){
 
       <!-- Header avec avatar -->
       <div style="display:flex;align-items:center;gap:18px;margin-bottom:32px;">
-        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(145deg,var(--gl),rgba(224,192,154,.2));box-shadow:0 0 0 2.5px rgba(224,192,154,.5),0 0 0 6px rgba(224,192,154,.07),0 0 30px rgba(224,192,154,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(145deg,var(--gl),rgba(201,168,76,.2));box-shadow:0 0 0 2.5px rgba(201,168,76,.5),0 0 0 6px rgba(201,168,76,.07),0 0 30px rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <span style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--ink);font-weight:400;">Q</span>
         </div>
         <div style="flex:1;min-width:0;">
@@ -2051,7 +2051,7 @@ async function signOut(){
       <p class="sl" style="margin-bottom:12px;">Mon compte</p>
 
       <div class="cd tp" onclick="editPersonalInfo()" style="margin-bottom:2px;display:flex;align-items:center;gap:14px;border-radius:20px 20px 8px 8px;padding:16px 18px;">
-        <div style="width:34px;height:34px;border-radius:10px;background:rgba(224,192,154,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <div style="width:34px;height:34px;border-radius:10px;background:rgba(201,168,76,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </div>
         <span style="font-size:13px;color:var(--d1);flex:1;font-weight:400;">Informations personnelles</span>
@@ -2059,7 +2059,7 @@ async function signOut(){
       </div>
 
       <div class="cd tp" onclick="go('p-faceid-prompt')" style="margin-bottom:2px;display:flex;align-items:center;gap:14px;border-radius:8px;padding:16px 18px;">
-        <div style="width:34px;height:34px;border-radius:10px;background:rgba(224,192,154,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <div style="width:34px;height:34px;border-radius:10px;background:rgba(201,168,76,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
         <span style="font-size:13px;color:var(--d1);flex:1;font-weight:400;">Sécurité &amp; Face ID</span>
@@ -2067,7 +2067,7 @@ async function signOut(){
       </div>
 
       <div class="cd tp" onclick="go('p-email-sources')" style="margin-bottom:2px;display:flex;align-items:center;gap:14px;border-radius:8px;padding:16px 18px;">
-        <div style="width:34px;height:34px;border-radius:10px;background:rgba(224,192,154,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <div style="width:34px;height:34px;border-radius:10px;background:rgba(201,168,76,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         </div>
         <div style="flex:1;">
@@ -2077,7 +2077,7 @@ async function signOut(){
         <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--d2)" stroke-width="1.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
       </div>
       <div class="cd tp" onclick="requestPushPermission()" style="margin-bottom:2px;display:flex;align-items:center;gap:14px;border-radius:8px;padding:16px 18px;">
-        <div style="width:34px;height:34px;border-radius:10px;background:rgba(224,192,154,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <div style="width:34px;height:34px;border-radius:10px;background:rgba(201,168,76,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
         </div>
         <span style="font-size:13px;color:var(--d1);flex:1;font-weight:400;">Notifications</span>
@@ -2085,7 +2085,7 @@ async function signOut(){
       </div>
 
       <div class="cd tp" onclick="go('p-pricing')" style="margin-bottom:24px;display:flex;align-items:center;gap:14px;border-radius:8px 8px 20px 20px;padding:16px 18px;">
-        <div style="width:34px;height:34px;border-radius:10px;background:rgba(224,192,154,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <div style="width:34px;height:34px;border-radius:10px;background:rgba(201,168,76,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
         </div>
         <div style="flex:1;min-width:0;">
@@ -2320,7 +2320,7 @@ async function signOut(){
       </div>
 
       <!-- Info suivi -->
-      <div style="background:linear-gradient(160deg,rgba(224,192,154,.07),rgba(224,192,154,.03));border-radius:16px;padding:14px 16px;margin:20px 0 28px;box-shadow:0 0 0 1px rgba(224,192,154,.18);">
+      <div style="background:linear-gradient(160deg,rgba(201,168,76,.07),rgba(201,168,76,.03));border-radius:16px;padding:14px 16px;margin:20px 0 28px;box-shadow:0 0 0 1px rgba(201,168,76,.18);">
         <div style="display:flex;align-items:flex-start;gap:10px;">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           <p style="font-size:12px;color:var(--d2);line-height:1.65;">Le suivi en temps réel sera disponible dans la version complète via connexion aux transporteurs (Colissimo, DHL, UPS…)</p>
@@ -2348,7 +2348,7 @@ async function signOut(){
       <div style="margin-bottom:16px;">
         <label class="sl" style="display:block;margin-bottom:10px;">Type</label>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="sub-type-picker">
-          <button onclick="selectSubType('subs',this)" style="padding:12px 8px;border-radius:14px;border:none;background:linear-gradient(160deg,var(--g),var(--gd));color:#07060C;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.3),0 4px 14px rgba(224,192,154,.4);transition:all .2s;" data-type="subs">
+          <button onclick="selectSubType('subs',this)" style="padding:12px 8px;border-radius:14px;border:none;background:linear-gradient(160deg,var(--g),var(--gd));color:#07060C;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.3),0 4px 14px rgba(201,168,76,.4);transition:all .2s;" data-type="subs">
             📱 Abonnement
           </button>
           <button onclick="selectSubType('energy',this)" style="padding:12px 8px;border-radius:14px;border:none;background:rgba(255,255,255,.05);color:var(--d1);font-size:12px;font-weight:500;cursor:pointer;box-shadow:0 0 0 1px rgba(255,255,255,.09);transition:all .2s;" data-type="energy">
@@ -2479,7 +2479,7 @@ async function signOut(){
 
       <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
         <!-- 3 mois (recommandé) -->
-        <div id="period-3m" onclick="selectPeriod('3months')" class="cd" style="display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;border:1.5px solid rgba(224,192,154,.4);background:rgba(224,192,154,.06);">
+        <div id="period-3m" onclick="selectPeriod('3months')" class="cd" style="display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;border:1.5px solid rgba(201,168,76,.4);background:rgba(201,168,76,.06);">
           <div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--g);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
             <div id="dot-3m" style="width:10px;height:10px;border-radius:50%;background:var(--g);"></div>
           </div>
@@ -2508,13 +2508,13 @@ async function signOut(){
 
     <!-- Progression import -->
     <div id="import-progress" style="display:none;margin-bottom:24px;">
-      <div style="padding:20px;background:rgba(224,192,154,.06);border:1px solid rgba(224,192,154,.2);border-radius:18px;">
+      <div style="padding:20px;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:18px;">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
           <div style="width:10px;height:10px;border-radius:50%;background:var(--g);animation:sk 1s infinite;flex-shrink:0;"></div>
           <p style="font-size:13px;color:var(--cr);font-weight:400;" id="import-status-text">Analyse en cours…</p>
         </div>
         <div style="height:4px;border-radius:2px;background:rgba(255,255,255,.08);overflow:visible;">
-          <div id="import-progress-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--g),#F4E2CB);border-radius:2px;transition:width .5s ease;"></div>
+          <div id="import-progress-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--g),#EDD870);border-radius:2px;transition:width .5s ease;"></div>
         </div>
         <p style="font-size:11px;color:var(--d2);margin-top:10px;" id="import-progress-detail">Connexion à Gmail…</p>
       </div>
@@ -2534,7 +2534,7 @@ async function signOut(){
   <div id="mail-intro-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9000;align-items:flex-end;justify-content:center;" onclick="if(event.target===this)closeMailIntroModal()">
     <div id="mail-intro-card" style="width:100%;max-width:480px;background:#0E0D12;border-radius:24px 24px 0 0;padding:28px 24px calc(24px + env(safe-area-inset-bottom));border:1px solid rgba(255,255,255,.08);border-bottom:none;transform:translateY(100%);transition:transform .32s cubic-bezier(.32,.72,0,1);">
       <div style="width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.15);margin:0 auto 20px;"></div>
-      <div id="mail-intro-icon" style="width:52px;height:52px;border-radius:16px;background:rgba(224,192,154,.1);display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
+      <div id="mail-intro-icon" style="width:52px;height:52px;border-radius:16px;background:rgba(201,168,76,.1);display:flex;align-items:center;justify-content:center;margin-bottom:18px;">
         <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><path d="M3 8l7.89 5.26a2 2 0 0 0 2.22 0L21 8M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg>
       </div>
       <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--cr);margin-bottom:10px;line-height:1.25;">Remplissez votre coffre<br>automatiquement</h2>
@@ -2561,7 +2561,7 @@ async function signOut(){
   <div class="sc" style="display:flex;flex-direction:column;justify-content:center;padding:0 28px;min-height:100vh;">
 
     <!-- Icône -->
-    <div style="width:64px;height:64px;border-radius:20px;background:rgba(224,192,154,.1);box-shadow:0 0 0 1px rgba(224,192,154,.2);display:flex;align-items:center;justify-content:center;margin-bottom:28px;">
+    <div style="width:64px;height:64px;border-radius:20px;background:rgba(201,168,76,.1);box-shadow:0 0 0 1px rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center;margin-bottom:28px;">
       <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
     </div>
 
@@ -2589,7 +2589,7 @@ async function signOut(){
 <div class="pg" id="p-reset-password">
   <div class="sc" style="display:flex;flex-direction:column;justify-content:center;padding:0 28px;min-height:100vh;">
 
-    <div style="width:64px;height:64px;border-radius:20px;background:rgba(224,192,154,.1);box-shadow:0 0 0 1px rgba(224,192,154,.2);display:flex;align-items:center;justify-content:center;margin-bottom:28px;">
+    <div style="width:64px;height:64px;border-radius:20px;background:rgba(201,168,76,.1);box-shadow:0 0 0 1px rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center;margin-bottom:28px;">
       <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     </div>
 
@@ -2870,7 +2870,7 @@ const LOGOS={
   'SFR':     `<svg aria-hidden="true" viewBox="0 0 100 100" width="30" height="30"><rect width="100" height="100" rx="24" fill="#E2001A"/><text x="50" y="64" text-anchor="middle" font-size="36" font-weight="900" fill="white" font-family="Arial Black,sans-serif">SFR</text></svg>`,
   'Basic-Fit':`<svg aria-hidden="true" viewBox="0 0 100 100" width="30" height="30"><rect width="100" height="100" rx="24" fill="#FFE400"/><text x="50" y="50" text-anchor="middle" font-size="17" font-weight="800" fill="#000" font-family="Arial Black,sans-serif">Basic</text><text x="50" y="68" text-anchor="middle" font-size="17" font-weight="800" fill="#000" font-family="Arial Black,sans-serif">-Fit</text></svg>`,
   'Dyson':   `<svg aria-hidden="true" viewBox="0 0 100 100" width="30" height="30"><rect width="100" height="100" rx="24" fill="#CC0000"/><text x="50" y="60" text-anchor="middle" font-size="20" font-weight="700" fill="white" font-family="Arial,sans-serif">DYSON</text></svg>`,
-  'Cartier': `<svg aria-hidden="true" viewBox="0 0 100 100" width="30" height="30"><rect width="100" height="100" rx="24" fill="#111"/><rect x="14" y="14" width="72" height="72" rx="5" fill="none" stroke="#E0C09A" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" fill="#E0C09A" font-family="Georgia,serif" letter-spacing="1.5">CARTIER</text></svg>`,
+  'Cartier': `<svg aria-hidden="true" viewBox="0 0 100 100" width="30" height="30"><rect width="100" height="100" rx="24" fill="#111"/><rect x="14" y="14" width="72" height="72" rx="5" fill="none" stroke="#C9A84C" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" fill="#C9A84C" font-family="Georgia,serif" letter-spacing="1.5">CARTIER</text></svg>`,
 }
 function logo(b,sz=30){
   const brand = String(b || '?')
@@ -3622,7 +3622,7 @@ const FOLDER_ICONS = [
 
 /* Couleurs accent disponibles */
 const FOLDER_COLORS = [
-  {name:'Or',     val:'rgba(224,192,154,.15)',  border:'rgba(224,192,154,.3)',  icon:'rgba(224,192,154,.9)'},
+  {name:'Or',     val:'rgba(201,168,76,.15)',  border:'rgba(201,168,76,.3)',  icon:'rgba(201,168,76,.9)'},
   {name:'Blanc',  val:'rgba(255,255,255,.08)', border:'rgba(255,255,255,.18)',icon:'rgba(255,255,255,.7)'},
   {name:'Vert',   val:'rgba(52,208,88,.1)',    border:'rgba(52,208,88,.25)',  icon:'rgba(52,208,88,.9)'},
   {name:'Rouge',  val:'rgba(255,59,48,.1)',    border:'rgba(255,59,48,.25)',  icon:'rgba(255,59,48,.9)'},
@@ -3715,8 +3715,8 @@ function selectIcon(em, btn){
     b.style.boxShadow='0 0 0 1px rgba(255,255,255,.08)'
     b.style.transform='none'
   })
-  btn.style.background='rgba(224,192,154,.15)'
-  btn.style.boxShadow='0 0 0 2px rgba(224,192,154,.4)'
+  btn.style.background='rgba(201,168,76,.15)'
+  btn.style.boxShadow='0 0 0 2px rgba(201,168,76,.4)'
   btn.style.transform='scale(1.1)'
 }
 
@@ -3922,7 +3922,7 @@ function selectSubType(type, btn){
   })
   btn.style.background = 'linear-gradient(160deg,var(--g),var(--gd))'
   btn.style.color = '#07060C'
-  btn.style.boxShadow = '0 2px 0 rgba(0,0,0,.3),0 4px 14px rgba(224,192,154,.4)'
+  btn.style.boxShadow = '0 2px 0 rgba(0,0,0,.3),0 4px 14px rgba(201,168,76,.4)'
 }
 
 function formatDateFR(dateStr){
@@ -4020,7 +4020,7 @@ function clearSubForm(){
     if(i===0){
       b.style.background = 'linear-gradient(160deg,var(--g),var(--gd))'
       b.style.color = '#07060C'
-      b.style.boxShadow = '0 2px 0 rgba(0,0,0,.3),0 4px 14px rgba(224,192,154,.4)'
+      b.style.boxShadow = '0 2px 0 rgba(0,0,0,.3),0 4px 14px rgba(201,168,76,.4)'
     } else {
       b.style.background = 'rgba(255,255,255,.05)'
       b.style.color = 'var(--d1)'
@@ -4352,7 +4352,7 @@ async function loadEmailSourcesCount(){
         const color = statusColor[src.sync_status] || 'var(--d2)'
         const label = statusLabel[src.sync_status] || 'Inconnu'
         html += '<div class="cd" style="margin-bottom:9px;display:flex;align-items:center;gap:14px;padding:16px 18px;">'
-        html += '<div style="width:38px;height:38px;border-radius:12px;background:rgba(224,192,154,.1);display:flex;align-items:center;justify-content:center;">' + icon + '</div>'
+        html += '<div style="width:38px;height:38px;border-radius:12px;background:rgba(201,168,76,.1);display:flex;align-items:center;justify-content:center;">' + icon + '</div>'
         html += '<div style="flex:1;min-width:0;">'
         html += '<div style="font-size:13px;color:var(--cr);">' + escapeHTML(src.email) + '</div>'
         html += '<div style="font-size:11px;color:' + color + ';">' + label + (src.last_sync_at ? ' · ' + new Date(src.last_sync_at).toLocaleDateString('fr-FR') : '') + '</div>'
@@ -4830,14 +4830,14 @@ function selectPeriod(period){
   const is3m = period === '3months'
   const p3=document.getElementById('period-3m'), p12=document.getElementById('period-12m')
   if(p3){
-    p3.style.border=is3m?'1.5px solid rgba(224,192,154,.4)':'1.5px solid rgba(255,255,255,.08)'
-    p3.style.background=is3m?'rgba(224,192,154,.06)':''
+    p3.style.border=is3m?'1.5px solid rgba(201,168,76,.4)':'1.5px solid rgba(255,255,255,.08)'
+    p3.style.background=is3m?'rgba(201,168,76,.06)':''
     const dot=p3.querySelector('#dot-3m'); if(dot) dot.style.background=is3m?'var(--g)':'transparent'
     if(dot?.parentElement) dot.parentElement.style.border=is3m?'2px solid var(--g)':'2px solid rgba(255,255,255,.2)'
   }
   if(p12){
-    p12.style.border=!is3m?'1.5px solid rgba(224,192,154,.4)':'1.5px solid rgba(255,255,255,.08)'
-    p12.style.background=!is3m?'rgba(224,192,154,.06)':''
+    p12.style.border=!is3m?'1.5px solid rgba(201,168,76,.4)':'1.5px solid rgba(255,255,255,.08)'
+    p12.style.background=!is3m?'rgba(201,168,76,.06)':''
     const dot=p12.querySelector('#dot-12m'); if(dot) dot.style.background=!is3m?'var(--g)':'transparent'
     if(dot?.parentElement) dot.parentElement.style.border=!is3m?'2px solid var(--g)':'2px solid rgba(255,255,255,.2)'
   }
@@ -4856,7 +4856,7 @@ function showMailIntroModal(provider){
   if(!overlay||!card||!btn) return
   const isGmail=provider==='gmail'
   btn.textContent=isGmail?'Connecter Gmail':'Connecter Outlook'
-  icon.style.background=isGmail?'rgba(224,192,154,.1)':'rgba(0,164,239,.12)'
+  icon.style.background=isGmail?'rgba(201,168,76,.1)':'rgba(0,164,239,.12)'
   overlay.style.display='flex'
   requestAnimationFrame(()=>{ card.style.transform='translateY(0)' })
 }
@@ -5220,7 +5220,7 @@ function displayAIResponse(msgs, text){
   const formatted = text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').split('\n').join('<br/>')
   msgs.innerHTML += '<div style="margin-bottom:14px;">' +
     '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">' +
-      '<div style="width:24px;height:24px;border-radius:8px;background:rgba(224,192,154,.15);display:flex;align-items:center;justify-content:center;font-size:12px;">V</div>' +
+      '<div style="width:24px;height:24px;border-radius:8px;background:rgba(201,168,76,.15);display:flex;align-items:center;justify-content:center;font-size:12px;">V</div>' +
       '<span style="font-size:11px;color:var(--d2);">CLERVIO</span>' +
     '</div>' +
     '<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px 16px 16px 4px;padding:14px 16px;font-size:13px;color:var(--d1);line-height:1.7;">' + formatted + '</div>' +
@@ -5237,7 +5237,7 @@ async function sendAI(){
   if(sugg) sugg.style.display = 'none'
   const msgs = document.getElementById('aimsgs')
   msgs.innerHTML += '<div style="display:flex;justify-content:flex-end;margin-bottom:14px;">' +
-    '<div style="background:rgba(224,192,154,.12);border:1px solid rgba(224,192,154,.2);border-radius:16px 16px 4px 16px;padding:12px 16px;max-width:80%;font-size:13px;color:var(--cr);line-height:1.6;">' + msg + '</div>' +
+    '<div style="background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.2);border-radius:16px 16px 4px 16px;padding:12px 16px;max-width:80%;font-size:13px;color:var(--cr);line-height:1.6;">' + msg + '</div>' +
   '</div>'
   const loaderId = 'ai-loader-' + Date.now()
   msgs.innerHTML += '<div id="' + loaderId + '" style="display:flex;gap:6px;margin-bottom:14px;padding:4px 0;">' +
@@ -5293,7 +5293,7 @@ window.springTo = function(el, props, done){
     if(indicator) return indicator
     indicator = document.createElement("div")
     indicator.id = "ptr-indicator"
-    indicator.style.cssText = "position:fixed;top:0;left:50%;transform:translateX(-50%) translateY(-60px);width:36px;height:36px;border-radius:50%;background:rgba(224,192,154,.15);border:1px solid rgba(224,192,154,.3);display:flex;align-items:center;justify-content:center;z-index:9999;transition:transform .2s;pointer-events:none;"
+    indicator.style.cssText = "position:fixed;top:0;left:50%;transform:translateX(-50%) translateY(-60px);width:36px;height:36px;border-radius:50%;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;z-index:9999;transition:transform .2s;pointer-events:none;"
     indicator.innerHTML = "<div style=\"width:16px;height:16px;border:2px solid var(--g);border-top-color:transparent;border-radius:50%;\"></div>"
     document.body.appendChild(indicator)
     return indicator
@@ -5549,7 +5549,7 @@ if (isIOS && !isStandalone && !hasSeenBanner) {
       <p class="sl" style="margin-bottom:10px;">Tarification</p>
       <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;color:var(--cr);line-height:1.15;">Simple.<br/><em style="color:var(--g);">Transparent.</em></h1>
     </div>
-    <div class="cd" style="padding:28px 24px;margin-bottom:20px;background:linear-gradient(135deg,rgba(224,192,154,.08),rgba(224,192,154,.04));border:1px solid rgba(224,192,154,.2);position:relative;overflow:visible;">
+    <div class="cd" style="padding:28px 24px;margin-bottom:20px;background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.04));border:1px solid rgba(201,168,76,.2);position:relative;overflow:visible;">
       <div style="position:absolute;top:16px;right:16px;"><span class="badge-live">Disponible</span></div>
       <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--g);margin-bottom:12px;font-weight:600;">CLERVIO Premium</div>
       <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:6px;">
