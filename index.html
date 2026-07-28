@@ -1453,79 +1453,21 @@ async function signOut(){
       <section class="ob1-hero">
       <p class="ob1-eyebrow">L'ordre silencieux</p>
 
-      <!-- Headline — editorial, aéré -->
-      <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,11.5vw,5rem);font-weight:300;line-height:1.15;color:var(--cr);margin-bottom:0;padding-top:4px;animation:fu .8s var(--e2) .2s both;letter-spacing:-.02em;">
-        Tout ce que<br/>vous achetez,
-      </h1>
-      <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,11.5vw,5rem);font-weight:300;line-height:1.3;font-style:italic;margin-bottom:28px;padding-bottom:14px;display:block;animation:fu .8s var(--e2) .3s both;letter-spacing:-.02em;background:linear-gradient(135deg,var(--gh) 0%,var(--g) 60%,var(--gd) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">
-        enfin gardé.
-      </h1>
+      <h1 class="ob1-h1">Tout ce que<br/>vous achetez,<em>enfin gardé.</em></h1>
+      <p class="ob1-lede">Commandes, garanties, abonnements. Rien ne se perd, rien ne s'oublie.</p>
 
-      <!-- Sous-titre court et fort -->
-      <p style="font-size:15px;color:var(--d1);line-height:1.7;margin-bottom:52px;max-width:320px;animation:fu .7s var(--e2) .4s both;font-weight:300;">
-        Commandes, garanties, abonnements. Rien ne se perd, rien ne s'oublie.
-      </p>
+      </section>
 
-      <!-- 3 preuves sociales — chiffres plutôt que liste -->
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:52px;animation:fu .7s var(--e2) .5s both;">
-        <div style="text-align:center;padding:18px 8px;background:linear-gradient(160deg,var(--s2),var(--s1));border-radius:20px;box-shadow:0 0 0 1px var(--b1),inset 0 1px 0 var(--b0),0 4px 14px rgba(0,0,0,.35);position:relative;overflow:visible;">
-          <!-- Mini graphique sparkline -->
-          <svg aria-hidden="true" width="60" height="28" viewBox="0 0 60 28" fill="none" style="margin-bottom:6px;">
-            <defs>
-              <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="rgba(201,168,76,.3)"/>
-                <stop offset="100%" stop-color="rgba(201,168,76,.0)"/>
-              </linearGradient>
-            </defs>
-            <path d="M0 22 L10 18 L20 20 L30 14 L40 10 L50 6 L60 4" stroke="rgba(201,168,76,.3)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M0 22 L10 18 L20 20 L30 14 L40 10 L50 6 L60 4" stroke="var(--g)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M0 22 L10 18 L20 20 L30 14 L40 10 L50 6 L60 4 L60 28 L0 28 Z" fill="url(#spark-fill)"/>
-            <circle cx="60" cy="4" r="2.5" fill="var(--g)"/>
-          </svg>
-          <div style="font-size:10px;color:var(--d2);letter-spacing:.04em;line-height:1.4;">Économies<br/>réalisées</div>
+      <footer class="ob1-foot">
+        <button class="ob1-cta" onclick="go('p-ob2')">Commencer gratuitement</button>
+        <button class="ob1-sec" onclick="returningUser()">J'ai déjà un compte</button>
+
+        <div class="ob1-rule foot"></div>
+        <div class="ob1-meta">
+          <span>Chiffré · Europe</span>
+          <span>4,99 € / mois</span>
         </div>
-        <div style="text-align:center;padding:20px 8px;background:linear-gradient(160deg,var(--s2),var(--s1));border-radius:20px;box-shadow:0 0 0 1px var(--b1),inset 0 1px 0 var(--b0),0 4px 14px rgba(0,0,0,.35);">
-          <div style="color:var(--g);margin-bottom:8px;filter:drop-shadow(0 0 8px rgba(201,168,76,.6));">
-              <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
-                <rect x="3" y="11" width="18" height="11" rx="2"/>
-                <path d="M7 11V7a5 5 0 0110 0v4"/>
-                <circle cx="12" cy="16" r="1.5" fill="currentColor"/>
-              </svg>
-            </div>
-            <div style="font-size:10px;color:var(--d2);letter-spacing:.04em;line-height:1.4;">Coffre<br/>chiffré</div>
-        </div>
-        <div style="text-align:center;padding:20px 8px;background:linear-gradient(160deg,var(--s2),var(--s1));border-radius:20px;box-shadow:0 0 0 1px var(--b1),inset 0 1px 0 var(--b0),0 4px 14px rgba(0,0,0,.35);">
-          <div style="font-family:'DM Sans',sans-serif;font-size:1.9rem;font-weight:200;letter-spacing:-.05em;font-feature-settings:'tnum' 1;background:linear-gradient(135deg,var(--gh),var(--g));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:5px;">4,99</div>
-          <div style="font-size:10px;color:var(--d2);letter-spacing:.04em;line-height:1.4;">€ / mois<br/>tout inclus</div>
-        </div>
-      </div>
-
-      <!-- CTA -->
-      <button class="bg fw lg" onclick="go('p-ob2')" style="animation:fu .6s var(--e2) .6s both;">
-        Commencer gratuitement
-      </button>
-      <button onclick="returningUser()" style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);color:var(--cr);border-radius:14px;padding:15px;font-size:13.5px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-top:14px;animation:fu .5s var(--e2) .7s both;transition:background .2s var(--e1);">
-        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gm)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
-        J'ai déjà un compte
-      </button>
-
-      <!-- Réassurance discrète -->
-      <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-top:32px;animation:fu .5s var(--e2) .8s both;">
-        <span style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--d2);">
-          <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--d2)" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Données chiffrées
-        </span>
-        <span style="width:1px;height:12px;background:var(--d3);"></span>
-        <span style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--d2);">
-          <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--d2)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          Sans engagement
-        </span>
-        <span style="width:1px;height:12px;background:var(--d3);"></span>
-        <span style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--d2);">
-          <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--d2)" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Hébergé en Europe
-        </span>
-      </div>
+      </footer>
 
     </div>
   </div>
