@@ -31,13 +31,16 @@
     { id:'p-email-sources',  risque:false },
     { id:'p-forgot',         risque:false },
     { id:'p-reset-password', risque:false },
-    { id:'p-pricing',        risque:false }
+    { id:'p-pricing',        risque:false },
+    { id:'p-privacy',        risque:false },
+    { id:'p-cgv',            risque:false }
   ];
 
   /* Écrans devant porter la barre supérieure (miroir de 16-barre.js) */
   var AVEC_BARRE = ['p-folder','p-add-order','p-add-sub','p-legal','p-pricing',
                     'p-email-sources','p-forgot','p-reset-password',
-                    'p-orders','p-vault','p-profile'];
+                    'p-orders','p-vault','p-profile',
+                    'p-od','p-sd','p-scan','p-privacy','p-cgv'];
 
   function nbErreurs(){
     try{
