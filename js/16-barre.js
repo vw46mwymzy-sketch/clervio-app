@@ -92,9 +92,51 @@
     }
   }
 
-  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', passe);
-  else passe();
-  window.addEventListener('load', passe);
-  setTimeout(passe, 600);
-  setTimeout(passe, 2000);
+  /* ── Écrans reconstruits en JavaScript ─────────────────── */
+  /* La barre est posée hors du conteneur .sc : les rendus     */
+  /* successifs réécrivent .sc sans jamais l'effacer.          */
+  var DYNAMIQUES = { 'p-od':'p-orders', 'p-sd':'p-vault', 'p-scan':'p-home' };
+
+  function ajusterContenu(sc){
+    try{
+      var premier = sc.firstElementChild;
+      if (premier && premier.style && premier.dataset && !premier.dataset.ctbAjuste){
+        premier.dataset.ctbAjuste = '1';
+        premier.style.paddingTop = '14px';
+      }
+    }catch(e){}
+  }
+
+  function poserDynamique(id, retour){
+    var page = document.getElementById(id);
+    if (!page) return false;
+    var sc = page.querySelector('.sc');
+    if (!sc) return false;
+    if (!page.querySelector('.ctb')){
+      page.insertBefore(construire(id, { retour: retour }), sc);
+      var bk = page.querySelector('.bk');
+      if (bk) bk.style.display = 'none';
+      if (window.MutationObserver){
+        try{
+          new MutationObserver(function(){ ajusterContenu(sc); }).observe(sc, { childList: true });
+        }catch(e){}
+      }
+    }
+    ajusterContenu(sc);
+    return true;
+  }
+
+  function passeDynamique(){
+    for (var id in DYNAMIQUES){
+      try{ poserDynamique(id, DYNAMIQUES[id]); }catch(e){}
+    }
+  }
+
+  function tout(){ passe(); passeDynamique(); }
+
+  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', tout);
+  else tout();
+  window.addEventListener('load', tout);
+  setTimeout(tout, 600);
+  setTimeout(tout, 2000);
 })();
