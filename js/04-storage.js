@@ -215,8 +215,8 @@ function renderVault(filter){
       <div class="cd tp" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;animation:sk .4s var(--e2) ${i*.07}s both;">
         <div class="vic">${logo(d.brand)}</div>
         <div style="flex:1;min-width:0;">
-          <div style="font-size:13px;color:var(--cr);font-weight:400;margin-bottom:2px;white-space:nowrap;overflow:visible;text-overflow:ellipsis;">${d.name}</div>
-          <div style="font-size:11px;color:var(--d2);">${d.sub}</div>
+          <div style="font-size:13px;color:var(--cr);font-weight:400;margin-bottom:2px;white-space:nowrap;overflow:visible;text-overflow:ellipsis;">${escapeHTML(d.name)}</div>
+          <div style="font-size:11px;color:var(--d2);">${escapeHTML(d.sub)}</div>
         </div>
         <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--d2)" stroke-width="1.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
       </div>`).join('')
@@ -232,9 +232,9 @@ function renderVault(filter){
         <div class="cd tp" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;">
           <div class="vic">${logo(w.brand)}</div>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:2px;font-weight:700;">${w.brand}</div>
-            <div style="font-size:13px;color:var(--cr);font-weight:400;">${w.name}</div>
-            <div style="font-size:11px;color:var(--d2);margin-top:1px;">Expire le ${w.exp}</div>
+            <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:2px;font-weight:700;">${escapeHTML(w.brand)}</div>
+            <div style="font-size:13px;color:var(--cr);font-weight:400;">${escapeHTML(w.name)}</div>
+            <div style="font-size:11px;color:var(--d2);margin-top:1px;">Expire le ${escapeHTML(w.exp)}</div>
           </div>
           <span class="ba ba-${w.st==='r'?'r':'g'}">${w.days}j</span>
         </div>`).join('')
@@ -244,15 +244,15 @@ function renderVault(filter){
     html += makeAccordion('abonnements','Abonnements',
       `<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>`,
       SUBS.map(s=>`
-        <div class="cd tp" onclick="showSub('${s.id}')" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;${s.st==='paused'?'opacity:.5':''}">
+        <div class="cd tp" onclick="showSub('${escapeHTML(s.id)}')" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;${s.st==='paused'?'opacity:.5':''}">
           <div class="vic">${logo(s.name)}</div>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:13px;color:var(--cr);font-weight:500;margin-bottom:1px;">${s.name}</div>
-            <div style="font-size:11px;color:var(--d2);">${s.sub}</div>
+            <div style="font-size:13px;color:var(--cr);font-weight:500;margin-bottom:1px;">${escapeHTML(s.name)}</div>
+            <div style="font-size:11px;color:var(--d2);">${escapeHTML(s.sub)}</div>
           </div>
           <div style="text-align:right;flex-shrink:0;">
             <div style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--g);letter-spacing:-.02em;">${s.amt.toFixed(2)} €</div>
-            <div style="font-size:10px;color:var(--d2);">/${s.freq}</div>
+            <div style="font-size:10px;color:var(--d2);">/${escapeHTML(s.freq)}</div>
           </div>
         </div>`).join('')
     )
@@ -261,16 +261,16 @@ function renderVault(filter){
     html += makeAccordion('contrats','Contrats & Baux',
       `<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>`,
       CONTR.map(s=>`
-        <div class="cd tp" onclick="showSub('${s.id}')" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;">
+        <div class="cd tp" onclick="showSub('${escapeHTML(s.id)}')" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;">
           <div class="sic">${s.name==='Bail appartement'?'🔑':'📱'}</div>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:13px;color:var(--cr);font-weight:500;margin-bottom:1px;">${s.name}</div>
-            <div style="font-size:11px;color:var(--d2);">${s.sub}</div>
-            ${s.renew?`<div style="font-size:10px;color:var(--d2);margin-top:1px;">Renouvelle le ${s.renew}</div>`:''}
+            <div style="font-size:13px;color:var(--cr);font-weight:500;margin-bottom:1px;">${escapeHTML(s.name)}</div>
+            <div style="font-size:11px;color:var(--d2);">${escapeHTML(s.sub)}</div>
+            ${s.renew?`<div style="font-size:10px;color:var(--d2);margin-top:1px;">Renouvelle le ${escapeHTML(s.renew)}</div>`:''}
           </div>
           <div style="text-align:right;flex-shrink:0;">
             <div style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--g);">${s.amt.toFixed(0)} €</div>
-            <div style="font-size:10px;color:var(--d2);">/${s.freq}</div>
+            <div style="font-size:10px;color:var(--d2);">/${escapeHTML(s.freq)}</div>
           </div>
         </div>`).join('')
     )
@@ -282,39 +282,39 @@ function renderVault(filter){
       <div class="cd tp" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;animation:sk .4s var(--e2) ${i*.07}s both;">
         <div class="vic">${logo(w.brand)}</div>
         <div style="flex:1;min-width:0;">
-          <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:2px;font-weight:700;">${w.brand}</div>
-          <div style="font-size:13px;color:var(--cr);font-weight:400;">${w.name}</div>
-          <div style="font-size:11px;color:var(--d2);margin-top:1px;">Expire le ${w.exp}</div>
+          <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:2px;font-weight:700;">${escapeHTML(w.brand)}</div>
+          <div style="font-size:13px;color:var(--cr);font-weight:400;">${escapeHTML(w.name)}</div>
+          <div style="font-size:11px;color:var(--d2);margin-top:1px;">Expire le ${escapeHTML(w.exp)}</div>
         </div>
         <span class="ba ba-${w.st==='r'?'r':'g'}">${w.days}j</span>
       </div>`).join('')
   }
   if(filter==='subs'){
     html+=SUBS.map((s,i)=>`
-      <div class="cd tp" onclick="showSub('${s.id}')" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;${s.st==='paused'?'opacity:.5':''}animation:sk .4s var(--e2) ${(i%4)*.07}s both;">
+      <div class="cd tp" onclick="showSub('${escapeHTML(s.id)}')" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;${s.st==='paused'?'opacity:.5':''}animation:sk .4s var(--e2) ${(i%4)*.07}s both;">
         <div class="vic">${logo(s.name)}</div>
         <div style="flex:1;min-width:0;">
-          <div style="font-size:13px;color:var(--cr);font-weight:500;margin-bottom:1px;">${s.name}</div>
-          <div style="font-size:11px;color:var(--d2);">${s.sub}</div>
+          <div style="font-size:13px;color:var(--cr);font-weight:500;margin-bottom:1px;">${escapeHTML(s.name)}</div>
+          <div style="font-size:11px;color:var(--d2);">${escapeHTML(s.sub)}</div>
         </div>
         <div style="text-align:right;flex-shrink:0;">
           <div style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--g);letter-spacing:-.02em;">${s.amt.toFixed(2)} €</div>
-          <div style="font-size:10px;color:var(--d2);">/${s.freq}</div>
+          <div style="font-size:10px;color:var(--d2);">/${escapeHTML(s.freq)}</div>
         </div>
       </div>`).join('')
   }
   if(filter==='contracts'){
     html+=CONTR.map((s,i)=>`
-      <div class="cd tp" onclick="showSub('${s.id}')" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;animation:sk .4s var(--e2) ${i*.07}s both;">
+      <div class="cd tp" onclick="showSub('${escapeHTML(s.id)}')" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;animation:sk .4s var(--e2) ${i*.07}s both;">
         <div class="sic">${s.name==='Bail appartement'?'🔑':'📱'}</div>
         <div style="flex:1;min-width:0;">
-          <div style="font-size:13px;color:var(--cr);font-weight:500;margin-bottom:1px;">${s.name}</div>
-          <div style="font-size:11px;color:var(--d2);">${s.sub}</div>
-          ${s.renew?`<div style="font-size:10px;color:var(--d2);margin-top:1px;">Renouvelle le ${s.renew}</div>`:''}
+          <div style="font-size:13px;color:var(--cr);font-weight:500;margin-bottom:1px;">${escapeHTML(s.name)}</div>
+          <div style="font-size:11px;color:var(--d2);">${escapeHTML(s.sub)}</div>
+          ${s.renew?`<div style="font-size:10px;color:var(--d2);margin-top:1px;">Renouvelle le ${escapeHTML(s.renew)}</div>`:''}
         </div>
         <div style="text-align:right;flex-shrink:0;">
           <div style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--g);">${s.amt.toFixed(0)} €</div>
-          <div style="font-size:10px;color:var(--d2);">/${s.freq}</div>
+          <div style="font-size:10px;color:var(--d2);">/${escapeHTML(s.freq)}</div>
         </div>
       </div>`).join('')
   }
@@ -385,18 +385,18 @@ function showSub(id){
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;">
         <div style="width:62px;height:62px;border-radius:18px;background:var(--s2);border:1px solid var(--ln2);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 20px rgba(0,0,0,.35);">${logo(s.name,40)}</div>
         <div>
-          <h2 class="sr" style="font-size:1.9rem;font-weight:300;color:var(--cr);line-height:1.08;">${s.name}</h2>
-          <p style="font-size:12px;color:var(--d2);margin-top:5px;">${s.sub}</p>
+          <h2 class="sr" style="font-size:1.9rem;font-weight:300;color:var(--cr);line-height:1.08;">${escapeHTML(s.name)}</h2>
+          <p style="font-size:12px;color:var(--d2);margin-top:5px;">${escapeHTML(s.sub)}</p>
         </div>
       </div>
       <div class="glcd" style="margin-bottom:18px;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
-          <div><p class="sl" style="margin-bottom:8px;">Montant</p><div class="sr" style="font-family:'DM Sans',sans-serif;font-size:1.9rem;font-weight:200;letter-spacing:-.05em;font-feature-settings:'tnum' 1;color:var(--g);">${s.amt.toFixed(2)} €<span style="font-size:.42em;color:var(--d2);letter-spacing:0;">/${s.freq}</span></div></div>
-          <div><p class="sl" style="margin-bottom:8px;">Prochain prélèv.</p><div style="font-size:14px;color:var(--cr);margin-top:9px;font-weight:400;">${s.next}</div></div>
-          ${s.renew?`<div><p class="sl" style="margin-bottom:8px;">Renouvellement</p><div style="font-size:13px;color:var(--cr);margin-top:9px;">${s.renew}</div></div>`:''}
+          <div><p class="sl" style="margin-bottom:8px;">Montant</p><div class="sr" style="font-family:'DM Sans',sans-serif;font-size:1.9rem;font-weight:200;letter-spacing:-.05em;font-feature-settings:'tnum' 1;color:var(--g);">${s.amt.toFixed(2)} €<span style="font-size:.42em;color:var(--d2);letter-spacing:0;">/${escapeHTML(s.freq)}</span></div></div>
+          <div><p class="sl" style="margin-bottom:8px;">Prochain prélèv.</p><div style="font-size:14px;color:var(--cr);margin-top:9px;font-weight:400;">${escapeHTML(s.next)}</div></div>
+          ${s.renew?`<div><p class="sl" style="margin-bottom:8px;">Renouvellement</p><div style="font-size:13px;color:var(--cr);margin-top:9px;">${escapeHTML(s.renew)}</div></div>`:''}
           <div><p class="sl" style="margin-bottom:8px;">Coût annuel</p><div class="sr" style="font-family:'DM Sans',sans-serif;font-size:1.2rem;font-weight:200;letter-spacing:-.04em;font-feature-settings:'tnum' 1;color:var(--cr);margin-top:7px;">${annualEquivalent(s).toFixed(0)} €</div></div>
         </div>
-        ${s.notice?`<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--ln2);"><p style="font-size:12px;color:var(--g);">⚠ ${s.notice}</p></div>`:''}
+        ${s.notice?`<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--ln2);"><p style="font-size:12px;color:var(--g);">⚠ ${escapeHTML(s.notice)}</p></div>`:''}
       </div>
       <div class="cd tp" onclick="go(\'p-vault\')" style="margin-bottom:18px;display:flex;align-items:center;gap:13px;"><div class="vic"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div><span style="font-size:13px;color:var(--d1);flex:1;">Contrat dans le Coffre-Fort</span><span style="font-size:11px;color:var(--g);">Voir →</span></div>
       <p class="sl" style="margin-bottom:13px;">Actions</p>
