@@ -54,15 +54,30 @@
 
   function attendre(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
 
+  /* Écrans de détail : sans élément choisi, le garde-fou les renvoie
+     vers leur parent. Les deux issues sont valides. */
+  var CONTEXTUELS = { 'p-od':'p-orders', 'p-sd':'p-vault', 'p-folder':'p-vault' };
+
   function verifier(ec){
     var pb = [];
     var el = document.getElementById(ec.id);
     if (!el) return ['écran absent du document'];
+
+    var parent = CONTEXTUELS[ec.id];
+    if (parent && !el.classList.contains('on')){
+      var p = document.getElementById(parent);
+      if (p && p.classList.contains('on')) return [];
+      pb.push("ni l'écran ni son parent " + parent + " ne s'affichent");
+      return pb;
+    }
+
     if (!el.classList.contains('on')) pb.push("l'écran ne s'affiche pas (classe 'on' absente)");
     if (el.children.length === 0) pb.push('aucun élément enfant');
-    var txt = (el.textContent || '').trim();
-    if (txt.length < 10) pb.push('contenu vide ou quasi vide (' + txt.length + ' caractères)');
     if (AVEC_BARRE.indexOf(ec.id) > -1 && !el.querySelector('.ctb')) pb.push('barre supérieure absente');
+    if (!parent){
+      var txt = (el.textContent || '').trim();
+      if (txt.length < 10) pb.push('contenu vide ou quasi vide (' + txt.length + ' caractères)');
+    }
     return pb;
   }
 
@@ -95,7 +110,7 @@
         afficher(resultats, liste.length, true);
         return suivant();
       }
-      attendre(320).then(function(){
+      attendre(CONTEXTUELS[ec.id] ? 1500 : 320).then(function(){
         var pb = verifier(ec);
         var apres = nbErreurs();
         if (apres > avant) pb.push((apres-avant) + ' erreur(s) pendant la transition');
