@@ -163,31 +163,31 @@ function openFolder(folderId){
 
       <!-- Header dossier -->
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:28px;">
-        <div style="width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;background:${folder.color.val};box-shadow:0 0 0 1.5px ${folder.color.border},0 4px 16px rgba(0,0,0,.35);">
-          ${folder.icon}
+        <div style="width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;background:${escapeHTML(folder.color.val)};box-shadow:0 0 0 1.5px ${escapeHTML(folder.color.border)},0 4px 16px rgba(0,0,0,.35);">
+          ${escapeHTML(folder.icon)}
         </div>
         <div>
-          <h1 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--cr);">${folder.name}</h1>
-          <p style="font-size:12px;color:var(--d2);margin-top:3px;">${docs.length} document${docs.length!==1?'s':''} · Créé le ${folder.createdAt}</p>
+          <h1 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--cr);">${escapeHTML(folder.name)}</h1>
+          <p style="font-size:12px;color:var(--d2);margin-top:3px;">${docs.length} document${docs.length!==1?'s':''} · Créé le ${escapeHTML(folder.createdAt)}</p>
         </div>
       </div>
 
       ${docs.length===0 ? `
         <!-- Empty state -->
         <div style="text-align:center;padding:60px 20px;">
-          <div style="width:72px;height:72px;border-radius:20px;background:rgba(255,255,255,.04);box-shadow:0 0 0 1px rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;">${folder.icon}</div>
+          <div style="width:72px;height:72px;border-radius:20px;background:rgba(255,255,255,.04);box-shadow:0 0 0 1px rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;">${escapeHTML(folder.icon)}</div>
           <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--cr);margin-bottom:8px;">Dossier vide</h3>
           <p style="font-size:13px;color:var(--d2);margin-bottom:28px;line-height:1.6;">Ajoutez des documents depuis le scanner ou depuis vos autres documents.</p>
           <button class="bgh" onclick="addDocToFolder()" style="font-size:13px;">+ Ajouter un document</button>
         </div>
       ` : docs.map((doc,i) => `
         <div class="cd" style="margin-bottom:9px;display:flex;align-items:center;gap:16px;padding:16px 18px;animation:sk .4s var(--e2) ${i*.06}s both;">
-          <div class="vic" style="background:${folder.color.val};box-shadow:0 0 0 1px ${folder.color.border};">
-            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${folder.color.icon}" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+          <div class="vic" style="background:${escapeHTML(folder.color.val)};box-shadow:0 0 0 1px ${escapeHTML(folder.color.border)};">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${escapeHTML(folder.color.icon)}" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
           </div>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:13px;color:var(--cr);font-weight:400;margin-bottom:2px;white-space:nowrap;overflow:visible;text-overflow:ellipsis;">${doc.name}</div>
-            <div style="font-size:11px;color:var(--d2);">${doc.date}</div>
+            <div style="font-size:13px;color:var(--cr);font-weight:400;margin-bottom:2px;white-space:nowrap;overflow:visible;text-overflow:ellipsis;">${escapeHTML(doc.name)}</div>
+            <div style="font-size:11px;color:var(--d2);">${escapeHTML(doc.date)}</div>
           </div>
           <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--d2)" stroke-width="1.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
         </div>
@@ -232,7 +232,7 @@ async function deleteCurrentFolder(){
   const folders = loadFolders()
   const folder = folders.find(f=>String(f.id)===String(currentFolderId))
   if(!folder) return
-  if(!confirm(`Supprimer le dossier "${folder.name}" ?`)) return
+  if(!confirm(`Supprimer le dossier "${escapeHTML(folder.name)}" ?`)) return
 
   if(currentUser && supa){
     const { error } = await supa.from('vault_folders').delete().eq('id', folder.id).eq('user_id', currentUser.id)
@@ -267,7 +267,7 @@ function renderFolderSection(filter){
       // Grid 2 colonnes pour les dossiers
       html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:${filter==='all'?'16px':'0'};">`
       html += folders.map((folder,i)=>`
-        <div onclick="openFolder('${folder.id}')" style="
+        <div onclick="openFolder('${escapeHTML(folder.id)}')" style="
           background:linear-gradient(160deg,#161618,#0F0F11);
           border-radius:18px;padding:16px 14px;cursor:pointer;
           box-shadow:0 0 0 1px rgba(255,255,255,.09),inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.4);
@@ -276,11 +276,11 @@ function renderFolderSection(filter){
           position:relative;overflow:visible;
         " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 0 0 1px '+${JSON.stringify(folder.color.border)}+',0 8px 24px rgba(0,0,0,.5)'" onmouseout="this.style.transform='';this.style.boxShadow='0 0 0 1px rgba(255,255,255,.09),inset 0 1px 0 rgba(255,255,255,.07),0 4px 14px rgba(0,0,0,.4)'">
           <!-- Accent top -->
-          <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,${folder.color.border},transparent);border-radius:18px 18px 0 0;"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,${escapeHTML(folder.color.border)},transparent);border-radius:18px 18px 0 0;"></div>
           <!-- Icône -->
-          <div style="width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;background:${folder.color.val};box-shadow:0 0 0 1px ${folder.color.border};margin-bottom:12px;">${folder.icon}</div>
+          <div style="width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;background:${escapeHTML(folder.color.val)};box-shadow:0 0 0 1px ${escapeHTML(folder.color.border)};margin-bottom:12px;">${escapeHTML(folder.icon)}</div>
           <!-- Nom -->
-          <div style="font-size:13px;color:var(--cr);font-weight:500;margin-bottom:3px;white-space:nowrap;overflow:visible;text-overflow:ellipsis;">${folder.name}</div>
+          <div style="font-size:13px;color:var(--cr);font-weight:500;margin-bottom:3px;white-space:nowrap;overflow:visible;text-overflow:ellipsis;">${escapeHTML(folder.name)}</div>
           <div style="font-size:11px;color:var(--d2);">${(folder.docs||[]).length} doc${(folder.docs||[]).length!==1?'s':''}</div>
         </div>
       `).join('')
