@@ -12,7 +12,32 @@
       buf.push({ t: Date.now()-T0, type: type, mod: mod||'-', msg: String(msg).slice(0,400) });
       if (buf.length > MAX) buf.shift();
       if (panelOpen) render();
+      if (type === 'err') remonter(mod, msg);
     }catch(e){}
+  }
+
+  /* ── Remontée serveur (table client_errors) ──────────────
+     Bornée : 20 envois par session, doublons ignorés.
+     Silencieuse : n'émet jamais d'erreur qui se réinjecterait. */
+  var envoyees = 0, dejaVues = {}, enCours = false;
+  function remonter(mod, msg){
+    try{
+      if (enCours || envoyees >= 20) return;
+      var cle = String(mod) + '|' + String(msg).slice(0,120);
+      if (dejaVues[cle]) return;
+      if (typeof supa === 'undefined' || !supa) return;
+      if (typeof currentUser === 'undefined' || !currentUser || !currentUser.id) return;
+      dejaVues[cle] = 1;
+      envoyees++;
+      enCours = true;
+      supa.from('client_errors').insert({
+        user_id: currentUser.id,
+        module:  String(mod).slice(0,80),
+        message: String(msg).slice(0,600),
+        page:    String(location.hash || location.search || '/').slice(0,200),
+        agent:   String(navigator.userAgent || '').slice(0,300)
+      }).then(function(){ enCours = false; }, function(){ enCours = false; });
+    }catch(e){ enCours = false; }
   }
   function fichier(src){
     if(!src) return '-';
