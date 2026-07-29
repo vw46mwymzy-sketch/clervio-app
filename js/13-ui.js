@@ -95,10 +95,10 @@ window.springTo = function(el, props, done){
 })()
 
 /* ══ SÉCURITÉ XSS ════════════════════════════════════ */
-function escapeHtml(str){
-  if(typeof str !== 'string') return str ?? ''
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;')
-}
+/* L'échappement est assuré par escapeHTML(), définie dans 05-ai.js
+   et appelée 33 fois. Un doublon escapeHtml() vivait ici sans jamais
+   être appelé : retiré le 29/07/2026 pour éviter toute confusion
+   de casse à l'usage. */
 
 /* ══ FAB MENU ════════════════════════════════════════════ */
 function toggleFabMenu(id){
