@@ -149,6 +149,27 @@
     }catch(e){ journal('err', 'sélecteur : ' + (e && e.message || e)); }
   }
 
+  /* ── Rafraîchissement de la vue coffre ─────────────── */
+  function rafraichirCoffre(){
+    try{
+      if (typeof rechargerDonnees === 'function') { rechargerDonnees(); return; }
+      if (typeof renderVault === 'function') { renderVault(); return; }
+      if (typeof window.go === 'function') window.go('p-vault');
+    }catch(e){ journal('err', 'rafraîchissement : ' + (e && e.message || e)); }
+  }
+
+  /* ── Suppression depuis l'interface, avec confirmation ── */
+  async function supprimerDepuisVue(id){
+    if (!id) return;
+    var ok = true;
+    try{ ok = window.confirm('Supprimer ce document ? Le fichier sera effacé définitivement.'); }catch(e){}
+    if (!ok) return;
+    var fait = await supprimer(id);
+    if (fait) setTimeout(rafraichirCoffre, 250);
+  }
+
+  window.supprimerDocument = supprimerDepuisVue;
+  window.rafraichirCoffre  = rafraichirCoffre;
   window.coffreEtat       = etat;
   window.coffreDeposer    = deposer;
   window.coffreOuvrir     = ouvrir;
