@@ -96,7 +96,10 @@
     function suivant(){
       if (i >= liste.length){
         try{ if (typeof window.go === 'function') window.go(depart); }catch(e){}
-        afficher(resultats, liste.length, false);
+        setTimeout(function(){
+          fonctions().forEach(function(r){ resultats.push(r); });
+          afficher(resultats, resultats.length, false);
+        }, 450);
         return;
       }
       var ec = liste[i++];
@@ -120,6 +123,89 @@
       });
     }
     suivant();
+  }
+
+  /* ── Seconde phase : le fonctionnement, pas seulement l'affichage ── */
+  function tableau(nom){
+    try{
+      var v = window[nom];
+      if (Array.isArray(v)) return v;
+      v = eval(nom);
+      return Array.isArray(v) ? v : null;
+    }catch(e){ return null; }
+  }
+
+  function fonctions(){
+    var res = [];
+    function test(nom, fn){
+      var t = Date.now(), pb = [];
+      try{ pb = fn() || []; }catch(e){ pb = ['exception : ' + ((e && e.message) || e)]; }
+      res.push({ id: nom, ok: pb.length === 0, pb: pb, ms: Date.now() - t });
+    }
+
+    test('modules chargés', function(){
+      var p = [];
+      [['CLERVIO_DIAG','diagnostic'],['CLERVIO_RESILIENCE','résilience'],['CLERVIO_BARRE','barre'],
+       ['CLERVIO_CONTEXTE','contexte'],['CLERVIO_PUSH','push'],['CLERVIO_PROFIL','profil'],
+       ['CLERVIO_CONCIERGE','concierge']].forEach(function(m){
+        if (!window[m[0]]) p.push(m[1] + ' absent');
+      });
+      return p;
+    });
+
+    test('couche de données', function(){
+      var p = [];
+      ['ORDS','WARR','SUBS'].forEach(function(n){
+        if (!tableau(n)) p.push(n + ' introuvable ou pas un tableau');
+      });
+      return p;
+    });
+
+    test('cohérence des compteurs', function(){
+      var p = [];
+      function cmp(sel, ref, lib){
+        var el = document.querySelector(sel);
+        if (!el || !ref) return;
+        var v = parseInt((el.textContent || '').replace(/[^0-9]/g, ''), 10);
+        if (!isNaN(v) && v !== ref.length) p.push(lib + ' : ' + v + ' affiché, ' + ref.length + ' en mémoire');
+      }
+      cmp('.stat-orders', tableau('ORDS'), 'commandes');
+      cmp('.stat-warr',   tableau('WARR'), 'garanties');
+      cmp('.stat-subs',   tableau('SUBS'), 'abonnements');
+      return p;
+    });
+
+    test('portée du concierge', function(){
+      var el = document.getElementById('ai-portee');
+      if (!el) return ['élément absent'];
+      var t = (el.textContent || '').trim();
+      if (!t || t === 'Concierge') return ['portée non renseignée'];
+      return [];
+    });
+
+    test('en-tête du profil', function(){
+      var p = [];
+      var n = document.getElementById('profile-name');
+      var v = n ? (n.textContent || '').trim() : '';
+      if (!v || v === '—') p.push('nom non renseigné');
+      var b = document.getElementById('profile-badge');
+      if (b && (b.textContent || '').indexOf('Premium') > -1) p.push('badge annonce une offre non souscrite');
+      var a = document.getElementById('prof-arc');
+      if (a && !a.style.strokeDashoffset) p.push('anneau non initialisé');
+      return p;
+    });
+
+    test('aucune injection HTML', function(){
+      var p = [];
+      ['p-vault','p-orders','p-home','p-ai'].forEach(function(id){
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (/<script/i.test(el.innerHTML || '')) p.push(id + ' contient une balise script');
+      });
+      return p;
+    });
+
+    return res;
   }
 
   var panneau = null, corps = null, entete = null;
