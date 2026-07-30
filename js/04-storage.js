@@ -230,13 +230,13 @@ function renderVault(filter){
       `<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
       WARR.map(w=>`
         <div class="cd tp" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;">
-          <div class="vic">${logo(w.brand)}</div>
+          <div class="wg"><svg viewBox="0 0 58 58" aria-hidden="true"><circle class="wg-p" cx="29" cy="29" r="26"/><circle class="wg-a" cx="29" cy="29" r="26" stroke="${(w.days||0)<=90?'#E0A05A':'var(--g)'}" style="stroke-dashoffset:${(163.4*(1-Math.max(0,Math.min(1,(w.days||0)/730)))).toFixed(1)}"/></svg><div class="wg-s">${escapeHTML(String(w.brand||'?').charAt(0).toUpperCase())}</div></div>
           <div style="flex:1;min-width:0;">
             <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:2px;font-weight:700;">${escapeHTML(w.brand)}</div>
             <div style="font-size:13px;color:var(--cr);font-weight:400;">${escapeHTML(w.name)}</div>
             <div style="font-size:11px;color:var(--d2);margin-top:1px;">Expire le ${escapeHTML(w.exp)}</div>
           </div>
-          <span class="ba ba-${w.st==='r'?'r':'g'}">${w.days}j</span>
+          <div style="text-align:right;flex-shrink:0;"><div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;line-height:1;color:${(w.days||0)<=90?'#E0A05A':'var(--cr)'};">${(w.days||0)>=60?Math.round((w.days||0)/30):(w.days||0)}</div><div style="font-size:9.5px;letter-spacing:.08em;margin-top:3px;color:${(w.days||0)<=90?'rgba(224,160,90,.75)':'var(--d2)'};">${(w.days||0)>=60?'MOIS':'JOURS'}</div></div>
         </div>`).join('')
     )
 
@@ -280,13 +280,13 @@ function renderVault(filter){
   if(filter==='warr'){
     html+=WARR.map((w,i)=>`
       <div class="cd tp" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;animation:sk .4s var(--e2) ${i*.07}s both;">
-        <div class="vic">${logo(w.brand)}</div>
+        <div class="wg"><svg viewBox="0 0 58 58" aria-hidden="true"><circle class="wg-p" cx="29" cy="29" r="26"/><circle class="wg-a" cx="29" cy="29" r="26" stroke="${(w.days||0)<=90?'#E0A05A':'var(--g)'}" style="stroke-dashoffset:${(163.4*(1-Math.max(0,Math.min(1,(w.days||0)/730)))).toFixed(1)}"/></svg><div class="wg-s">${escapeHTML(String(w.brand||'?').charAt(0).toUpperCase())}</div></div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:2px;font-weight:700;">${escapeHTML(w.brand)}</div>
           <div style="font-size:13px;color:var(--cr);font-weight:400;">${escapeHTML(w.name)}</div>
           <div style="font-size:11px;color:var(--d2);margin-top:1px;">Expire le ${escapeHTML(w.exp)}</div>
         </div>
-        <span class="ba ba-${w.st==='r'?'r':'g'}">${w.days}j</span>
+        <div style="text-align:right;flex-shrink:0;"><div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;line-height:1;color:${(w.days||0)<=90?'#E0A05A':'var(--cr)'};">${(w.days||0)>=60?Math.round((w.days||0)/30):(w.days||0)}</div><div style="font-size:9.5px;letter-spacing:.08em;margin-top:3px;color:${(w.days||0)<=90?'rgba(224,160,90,.75)':'var(--d2)'};">${(w.days||0)>=60?'MOIS':'JOURS'}</div></div>
       </div>`).join('')
   }
   if(filter==='subs'){
