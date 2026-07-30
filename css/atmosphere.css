@@ -1,0 +1,105 @@
+/* ══ ATMOSPHÈRE ══════════════════════════════════════════
+   Grammaire visuelle de CLERVIO, appliquée aux 24 écrans.
+   Remplace css/allegement.css, qui aplatissait tout.
+
+   Trois principes :
+     1. la lumière vient de l'intérieur — halo chaud par écran
+     2. du grain, pour casser le lisse numérique
+     3. de la profondeur mesurée : 3 couches d'ombre, pas 13, pas 2
+
+   Réversible : retirer la balise <link> dans index.html.
+   ════════════════════════════════════════════════════════ */
+
+/* ── 1. Lumière ambiante, sur chaque écran ───────────────── */
+.pg::before{
+  content:'';
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 72% 34% at 50% 30%, rgba(201,168,76,.075) 0%, transparent 66%),
+    radial-gradient(ellipse 120% 46% at 50% -6%, rgba(28,24,32,.85) 0%, transparent 60%);
+}
+
+/* ── 2. Grain, fixe pendant que le contenu défile ────────── */
+.pg::after{
+  content:'';
+  position:absolute; inset:0; z-index:3; pointer-events:none; opacity:.032;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Le contenu passe devant la lumière, derrière le grain */
+.pg > .sc, .pg > .ctb, .pg > .bk{ position:relative; z-index:1; }
+
+/* ── 3. Cartes : profondeur chaude, trois couches ────────── */
+.cd, .stcd, .glcd, .vic, .sic, .bai, .bme{
+  box-shadow:
+    0 0 0 1px rgba(237,224,200,.075),
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 6px 22px rgba(0,0,0,.46) !important;
+}
+.cd.tp:active, .stcd:active, .glcd:active{
+  box-shadow:
+    0 0 0 1px rgba(201,168,76,.30),
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 3px 14px rgba(0,0,0,.5) !important;
+}
+
+/* ── 4. Bouton doré : reflet intérieur et halo maîtrisé ─── */
+.bg{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.40),
+    0 8px 30px rgba(201,168,76,.22),
+    0 2px 8px rgba(0,0,0,.4) !important;
+}
+.bg:active{
+  box-shadow:
+    inset 0 2px 5px rgba(0,0,0,.30),
+    0 3px 14px rgba(201,168,76,.16) !important;
+}
+
+/* ── 5. Boutons secondaires : filet qui se réchauffe ─────── */
+.bgh, .bk, .auth-btn, .auth-apple{
+  box-shadow:0 0 0 1px rgba(237,224,200,.11) !important;
+}
+.bgh:active, .bk:active, .auth-btn:active, .auth-apple:active{
+  box-shadow:0 0 0 1px rgba(201,168,76,.35), 0 0 18px rgba(201,168,76,.10) !important;
+}
+
+/* ── 6. Navigation et boutons flottants ──────────────────── */
+.nav{
+  box-shadow:
+    0 -1px 0 rgba(201,168,76,.10),
+    0 -10px 34px rgba(0,0,0,.62) !important;
+}
+.fab, .nc{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.35),
+    0 6px 24px rgba(201,168,76,.26),
+    0 3px 12px rgba(0,0,0,.5) !important;
+}
+.tab{ box-shadow:none !important; }
+.tab.on{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.28),
+    0 2px 10px rgba(201,168,76,.20) !important;
+}
+
+/* ── 7. Champs : le focus s'allume ───────────────────────── */
+.inp{ box-shadow:0 0 0 1px rgba(237,224,200,.10) !important; }
+.inp:focus{
+  box-shadow:
+    0 0 0 1px rgba(201,168,76,.50),
+    0 0 20px rgba(201,168,76,.12) !important;
+}
+
+/* ── 8. Notifications ────────────────────────────────────── */
+.toast{
+  box-shadow:
+    0 0 0 1px rgba(237,224,200,.08),
+    0 12px 36px rgba(0,0,0,.62) !important;
+}
+
+/* ── 9. Barre supérieure : filet chaud plutôt que gris ───── */
+.ctb{ border-bottom-color:rgba(201,168,76,.13) !important; }
+
+/* ── 10. L'orbe du concierge garde son halo d'origine ───── */
+</style>
