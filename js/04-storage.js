@@ -80,8 +80,8 @@ function showOrd(id){
 
   const amount=Number(o.amt)||0
   let html='<div style="padding:62px 22px 24px;">'
-  html+='<div style="width:100%;height:165px;border-radius:22px;margin-bottom:22px;background:linear-gradient(145deg,#1A1A1C,#0E0E10);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.12);box-shadow:0 10px 30px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05);position:relative;overflow:hidden;">'+logo(o.brand,72)+'</div>'
-  html+='<div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--g);margin-bottom:4px;font-weight:600;">'+escapeHTML(o.brand)+'</div>'
+  html+='<div style="display:flex;align-items:center;gap:15px;margin-bottom:26px;"><div style="width:50px;height:50px;border-radius:15px;flex-shrink:0;display:grid;place-items:center;font-family:Cormorant Garamond,serif;font-size:1.45rem;color:#0D0B08;background:linear-gradient(145deg,var(--gh) 0%,var(--g) 52%,var(--gd) 100%);box-shadow:0 6px 22px rgba(201,168,76,.24),inset 0 1px 0 rgba(255,255,255,.35);">'+escapeHTML(String(o.brand||'?').charAt(0).toUpperCase())+'</div><div style="min-width:0;"><div style="font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--d2);margin-bottom:4px;">'+escapeHTML(o.brand)+'</div><div style="font-size:12.5px;color:var(--d1);">'+(o.ref?'Commande '+escapeHTML(o.ref):'Référence non communiquée')+'</div></div></div>'
+  
   html+='<h2 style="font-family:Cormorant Garamond,serif;font-size:2rem;font-weight:300;color:var(--cr);margin-bottom:4px;">'+escapeHTML(o.name)+'</h2>'
   html+='<div style="font-family:Cormorant Garamond,serif;font-size:2.1rem;font-weight:400;margin-bottom:16px;background:linear-gradient(135deg,var(--gh),var(--g));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">'+amount.toFixed(2).replace('.00','')+' €</div>'
   html+='<span class="ba ba-'+escapeHTML(o.sc||'b')+'">'+escapeHTML(o.st)+'</span>'
@@ -98,6 +98,11 @@ function showOrd(id){
   if(o.warr){
     html+='<div class="cd tp" onclick="go(\'p-vault\')" style="display:flex;align-items:center;gap:12px;"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span style="font-size:13px;color:var(--d1);flex:1;">🛡 Garantie · '+escapeHTML(o.warr)+' mois</span><span style="font-size:11px;color:var(--g);">Voir dans le coffre →</span></div>'
   }
+  html+='<div style="margin-top:26px;padding-top:17px;border-top:1px solid rgba(237,224,200,.08);display:flex;justify-content:space-between;gap:12px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--d2);">'
+    +(o.warr?'<span>Garantie '+escapeHTML(o.warr)+' mois</span>':'')
+    +(o.retour?'<span>Retour avant le '+escapeHTML(o.retour)+'</span>':'')
+    +((!o.warr&&!o.retour)?'<span style="margin:0 auto;">Aucune garantie enregistrée</span>':'')
+    +'</div>'
   html+='</div>'
   document.getElementById('od-c').innerHTML=html
   go('p-od')
