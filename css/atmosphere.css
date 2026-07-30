@@ -101,4 +101,18 @@
 /* ── 9. Barre supérieure : filet chaud plutôt que gris ───── */
 .ctb{ border-bottom-color:rgba(201,168,76,.13) !important; }
 
-/* ── 10. L'orbe du concierge garde son halo d'origine ───── */
+/* ── 10. Jauge de garantie : l'arc de décompte ────────────
+   Le temps restant devient lisible d'un coup d'oeil.
+   Référence : 24 mois, la garantie légale française. */
+.wg{position:relative;width:56px;height:56px;flex-shrink:0;}
+.wg svg{position:absolute;inset:0;transform:rotate(-90deg);}
+.wg-p{fill:none;stroke:rgba(237,224,200,.09);stroke-width:2;}
+.wg-a{fill:none;stroke-width:2;stroke-linecap:round;stroke-dasharray:163.4;
+  transition:stroke-dashoffset 1s cubic-bezier(0.16,1,0.3,1);}
+.wg-s{position:absolute;inset:7px;border-radius:50%;display:grid;place-items:center;
+  font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--cr);
+  background:linear-gradient(150deg,rgba(237,224,200,.09),rgba(237,224,200,.03));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);}
+
+/* ── 11. L'orbe du concierge garde son halo d'origine ───── */
+</style>
