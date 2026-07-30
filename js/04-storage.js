@@ -62,20 +62,20 @@ function showOrd(id){
   if(currentIndex<0) currentIndex=isReturn?4:0
   const steps=statuses.map((label,index)=>({
     l:label==='Livré'?'Livrée':label,
-    d:index===0 ? String(o.dt||'—') : index<currentIndex ? 'Terminé' : index===currentIndex ? 'Statut actuel' : 'À venir',
+    d:index===0 ? String(o.dt||'') : (index===statuses.length-1 ? (o.livr || 'Date non communiquée') : ''),
     ok:index<currentIndex || (index===currentIndex && currentStatus==='Livré'),
     cur:index===currentIndex && currentStatus!=='Livré'
   }))
-  if(isReturn) steps.push({l:'Retour / remboursement',d:'Statut actuel',ok:false,cur:true})
+  if(isReturn) steps.push({l:'Retour / remboursement',d:'',ok:false,cur:true})
 
   let stepsHtml=''
   steps.forEach((s,i)=>{
-    const dotColor=s.ok?'var(--grn)':s.cur?'var(--g)':'rgba(255,255,255,.15)'
-    const dotGlow=s.ok?'0 0 10px rgba(50,215,75,.55)':s.cur?'0 0 10px rgba(200,168,74,.55)':'none'
-    const lineColor=s.ok?'rgba(50,215,75,.3)':'var(--ln2, rgba(255,255,255,.07))'
+    const dotColor=s.ok?'linear-gradient(150deg,var(--gh),var(--gd))':s.cur?'var(--g)':'rgba(255,255,255,.15)'
+    const dotGlow=s.ok?'0 0 10px rgba(201,168,76,.45)':s.cur?'0 0 0 4px rgba(201,168,76,.14),0 0 18px rgba(201,168,76,.5)':'none'
+    const lineColor=s.ok?'linear-gradient(180deg,var(--g),rgba(201,168,76,.35))':'var(--ln2, rgba(255,255,255,.07))'
     const textColor=s.cur?'var(--g)':s.ok?'var(--d1)':'var(--d2)'
     const lineHtml=i<steps.length-1?'<div style="width:1px;flex:1;min-height:14px;background:'+lineColor+';margin:3px 0;"></div>':''
-    stepsHtml+='<div style="display:flex;gap:14px;margin-bottom:10px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="width:10px;height:10px;border-radius:50%;flex-shrink:0;background:'+dotColor+';box-shadow:'+dotGlow+';"></div>'+lineHtml+'</div><div style="padding-bottom:6px;"><div style="font-size:12px;color:'+textColor+';">'+escapeHTML(s.l)+'</div><div style="font-size:10px;color:var(--d2);margin-top:1px;">'+escapeHTML(s.d)+'</div></div></div>'
+    stepsHtml+='<div style="display:flex;gap:14px;margin-bottom:10px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="width:10px;height:10px;border-radius:50%;flex-shrink:0;background:'+dotColor+';box-shadow:'+dotGlow+';"></div>'+lineHtml+'</div><div style="padding-bottom:6px;"><div style="font-size:12px;color:'+textColor+';">'+escapeHTML(s.l)+'</div>'+(s.d?'<div style="font-size:10px;color:var(--d2);margin-top:3px;">'+escapeHTML(s.d)+'</div>':'')+'</div></div>'
   })
 
   const amount=Number(o.amt)||0
