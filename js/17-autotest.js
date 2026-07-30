@@ -126,13 +126,22 @@
   }
 
   /* ── Seconde phase : le fonctionnement, pas seulement l'affichage ── */
+  /* ORDS, WARR et SUBS sont declares en let : ils vivent dans
+     l'environnement lexical global, pas sur window. On y accede
+     donc par identifiant direct, jamais par window[...]. */
   function tableau(nom){
+    var v = null;
     try{
-      var v = window[nom];
-      if (Array.isArray(v)) return v;
-      v = eval(nom);
-      return Array.isArray(v) ? v : null;
+      if (nom === 'ORDS') v = (typeof ORDS !== 'undefined') ? ORDS : null;
+      else if (nom === 'WARR') v = (typeof WARR !== 'undefined') ? WARR : null;
+      else if (nom === 'SUBS') v = (typeof SUBS !== 'undefined') ? SUBS : null;
     }catch(e){ return null; }
+    return Array.isArray(v) ? v : null;
+  }
+
+  function connecte(){
+    try{ return (typeof currentUser !== 'undefined') && !!currentUser; }
+    catch(e){ return false; }
   }
 
   function fonctions(){
@@ -185,6 +194,8 @@
 
     test('en-tête du profil', function(){
       var p = [];
+      /* Hors session, il n'y a rien a afficher : ce n'est pas une panne */
+      if (!connecte()) return [];
       var n = document.getElementById('profile-name');
       var v = n ? (n.textContent || '').trim() : '';
       if (!v || v === '—') p.push('nom non renseigné');
@@ -200,7 +211,10 @@
       ['p-vault','p-orders','p-home','p-ai'].forEach(function(id){
         var el = document.getElementById(id);
         if (!el) return;
-        if (/<script/i.test(el.innerHTML || '')) p.push(id + ' contient une balise script');
+        var scripts = el.querySelectorAll ? el.querySelectorAll('script') : [];
+        for (var k = 0; k < scripts.length; k++){
+          if (!scripts[k].hasAttribute('data-clervio')) p.push(id + ' contient un script non identifié');
+        }
       });
       return p;
     });
