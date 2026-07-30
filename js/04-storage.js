@@ -156,7 +156,7 @@ async function loadVaultData(){
     DOCS = (docsResult.data || []).map(d => ({
       id:d.id, brand:d.brand || '—', name:d.name || 'Document', sub:d.type || 'document',
       date:d.created_at ? new Date(d.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}) : '—',
-      url:d.file_url || d.public_url || null
+      chemin:d.file_path || null, poids:d.file_size || 0
     }))
 
     if(foldersResult.error){
@@ -217,14 +217,15 @@ function renderVault(filter){
   if(filter==='all'||filter==='docs'){
     if(filter==='all') html+=`<p class="sl" style="margin-bottom:11px;">Documents récents</p>`
     html+=DOCS.map((d,i)=>`
-      <div class="cd tp" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;animation:sk .4s var(--e2) ${i*.07}s both;">
+      <div class="cd tp"${d.chemin?` onclick="coffreOuvrir('${escapeHTML(d.chemin)}')"`:''} style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;animation:sk .4s var(--e2) ${i*.07}s both;">
         <div class="vic">${logo(d.brand)}</div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:13px;color:var(--cr);font-weight:400;margin-bottom:2px;white-space:nowrap;overflow:visible;text-overflow:ellipsis;">${escapeHTML(d.name)}</div>
-          <div style="font-size:11px;color:var(--d2);">${escapeHTML(d.sub)}</div>
+          <div style="font-size:11px;color:var(--d2);">${escapeHTML(d.sub)}${d.chemin?'':' · sans pièce jointe'}</div>
         </div>
-        <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--d2)" stroke-width="1.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+        ${d.chemin?`<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>`:``}<button onclick="event.stopPropagation();supprimerDocument('${escapeHTML(d.id)}')" aria-label="Supprimer" style="background:none;border:none;padding:7px;margin-left:4px;color:rgba(237,224,200,.20);cursor:pointer;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
       </div>`).join('')
+    html+=`<button onclick="ajouterDocument()" style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;background:none;border:1px dashed rgba(201,168,76,.22);border-radius:16px;padding:15px;margin-top:4px;color:var(--d1);font-size:13px;cursor:pointer;font-family:inherit;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Ajouter un document</button>`
     if(filter==='all') html+=`<div style="height:6px;"></div>`
   }
 
@@ -284,7 +285,7 @@ function renderVault(filter){
   // Mode filtré (pas all) — affichage direct sans accordéon
   if(filter==='warr'){
     html+=WARR.map((w,i)=>`
-      <div class="cd tp" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;animation:sk .4s var(--e2) ${i*.07}s both;">
+      <div class="cd tp"${d.chemin?` onclick="coffreOuvrir('${escapeHTML(d.chemin)}')"`:''} style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;animation:sk .4s var(--e2) ${i*.07}s both;">
         <div class="wg"><svg viewBox="0 0 58 58" aria-hidden="true"><circle class="wg-p" cx="29" cy="29" r="26"/><circle class="wg-a" cx="29" cy="29" r="26" stroke="${(w.days||0)<=90?'#E0A05A':'var(--g)'}" style="stroke-dashoffset:${(163.4*(1-Math.max(0,Math.min(1,(w.days||0)/730)))).toFixed(1)}"/></svg><div class="wg-s">${escapeHTML(String(w.brand||'?').charAt(0).toUpperCase())}</div></div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:2px;font-weight:700;">${escapeHTML(w.brand)}</div>
