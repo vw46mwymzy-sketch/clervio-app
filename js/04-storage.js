@@ -248,7 +248,7 @@ function renderVault(filter){
     // Abonnements accordéon
     html += makeAccordion('abonnements','Abonnements',
       `<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>`,
-      SUBS.map(s=>`
+      `<div style="margin:2px 0 16px;padding:20px 18px;border-radius:18px;text-align:center;background:linear-gradient(160deg,rgba(201,168,76,.11),rgba(201,168,76,.025));box-shadow:0 0 0 1px rgba(201,168,76,.24),inset 0 1px 0 rgba(255,255,255,.05),0 8px 26px rgba(0,0,0,.38);"><div style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--d2);">${SUBS.reduce((a,x)=>a+(Number(x.amt)||0),0).toFixed(2).replace(".",",")} € par mois</div><div style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;line-height:1;margin:8px 0 5px;background:linear-gradient(120deg,var(--gh),var(--g) 55%,var(--gd));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">${Math.round(SUBS.reduce((a,x)=>a+(Number(x.amt)||0),0)*12).toLocaleString("fr-FR")} €</div><div style="font-size:12px;color:var(--d1);line-height:1.5;">sur douze mois, répartis sur <b style="color:var(--cr);font-weight:400;">${SUBS.length} abonnement${SUBS.length>1?"s":""}</b></div></div>` + SUBS.map(s=>`
         <div class="cd tp" onclick="showSub('${escapeHTML(s.id)}')" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;${s.st==='paused'?'opacity:.5':''}">
           <div class="vic">${logo(s.name)}</div>
           <div style="flex:1;min-width:0;">
@@ -257,7 +257,7 @@ function renderVault(filter){
           </div>
           <div style="text-align:right;flex-shrink:0;">
             <div style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--g);letter-spacing:-.02em;">${s.amt.toFixed(2)} €</div>
-            <div style="font-size:10px;color:var(--d2);">/${escapeHTML(s.freq)}</div>
+            <div style="font-size:10px;color:var(--d2);">/${escapeHTML(s.freq)}</div><div style="font-size:9.5px;color:rgba(201,168,76,.72);margin-top:4px;white-space:nowrap;">${Math.round((Number(s.amt)||0)*12)} € / an</div>
           </div>
         </div>`).join('')
     )
@@ -275,7 +275,7 @@ function renderVault(filter){
           </div>
           <div style="text-align:right;flex-shrink:0;">
             <div style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--g);">${s.amt.toFixed(0)} €</div>
-            <div style="font-size:10px;color:var(--d2);">/${escapeHTML(s.freq)}</div>
+            <div style="font-size:10px;color:var(--d2);">/${escapeHTML(s.freq)}</div><div style="font-size:9.5px;color:rgba(201,168,76,.72);margin-top:4px;white-space:nowrap;">${Math.round((Number(s.amt)||0)*12)} € / an</div>
           </div>
         </div>`).join('')
     )
@@ -304,7 +304,7 @@ function renderVault(filter){
         </div>
         <div style="text-align:right;flex-shrink:0;">
           <div style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--g);letter-spacing:-.02em;">${s.amt.toFixed(2)} €</div>
-          <div style="font-size:10px;color:var(--d2);">/${escapeHTML(s.freq)}</div>
+          <div style="font-size:10px;color:var(--d2);">/${escapeHTML(s.freq)}</div><div style="font-size:9.5px;color:rgba(201,168,76,.72);margin-top:4px;white-space:nowrap;">${Math.round((Number(s.amt)||0)*12)} € / an</div>
         </div>
       </div>`).join('')
   }
@@ -319,7 +319,7 @@ function renderVault(filter){
         </div>
         <div style="text-align:right;flex-shrink:0;">
           <div style="font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--g);">${s.amt.toFixed(0)} €</div>
-          <div style="font-size:10px;color:var(--d2);">/${escapeHTML(s.freq)}</div>
+          <div style="font-size:10px;color:var(--d2);">/${escapeHTML(s.freq)}</div><div style="font-size:9.5px;color:rgba(201,168,76,.72);margin-top:4px;white-space:nowrap;">${Math.round((Number(s.amt)||0)*12)} € / an</div>
         </div>
       </div>`).join('')
   }
