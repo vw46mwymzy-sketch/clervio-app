@@ -1449,6 +1449,7 @@ async function signOut(){
       <footer class="ob1-foot">
         <button class="ob1-cta" onclick="go('p-ob2')">Commencer gratuitement</button>
         <button class="ob1-sec" onclick="returningUser()">J'ai déjà un compte</button>
+        <button onclick="go('p-pro')" style="display:block;width:100%;background:none;border:none;cursor:pointer;margin-top:18px;padding:6px 0;color:rgba(237,224,200,.34);font-size:12.5px;font-family:inherit;letter-spacing:.01em;">Vous êtes une entreprise ?</button>
       </footer>
 
     </div>
@@ -2207,6 +2208,71 @@ async function signOut(){
 
 <!-- ══ MENTIONS LÉGALES ══════════════════════════════ -->
 <!-- CONFIDENTIALITÉ -->
+<!-- PROFESSIONNELS -->
+<div class="pg" id="p-pro">
+  <div class="sc pb120">
+    <div style="padding:30px 24px 46px;">
+
+      <p style="font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--d2);margin-bottom:13px;">CLERVIO pour les professionnels</p>
+
+      <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.7rem;line-height:1.04;letter-spacing:-.02em;color:var(--cr);">Vos justificatifs,<br/>déjà classés.</h1>
+
+      <p style="font-size:14.5px;color:var(--d1);line-height:1.75;margin-top:20px;max-width:33ch;">CLERVIO lit vos e-mails professionnels, extrait la TVA et prépare l'export. En fin de trimestre, vous ne cherchez plus rien.</p>
+
+      <!-- Trois capacités, en lignes plutôt qu'en cartes -->
+      <div style="margin-top:38px;">
+        <div style="padding:18px 2px;border-top:1px solid rgba(237,224,200,.09);">
+          <div style="font-size:14.5px;color:var(--cr);margin-bottom:5px;">TVA extraite</div>
+          <div style="font-size:12.5px;color:var(--d2);line-height:1.6;">Montant hors taxes, taux, numéro de TVA du fournisseur. Rien n'est calculé à votre place : un montant absent reste vide.</div>
+        </div>
+        <div style="padding:18px 2px;border-top:1px solid rgba(237,224,200,.09);">
+          <div style="font-size:14.5px;color:var(--cr);margin-bottom:5px;">Export comptable</div>
+          <div style="font-size:12.5px;color:var(--d2);line-height:1.6;">Un fichier prêt pour votre logiciel ou pour votre cabinet, avec les pièces jointes.</div>
+        </div>
+        <div style="padding:18px 2px;border-top:1px solid rgba(237,224,200,.09);border-bottom:1px solid rgba(237,224,200,.09);">
+          <div style="font-size:14.5px;color:var(--cr);margin-bottom:5px;">Conservation dix ans</div>
+          <div style="font-size:12.5px;color:var(--d2);line-height:1.6;">La durée légale des pièces comptables, respectée sans y penser.</div>
+        </div>
+      </div>
+
+      <!-- Offres -->
+      <p style="font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--d2);margin:36px 0 14px;">Trois formules</p>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="background:linear-gradient(158deg,#161419,#100F13 62%,#0C0B0E);border-radius:18px;padding:17px 19px;box-shadow:0 0 0 1px rgba(237,224,200,.075),inset 0 1px 0 rgba(255,255,255,.045),0 6px 22px rgba(0,0,0,.46);">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;">
+            <span style="font-size:14.5px;color:var(--cr);">Indépendant</span>
+            <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--cr);">19,99<span style="font-size:.55em;color:var(--d2);"> €/mois</span></span>
+          </div>
+          <div style="font-size:11.5px;color:var(--d2);">Auto-entrepreneur, profession libérale, artisan. Une boîte mail, 1 000 documents.</div>
+        </div>
+
+        <div style="background:linear-gradient(158deg,#161419,#100F13 62%,#0C0B0E);border-radius:18px;padding:17px 19px;box-shadow:0 0 0 1px rgba(237,224,200,.075),inset 0 1px 0 rgba(255,255,255,.045),0 6px 22px rgba(0,0,0,.46);">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;">
+            <span style="font-size:14.5px;color:var(--cr);">Entreprise</span>
+            <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--cr);">39,99<span style="font-size:.55em;color:var(--d2);"> €/mois</span></span>
+          </div>
+          <div style="font-size:11.5px;color:var(--d2);">TPE et PME. Cinq accès partagés, trois boîtes mail, 5 000 documents.</div>
+        </div>
+
+        <div style="background:linear-gradient(158deg,#1A1712,#131009 62%,#0D0B07);border-radius:18px;padding:17px 19px;box-shadow:0 0 0 1px rgba(201,168,76,.26),inset 0 1px 0 rgba(255,255,255,.05),0 6px 22px rgba(0,0,0,.46);">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;">
+            <span style="font-size:14.5px;color:var(--gh);">Cabinet</span>
+            <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;background:linear-gradient(120deg,var(--gh),var(--g));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">99,99<span style="font-size:.55em;-webkit-text-fill-color:var(--d2);"> €/mois</span></span>
+          </div>
+          <div style="font-size:11.5px;color:var(--d1);">Cabinet comptable. Jusqu'à cinquante sociétés suivies, quinze accès. Soit deux euros par dossier et par mois.</div>
+        </div>
+      </div>
+
+      <!-- Une seule action : parler à quelqu'un -->
+      <button onclick="openSupport()" style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;height:55px;border:none;border-radius:100px;cursor:pointer;font-family:inherit;font-size:15px;font-weight:500;color:#0B0906;margin-top:28px;background:linear-gradient(102deg,var(--gd) 0%,var(--g) 26%,var(--gh) 52%,var(--g) 78%,var(--gd) 100%);box-shadow:0 8px 30px rgba(201,168,76,.22),inset 0 1px 0 rgba(255,255,255,.4);">Demander une démonstration</button>
+
+      <p style="font-size:11.5px;color:var(--d2);line-height:1.6;text-align:center;margin-top:16px;">Nous répondons sous un jour ouvré. Facturation sur devis possible.</p>
+
+    </div>
+  </div>
+</div>
+
 <div class="pg" id="p-privacy">
   <div class="sc pb120">
     <div style="padding:64px 24px 40px;">
