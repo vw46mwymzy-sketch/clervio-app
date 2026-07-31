@@ -37,7 +37,27 @@
       var elInit = document.getElementById('prof-init');
       if (elInit) elInit.textContent = (nom.charAt(0) || '?').toUpperCase();
 
-      var plan = (profil && profil.plan) || 'trial';
+      /* Ligne « Abonnement » des réglages : elle annonçait
+         « Premium · 4,99 €/mois » à tout le monde, y compris
+         aux comptes gratuits. */
+      try{
+        var at = document.getElementById('prof-abo-titre');
+        var ad = document.getElementById('prof-abo-detail');
+        var lib = (profil && profil.libelle_offre) || null;
+        if (at) at.textContent = 'Abonnement';
+        if (ad){
+          var p = (profil && profil.plan) || 'gratuit';
+          if (p === 'gratuit')        ad.textContent = 'Découverte · gratuit';
+          else if (p === 'trial')     ad.textContent = 'Essai en cours';
+          else if (p === 'essentiel') ad.textContent = 'Essentiel · 4,99 €/mois';
+          else if (p === 'famille')   ad.textContent = 'Famille · 8,99 €/mois';
+          else if (p === 'pro')       ad.textContent = 'Intégral · 14,99 €/mois';
+          else if (p && p.indexOf('pro_') === 0) ad.textContent = 'Offre professionnelle';
+          else ad.textContent = lib || 'Découverte · gratuit';
+        }
+      }catch(e){}
+
+      var plan = (profil && profil.plan) || 'gratuit';
       var fin  = profil && profil.trial_ends_at ? new Date(profil.trial_ends_at) : null;
       var arc  = document.getElementById('prof-arc');
       var badge = document.getElementById('profile-badge');
