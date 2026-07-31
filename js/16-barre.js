@@ -14,6 +14,7 @@
     'p-add-sub':        { retour: 'p-vault'   },
     'p-legal':          { retour: 'p-profile' },
     'p-privacy':        { retour: 'p-legal'   },
+    'p-pro':            { retour: 'p-ob1'     },
     'p-cgv':            { retour: 'p-legal'   },
     'p-pricing':        { retour: 'p-profile' },
     'p-email-sources':  { retour: 'p-profile' },
