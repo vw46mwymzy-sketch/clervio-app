@@ -77,6 +77,12 @@
     var barre = construire(id, cfg);
     hote.insertBefore(barre, hote.firstElementChild);
 
+    /* L'ancien chevron flottant fait doublon avec celui de la barre.
+       Deux boutons retour sur un meme ecran, c'est une hesitation
+       offerte a l'utilisateur pour rien. */
+    var bk = page.querySelector('.bk');
+    if (bk) bk.style.display = 'none';
+
     /* Le bloc suivant porte un padding haut prévu sans barre : on le réduit. */
     var suivant = barre.nextElementSibling;
     if (suivant && suivant.style){
