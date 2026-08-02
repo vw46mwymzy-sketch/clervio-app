@@ -43,7 +43,16 @@ async function callAIEdge(msg, context){
 /* ══ CONCIERGE IA ══════════════════════════════════════ */
 
 function displayAIResponse(msgs, text){
-  const formatted = escapeHTML(text).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').split('\n').join('<br/>')
+  /* Le modèle produit du markdown : gras, listes, séparateurs.
+     Non rendu, il s'affiche en brut — astérisques et tirets visibles.
+     L'échappement passe toujours en premier : le texte vient de l'IA,
+     donc de l'extérieur. */
+  const formatted = escapeHTML(text)
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|<br\/>)\s*[-–—]{3,}\s*(?=<br\/>|$)/g, '$1<span style="display:block;height:1px;background:rgba(237,224,200,.10);margin:12px 0;"></span>')
+    .replace(/(^|\n)\s*[-•]\s+/g, '$1• ')
+    .replace(/\*(?!\s)([^*\n]+?)(?<!\s)\*/g, '<em>$1</em>')
+    .split('\n').join('<br/>')
   msgs.innerHTML += '<div style="margin-bottom:14px;">' +
     '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">' +
       '<div style="width:24px;height:24px;border-radius:8px;background:rgba(201,168,76,.15);display:flex;align-items:center;justify-content:center;font-size:12px;">V</div>' +
