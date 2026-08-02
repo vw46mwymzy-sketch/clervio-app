@@ -28,16 +28,26 @@ function updateScanProgress(percent, label){
 }
 
 function normalizeScanResult(payload){
-  const data = payload?.result || payload?.data || payload || {}
+  /* La fonction serveur renvoie { extrait: {...} } avec des clés
+     françaises. Les clés anglaises restent acceptées : une réponse
+     d'une version antérieure ne doit pas passer pour un échec. */
+  const data = payload?.extrait || payload?.result || payload?.data || payload || {}
+  const conf = data.confiance || data.confidence
+  const enPourcent = { haute: 92, moyenne: 68, faible: 35 }
   return {
-    brand: String(data.brand || data.merchant || data.vendor || '').trim(),
-    name: String(data.product || data.name || data.item || '').trim(),
-    amount: Number(data.amount ?? data.total ?? 0) || 0,
-    orderDate: String(data.order_date || data.orderDate || data.date || '').slice(0,10),
-    orderNumber: String(data.order_number || data.orderNumber || data.invoice_number || data.reference || '').trim(),
+    brand: String(data.marchand || data.brand || data.merchant || data.vendor || '').trim(),
+    name: String(data.produit || data.product || data.name || data.item || '').trim(),
+    amount: Number(data.montant ?? data.amount ?? data.total ?? 0) || 0,
+    orderDate: String(data.date_achat || data.order_date || data.orderDate || data.date || '').slice(0,10),
+    orderNumber: String(data.numero_commande || data.order_number || data.orderNumber || data.invoice_number || data.reference || '').trim(),
     status: String(data.status || 'Livré'),
-    warrantyMonths: Number(data.warranty_months ?? data.warrantyMonths ?? data.warranty ?? 0) || 0,
-    confidence: Math.round(Number(data.confidence ?? 0) * (Number(data.confidence ?? 0) <= 1 ? 100 : 1)) || null
+    warrantyMonths: Number(data.garantie_mois ?? data.warranty_months ?? data.warrantyMonths ?? data.warranty ?? 0) || 0,
+    confidence: typeof conf === 'string'
+      ? (enPourcent[conf] ?? null)
+      : (Math.round(Number(conf ?? 0) * (Number(conf ?? 0) <= 1 ? 100 : 1)) || null),
+    fichier: payload?.fichier?.chemin || null,
+    fichierOctets: payload?.fichier?.octets || 0,
+    fichierMime: payload?.fichier?.mime || null
   }
 }
 
