@@ -118,6 +118,9 @@ async function saveOrderToSupabase(order){
     order_date:      order.orderDate || new Date().toISOString().split('T')[0],
     warranty_months: order.warr || null,
     tracking_number: order.tracking || null,
+    invoice_path:    order.invoicePath || null,
+    invoice_size:    order.invoiceSize || null,
+    invoice_mime:    order.invoiceMime || null,
     source:          order.manual ? 'manual' : 'scan'
   })
   if(error){ toast('❌ ' + (error.message || 'Erreur sauvegarde')); console.error(error); return false }
