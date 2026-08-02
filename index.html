@@ -2900,6 +2900,7 @@ async function signOut(){
 <script src="js/21-concierge.js"></script>
 <script src="js/22-coffre.js"></script>
 <script src="js/23-quota.js"></script>
+<script src="js/24-offres.js"></script>
 <script src="js/17-autotest.js"></script>
 <script>
 
@@ -3032,7 +3033,8 @@ if (isIOS && !isStandalone && !hasSeenBanner) {
       <p style="font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--d2);margin-bottom:12px;">Tarification</p>
       <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;color:var(--cr);line-height:1.15;">Simple.<br/><em style="color:var(--g);">Transparent.</em></h1>
     </div>
-    <div style="padding:24px;margin-bottom:12px;border-radius:19px;background:linear-gradient(158deg,#161419,#100F13 62%,#0C0B0E);box-shadow:0 0 0 1px rgba(237,224,200,.075),inset 0 1px 0 rgba(255,255,255,.045),0 6px 22px rgba(0,0,0,.46);">
+    <div id="offres-liste">
+      <div style="padding:24px;margin-bottom:12px;border-radius:19px;background:linear-gradient(158deg,#161419,#100F13 62%,#0C0B0E);box-shadow:0 0 0 1px rgba(237,224,200,.075),inset 0 1px 0 rgba(255,255,255,.045),0 6px 22px rgba(0,0,0,.46);">
         <div style="font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--d2);margin-bottom:12px;">Découverte</div>
         <div style="display:flex;align-items:baseline;gap:7px;margin-bottom:8px;">
           <span style="font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:300;color:var(--cr);line-height:1;">Gratuit</span>
@@ -3062,6 +3064,7 @@ if (isIOS && !isStandalone && !hasSeenBanner) {
         <div style="display:flex;align-items:center;gap:12px;"><span style="color:var(--g);font-size:13px;">✓</span><span style="font-size:13px;color:var(--d1);">Connexion Gmail & Outlook <span class="badge-beta" style="margin-left:6px;">Bêta</span></span></div>
         <div style="display:flex;align-items:center;gap:12px;"><span style="color:var(--g);font-size:13px;">✓</span><span style="font-size:13px;color:var(--d1);">Export données RGPD</span></div>
         <div style="display:flex;align-items:center;gap:12px;"><span style="color:var(--g);font-size:13px;">✓</span><span style="font-size:13px;color:var(--d1);">Aucune publicité</span></div>
+      </div>
       </div>
       <button class="bg fw" onclick="go('p-ob2')" style="font-size:14px;padding:15px;">Commencer gratuitement</button>
     </div>
