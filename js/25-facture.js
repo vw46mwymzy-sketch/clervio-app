@@ -112,6 +112,59 @@
     }catch(e){ journal('err','retrait : ' + ((e && e.message) || e)); }
   }
 
+  /* ── Déplacer une commande vers le coffre ──────────────
+     Une facture déjà réglée classée en « commande » n'a pas
+     de sens : on la déplace sans perdre la pièce jointe. */
+  async function versLeCoffre(orderId){
+    if (!pret() || !orderId) return;
+    var ok = true;
+    try{ ok = window.confirm('Ranger cet achat dans votre coffre ? Il ne sera plus suivi comme une commande en cours.'); }catch(e){}
+    if (!ok) return;
+
+    try{
+      var r = await supa.from('orders')
+        .select('brand,name,amount,currency,order_date,warranty_months,invoice_path,invoice_size,invoice_mime')
+        .eq('id', orderId).eq('user_id', currentUser.id).maybeSingle();
+      if (!r || r.error || !r.data){ dire("Commande introuvable."); return; }
+      var o = r.data;
+
+      var ins = await supa.from('vault_documents').insert({
+        user_id: currentUser.id,
+        name: o.name || o.brand || 'Document',
+        type: 'facture',
+        brand: o.brand || null,
+        amount: o.amount || null,
+        currency: o.currency || 'EUR',
+        doc_date: o.order_date || null,
+        warranty_months: o.warranty_months || null,
+        source: 'deplace',
+        file_path: o.invoice_path || null,
+        file_size: o.invoice_size || null,
+        file_mime: o.invoice_mime || null,
+        file_added_at: new Date().toISOString()
+      });
+      if (ins && ins.error){ journal('err','copie : '+ins.error.message); dire("Le déplacement a échoué."); return; }
+
+      /* On détache la pièce avant de supprimer : le déclencheur de
+         suppression effacerait sinon le fichier qu'on vient de reprendre. */
+      await supa.from('orders')
+        .update({ invoice_path: null, invoice_size: null, invoice_mime: null })
+        .eq('id', orderId).eq('user_id', currentUser.id);
+
+      var del = await supa.from('orders').delete().eq('id', orderId).eq('user_id', currentUser.id);
+      if (del && del.error){ journal('err','suppression : '+del.error.message); }
+
+      journal('log','achat déplacé vers le coffre');
+      dire('Rangé dans votre coffre.');
+      if (typeof rechargerDonnees === 'function'){ try{ await rechargerDonnees(); }catch(x){} }
+      if (typeof window.go === 'function') window.go('p-vault');
+    }catch(e){
+      journal('err','déplacement : ' + ((e && e.message) || e));
+      dire("Le déplacement a échoué.");
+    }
+  }
+
+  window.rangerDansCoffre = versLeCoffre;
   window.attacherFacture = attacher;
   window.ouvrirFacture   = ouvrir;
   window.retirerFacture  = retirer;
