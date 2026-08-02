@@ -197,7 +197,42 @@ async function importOutlookClient(session,token){
 /* Le jeton de session Google expire au bout d'une heure. On le
    conserve chiffré côté serveur dès qu'on l'a, puis on demande
    un jeton valide — renouvelé si nécessaire. Sans cela, la
-   détection s'arrête une heure après la connexion. */
+   détection s'arrête une heure après la connexion.
+
+   Capturer le jeton SEULEMENT au moment de synchroniser était
+   la faille : une redirection OAuth recharge la page, referme
+   la fenêtre qui portait les jetons, et ils étaient perdus si
+   personne ne les récupérait à cet instant précis. */
+async function capturerJetonAuRetourOAuth(){
+  try{
+    if (location.search.indexOf('mail=connected') === -1) return
+    if (!supa || !currentUser) { setTimeout(capturerJetonAuRetourOAuth, 400); return }
+
+    const { data:{ session } } = await supa.auth.getSession()
+    if (session?.provider_token){
+      try{
+        await supa.functions.invoke('gmail-token', { body:{
+          action:'conserver',
+          email: (currentUser.email || '').toLowerCase(),
+          access_token: session.provider_token,
+          refresh_token: session.provider_refresh_token || '',
+          expires_in: 3600
+        }})
+        if (typeof window.CLERVIO_DIAG !== 'undefined' && window.CLERVIO_DIAG.log){
+          window.CLERVIO_DIAG.log('email', session.provider_refresh_token
+            ? 'jeton de renouvellement capturé au retour Google'
+            : 'jeton capturé, sans renouvellement — Google ne l\'a pas fourni')
+        }
+      }catch(e){ /* échec silencieux : le jeton sert quand même pour cette session */ }
+    }
+
+    const propre = location.pathname
+    try{ history.replaceState(null, '', propre) }catch(e){}
+  }catch(e){}
+}
+if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', capturerJetonAuRetourOAuth)
+else capturerJetonAuRetourOAuth()
+
 async function jetonGmailValide(){
   if(!currentUser || !supa) return null
   try{
