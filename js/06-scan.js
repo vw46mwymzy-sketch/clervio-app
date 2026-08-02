@@ -115,7 +115,47 @@ async function analyzeDocument(file){
     renderScan('error',{message:error.message || 'Analyse impossible pour le moment.'})
   }
 }
-async async function confirmScannedOrder(){
+/* Une facture déjà réglée n'a rien à faire dans « Commandes » :
+   ce mot annonce un achat en cours, un suivi, une livraison.
+   L'utilisateur choisit la destination après l'analyse. */
+async function confirmScannedDocument(){
+  const brand = document.getElementById('scan-brand')?.value?.trim()
+  const name  = document.getElementById('scan-name')?.value?.trim()
+  const amount = parseFloat(document.getElementById('scan-amount')?.value) || 0
+  const docDate = document.getElementById('scan-date')?.value || new Date().toISOString().slice(0,10)
+  const warrantyMonths = parseInt(document.getElementById('scan-warranty')?.value) || null
+  if(!name && !brand){ highlight('scan-name'); return }
+
+  if(typeof supa === 'undefined' || !supa || typeof currentUser === 'undefined' || !currentUser){
+    toast('Connectez-vous pour enregistrer ce document'); return
+  }
+
+  const ligne = {
+    user_id: currentUser.id,
+    name: name || brand || 'Document',
+    type: 'facture',
+    brand: brand || null,
+    amount: amount || null,
+    currency: 'EUR',
+    doc_date: docDate,
+    warranty_months: warrantyMonths,
+    source: 'scan',
+    file_path: lastScanResult?.fichier || null,
+    file_size: lastScanResult?.fichierOctets || null,
+    file_mime: lastScanResult?.fichierMime || null,
+    file_added_at: new Date().toISOString()
+  }
+
+  const { error } = await supa.from('vault_documents').insert(ligne)
+  if(error){ toast('❌ ' + (error.message || 'Erreur')); return }
+
+  lastScanResult = null
+  if(typeof rechargerDonnees === 'function'){ try{ await rechargerDonnees() }catch(e){} }
+  renderScan('done')
+  toast('✓ Rangé dans votre coffre')
+}
+
+async function confirmScannedOrder(){
   const brand = document.getElementById('scan-brand')?.value?.trim()
   const name = document.getElementById('scan-name')?.value?.trim()
   const amount = parseFloat(document.getElementById('scan-amount')?.value) || 0
@@ -127,15 +167,10 @@ async async function confirmScannedOrder(){
   if(!name){ highlight('scan-name'); return }
 
   const scMap = {'Livré':'g','En transit':'o','Expédiée':'o','Confirmée':'b','En attente':'b','Retour':'r'}
-  /* Le document scanné suit la commande : sans ce lien, la facture
-     reste orpheline dans le coffre et introuvable depuis l'achat. */
   const order = {
     id:Date.now(), brand, name, amt:amount, st:status, sc:scMap[status]||'b',
     dt:formatDateFR(orderDate), orderDate,
-    warr:warrantyMonths, tracking:orderNumber || null, manual:false,
-    invoicePath: lastScanResult?.fichier || null,
-    invoiceSize: lastScanResult?.fichierOctets || null,
-    invoiceMime: lastScanResult?.fichierMime || null
+    warr:warrantyMonths, tracking:orderNumber || null, manual:false
   }
   const saved = await saveOrderToSupabase(order)
   if(!saved) return
