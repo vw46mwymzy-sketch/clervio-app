@@ -1449,7 +1449,7 @@ async function signOut(){
       <footer class="ob1-foot">
         <button class="ob1-cta" onclick="go('p-ob2')">Commencer gratuitement</button>
         <button class="ob1-sec" onclick="returningUser()">J'ai déjà un compte</button>
-        <button onclick="go('p-pro')" style="display:block;width:100%;background:none;border:none;cursor:pointer;margin-top:18px;padding:6px 0;color:rgba(237,224,200,.34);font-size:12.5px;font-family:inherit;letter-spacing:.01em;">Vous êtes une entreprise ?</button>
+        <button id="ob1-pro" onclick="go('p-pro')" style="display:none;width:100%;background:none;border:none;cursor:pointer;margin-top:18px;padding:6px 0;color:rgba(237,224,200,.34);font-size:12.5px;font-family:inherit;letter-spacing:.01em;">Vous êtes une entreprise ?</button>
       </footer>
 
     </div>
@@ -2213,6 +2213,9 @@ async function signOut(){
   <div class="sc pb120">
     <div style="padding:30px 24px 46px;">
 
+      <div style="margin-bottom:22px;padding:13px 15px;border-radius:13px;background:rgba(224,160,90,.07);box-shadow:0 0 0 1px rgba(224,160,90,.22);">
+        <div style="font-size:12px;color:#E0A05A;line-height:1.55;">Ces offres sont en préparation. Nous ouvrons les premiers accès sur demande.</div>
+      </div>
       <p style="font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--d2);margin-bottom:13px;">CLERVIO pour les professionnels</p>
 
       <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.7rem;line-height:1.04;letter-spacing:-.02em;color:var(--cr);">Vos justificatifs,<br/>déjà classés.</h1>
