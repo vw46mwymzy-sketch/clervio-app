@@ -194,12 +194,40 @@ async function importOutlookClient(session,token){
   return stats
 }
 
+/* Le jeton de session Google expire au bout d'une heure. On le
+   conserve chiffré côté serveur dès qu'on l'a, puis on demande
+   un jeton valide — renouvelé si nécessaire. Sans cela, la
+   détection s'arrête une heure après la connexion. */
+async function jetonGmailValide(){
+  if(!currentUser || !supa) return null
+  try{
+    const { data:{ session } } = await supa.auth.getSession()
+
+    /* Une session fraîche porte les jetons : on les met à l'abri. */
+    if(session?.provider_token){
+      try{
+        await supa.functions.invoke('gmail-token', { body:{
+          action:'conserver',
+          email: (currentUser.email || '').toLowerCase(),
+          access_token: session.provider_token,
+          refresh_token: session.provider_refresh_token || '',
+          expires_in: 3600
+        }})
+      }catch(e){ /* la conservation ne doit pas bloquer l'import */ }
+      return session.provider_token
+    }
+
+    const { data, error } = await supa.functions.invoke('gmail-token', { body:{ action:'obtenir' } })
+    if(error || !data?.access_token) return null
+    return data.access_token
+  }catch(e){ return null }
+}
+
 async function startMailImport(){
   if(!currentUser || !supa){ toast("Connectez-vous d'abord"); return }
-  const {data:{session}}=await supa.auth.getSession()
-  const providerToken=session?.provider_token
-  if(!session || !providerToken){
-    toast('❌ Reconnectez '+(activeMailProvider==='outlook'?'Outlook':'Gmail')+' pour lancer la synchronisation')
+  const providerToken = await jetonGmailValide()
+  if(!providerToken){
+    toast('Reconnectez '+(activeMailProvider==='outlook'?'Outlook':'Gmail')+' depuis votre profil')
     return
   }
 
