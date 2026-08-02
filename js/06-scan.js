@@ -115,7 +115,7 @@ async function analyzeDocument(file){
     renderScan('error',{message:error.message || 'Analyse impossible pour le moment.'})
   }
 }
-async function confirmScannedOrder(){
+async async function confirmScannedOrder(){
   const brand = document.getElementById('scan-brand')?.value?.trim()
   const name = document.getElementById('scan-name')?.value?.trim()
   const amount = parseFloat(document.getElementById('scan-amount')?.value) || 0
@@ -127,10 +127,15 @@ async function confirmScannedOrder(){
   if(!name){ highlight('scan-name'); return }
 
   const scMap = {'Livré':'g','En transit':'o','Expédiée':'o','Confirmée':'b','En attente':'b','Retour':'r'}
+  /* Le document scanné suit la commande : sans ce lien, la facture
+     reste orpheline dans le coffre et introuvable depuis l'achat. */
   const order = {
     id:Date.now(), brand, name, amt:amount, st:status, sc:scMap[status]||'b',
     dt:formatDateFR(orderDate), orderDate,
-    warr:warrantyMonths, tracking:orderNumber || null, manual:false
+    warr:warrantyMonths, tracking:orderNumber || null, manual:false,
+    invoicePath: lastScanResult?.fichier || null,
+    invoiceSize: lastScanResult?.fichierOctets || null,
+    invoiceMime: lastScanResult?.fichierMime || null
   }
   const saved = await saveOrderToSupabase(order)
   if(!saved) return
