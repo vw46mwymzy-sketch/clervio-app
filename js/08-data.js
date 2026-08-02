@@ -92,6 +92,8 @@ async function fetchOrders(){
     orderDate:o.order_date || null,
     warr:     o.warranty_months,
     tracking: o.tracking_number,
+    facture:      o.invoice_path || null,
+    factureMime:  o.invoice_mime || null,
     carrier:  o.carrier || null,
     livr:     o.delivery_date ? new Date(o.delivery_date).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}) : null,
     retour:   o.return_deadline ? new Date(o.return_deadline).toLocaleDateString('fr-FR',{day:'numeric',month:'long'}) : null,
