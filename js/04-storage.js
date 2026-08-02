@@ -285,7 +285,7 @@ function renderVault(filter){
   // Mode filtré (pas all) — affichage direct sans accordéon
   if(filter==='warr'){
     html+=WARR.map((w,i)=>`
-      <div class="cd tp"${d.chemin?` onclick="coffreOuvrir('${escapeHTML(d.chemin)}')"`:''} style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;animation:sk .4s var(--e2) ${i*.07}s both;">
+      <div class="cd tp" style="margin-bottom:8px;display:flex;align-items:center;gap:14px;padding:14px 16px;animation:sk .4s var(--e2) ${i*.07}s both;">
         <div class="wg"><svg viewBox="0 0 58 58" aria-hidden="true"><circle class="wg-p" cx="29" cy="29" r="26"/><circle class="wg-a" cx="29" cy="29" r="26" stroke="${(w.days||0)<=90?'#E0A05A':'var(--g)'}" style="stroke-dashoffset:${(163.4*(1-Math.max(0,Math.min(1,(w.days||0)/730)))).toFixed(1)}"/></svg><div class="wg-s">${escapeHTML(String(w.brand||'?').charAt(0).toUpperCase())}</div></div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g);margin-bottom:2px;font-weight:700;">${escapeHTML(w.brand)}</div>
