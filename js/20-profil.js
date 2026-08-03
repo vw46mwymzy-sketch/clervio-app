@@ -102,6 +102,13 @@
 
   window.rafraichirProfil = charger;
 
+  /* Le compteur d'e-mails connectés vit dans js/11-email.js,
+     mais ce module ne sait pas quand le profil s'ouvre. */
+  function chargerAvecCompteurs(){
+    charger();
+    try{ if (typeof window.rafraichirCompteurEmails === 'function') window.rafraichirCompteurEmails(); }catch(e){}
+  }
+
   /* L'écran profil peut être atteint à tout moment : on rafraîchit
      à l'ouverture plutôt qu'une seule fois au démarrage. */
   function surNavigation(){
@@ -109,7 +116,7 @@
     var orig = window.go;
     var w = function(id){
       var r = orig.apply(window, arguments);
-      if (id === 'p-profile') setTimeout(charger, 60);
+      if (id === 'p-profile') setTimeout(chargerAvecCompteurs, 60);
       return r;
     };
     w.__profil = true;
