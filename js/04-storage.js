@@ -98,6 +98,9 @@ function showOrd(id){
   if(o.warr){
     html+='<div class="cd tp" onclick="go(\'p-vault\')" style="display:flex;align-items:center;gap:12px;"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span style="font-size:13px;color:var(--d1);flex:1;">🛡 Garantie · '+escapeHTML(o.warr)+' mois</span><span style="font-size:11px;color:var(--g);">Voir dans le coffre →</span></div>'
   }
+  if(o.notes && o.notes.trim()){
+    html+='<button data-id="'+escapeHTML(o.id)+'" onclick="genererDossierLitige(this.dataset.id)" style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;background:none;border:1px solid rgba(201,168,76,.22);border-radius:100px;padding:13px;margin-top:14px;color:var(--gh);font-size:12.5px;cursor:pointer;font-family:inherit;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--gh)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>Constituer le dossier de litige</button>'
+  }
   if(o.refundStatus){
     var _lbl = o.refundStatus==='attente' ? 'Remboursement en attente' : (o.refundStatus==='recu' ? 'Remboursement reçu' : 'Remboursement refusé')
     var _coul = o.refundStatus==='attente' ? 'var(--gh)' : (o.refundStatus==='recu' ? '#8FBF7F' : '#E08A7A')
