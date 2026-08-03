@@ -277,7 +277,7 @@ async function conserverJetonAvecReprise(email, accessToken, refreshToken){
   try{
     var diag = await supa.auth.getSession()
     var s = diag && diag.data && diag.data.session
-    journal('log', 'avant appel — session: ' + (s ? 'présente' : 'absente')
+    journal('err', 'DIAG avant appel — session: ' + (s ? 'présente' : 'absente')
       + ', access_token: ' + (s && s.access_token ? (s.access_token.length + ' car.') : 'absent')
       + ', expire: ' + (s && s.expires_at ? new Date(s.expires_at*1000).toISOString() : '—'))
   }catch(eDiag){ journal('err', 'diag session : ' + ((eDiag&&eDiag.message)||eDiag)) }
