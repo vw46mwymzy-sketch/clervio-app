@@ -115,7 +115,7 @@
   }
 
   /* ── Interface : une lettre à copier ou envoyer ── */
-  function afficherLettre(titre, texte){
+  function afficherLettre(titre, texte, orderIdPourSuivi){
     var ancien = document.getElementById('agir-overlay');
     if (ancien) ancien.remove();
 
@@ -130,6 +130,7 @@
       +   '</div>'
       +   '<div style="font-size:11.5px;color:var(--d2);line-height:1.5;margin-bottom:14px;">Un brouillon, pas un envoi automatique. Relisez, adaptez si besoin, puis envoyez-le où le service client vous répond habituellement.</div>'
       +   '<textarea id="agir-texte" readonly style="flex:1;min-height:280px;background:rgba(255,255,255,.03);border:1px solid rgba(237,224,200,.10);border-radius:14px;padding:16px;color:var(--cr);font-size:13.5px;line-height:1.65;font-family:inherit;resize:none;margin-bottom:16px;">' + esc(texte) + '</textarea>'
+      +   (orderIdPourSuivi ? '<button onclick="suivreRemboursement(\'' + esc(orderIdPourSuivi) + '\')" style="width:100%;height:44px;border:1px solid rgba(201,168,76,.28);border-radius:100px;background:none;color:var(--gh);font-size:12.5px;font-family:inherit;margin-bottom:10px;">Suivre ce remboursement dans CLERVIO</button>' : '')
       +   '<div style="display:flex;gap:10px;">'
       +     '<button onclick="window.copierLettre()" style="flex:1;height:50px;border:1px solid rgba(237,224,200,.16);border-radius:100px;background:none;color:var(--cr);font-size:14px;font-family:inherit;">Copier le texte</button>'
       +     '<button onclick="window.envoyerLettre(\\'' + esc(titre).replace(/'/g,"\\\\'") + '\\')" style="flex:1;height:50px;border:none;border-radius:100px;background:linear-gradient(102deg,var(--gd),var(--g) 26%,var(--gh) 52%,var(--g) 78%,var(--gd));color:#0B0906;font-size:14px;font-weight:500;font-family:inherit;">Envoyer par e-mail</button>'
@@ -247,7 +248,8 @@
     if (!o){ journal('err','réclamation : données manquantes'); return; }
     var r = genererReclamation(o);
     var titres = { retractation:'Rétractation', garantie:'Garantie', conformite:'Réclamation' };
-    afficherLettre(titres[r.type] || 'Réclamation', r.texte);
+    var suiviDisponible = (r.type === 'garantie' || r.type === 'conformite') ? o.id : null;
+    afficherLettre(titres[r.type] || 'Réclamation', r.texte, suiviDisponible);
     journal('log','lettre de réclamation générée (' + r.type + ') : ' + (o.name||o.brand||'?'));
   };
 })();
