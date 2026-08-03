@@ -341,4 +341,79 @@
       journal('log','bon de retour généré : ' + (o.name||o.brand||'?'));
     }catch(e){ journal('err','bon de retour : ' + ((e&&e.message)||e)); }
   };
+
+  function genererDossierLitigeHTML(o){
+    var nom = esc(o.name || o.brand || 'Article');
+    var marque = esc(o.brand || '');
+    var achat = dateFR(o.order_date || o.orderDate);
+    var numero = esc(o.order_number || o.orderNumber || o.ref || '—');
+    var montant = o.amt || o.amount;
+    var aujourd = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+
+    var lignesJournal = (o.notes || '').split('\\n').filter(function(l){ return l.trim(); });
+    var journalHTML = lignesJournal.length
+      ? lignesJournal.map(function(l){
+          var m = l.match(/^\\[([^\\]]+)\\]\\s*(.*)$/);
+          return '<div class="evt"><span class="evt-d">' + esc(m?m[1]:'') + '</span><span class="evt-t">' + esc(m?m[2]:l) + '</span></div>';
+        }).join('')
+      : '<div class="evt"><span class="evt-t" style="color:#999;">Aucune démarche enregistrée pour l\\'instant.</span></div>';
+
+    var statutLabels = { attente:'Remboursement en attente', recu:'Remboursement reçu', refuse:'Remboursement refusé' };
+    var statutActuel = o.refundStatus ? (statutLabels[o.refundStatus] || o.refundStatus) : 'Aucun remboursement en cours de suivi';
+
+    return '<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">'
+      + '<title>Dossier — ' + nom + '</title>'
+      + '<style>'
+      + '@page{margin:20mm}'
+      + 'body{font-family:Georgia,serif;color:#111;max-width:680px;margin:0 auto;padding:24px;line-height:1.5;}'
+      + 'h1{font-size:21px;font-weight:400;margin-bottom:4px;}'
+      + '.sst{color:#888;font-size:12.5px;margin-bottom:26px;}'
+      + 'h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#555;border-bottom:1px solid #ccc;padding-bottom:6px;margin:26px 0 14px;}'
+      + '.ligne{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;font-size:13.5px;}'
+      + '.lbl{color:#666;}.val{font-weight:600;}'
+      + '.evt{display:flex;gap:14px;padding:9px 0;border-bottom:1px solid #f0f0f0;font-size:12.5px;}'
+      + '.evt-d{color:#999;white-space:nowrap;min-width:110px;}'
+      + '.evt-t{color:#222;}'
+      + '.statut{padding:12px 16px;background:#f7f4ec;border-left:3px solid #b8944a;font-size:13.5px;margin-top:4px;}'
+      + '.piece{margin-top:10px;padding:12px 16px;border:1px dashed #bbb;font-size:12.5px;color:#555;}'
+      + '.pied{margin-top:34px;font-size:11px;color:#999;text-align:center;border-top:1px solid #eee;padding-top:14px;}'
+      + '@media print{.noprint{display:none}}'
+      + '</style></head><body>'
+      + '<h1>Dossier de litige</h1>'
+      + '<div class="sst">Constitué par CLERVIO le ' + aujourd + '</div>'
+
+      + '<h2>Achat concerné</h2>'
+      + '<div class="ligne"><span class="lbl">Article</span><span class="val">' + nom + (marque && marque!==nom ? ' — '+marque : '') + '</span></div>'
+      + '<div class="ligne"><span class="lbl">Référence de commande</span><span class="val">' + numero + '</span></div>'
+      + (achat ? '<div class="ligne"><span class="lbl">Date d\\'achat</span><span class="val">' + achat + '</span></div>' : '')
+      + (montant ? '<div class="ligne"><span class="lbl">Montant</span><span class="val">' + Number(montant).toFixed(2).replace('.',',') + ' €</span></div>' : '')
+
+      + '<h2>Chronologie des démarches</h2>'
+      + journalHTML
+
+      + '<h2>État actuel</h2>'
+      + '<div class="statut">' + esc(statutActuel) + '</div>'
+
+      + '<h2>Justificatif</h2>'
+      + (o.facture
+          ? '<div class="piece">Une facture ou un justificatif est conservé dans le coffre CLERVIO associé à cette commande. Joignez-le séparément à ce dossier : ouvrez la commande dans l\\'application, section « Facture », pour l\\'exporter.</div>'
+          : '<div class="piece">Aucun justificatif n\\'est actuellement attaché à cette commande dans CLERVIO.</div>')
+
+      + '<div class="pied">Document généré automatiquement à partir des informations saisies dans CLERVIO. Il constitue une aide à la constitution de votre dossier et ne remplace pas un conseil juridique.</div>'
+      + '<div class="noprint" style="margin-top:22px;text-align:center;"><button onclick="window.print()" style="padding:12px 28px;font-size:14px;cursor:pointer;">Imprimer / Enregistrer en PDF</button></div>'
+      + '</body></html>';
+  }
+
+  window.genererDossierLitige = function(orderId){
+    try{
+      var todo = (typeof ORDS !== 'undefined' ? ORDS : []);
+      var o = todo.find(function(x){ return String(x.id)===String(orderId); });
+      if (!o){ journal('err','dossier litige : commande introuvable'); return; }
+      var html = genererDossierLitigeHTML(o);
+      var w = window.open('', '_blank');
+      if (!w){ if (typeof toast==='function') toast('Autorisez les fenêtres pop-up pour ouvrir le dossier.'); return; }
+      w.document.open(); w.document.write(html); w.document.close();
+      journal('log','dossier de litige généré : ' + (o.name||o.brand||'?'));
+    }catch(e){ journal('err','dossier litige : ' + ((e&&e.message)||e)); }
+  };
 })();
