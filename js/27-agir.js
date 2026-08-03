@@ -273,4 +273,52 @@
   window.addEventListener('load', surNavigationRemboursements);
   setTimeout(surNavigationRemboursements, 1000);
   setTimeout(function(){ try{ if (typeof rafraichirRemboursements === 'function') rafraichirRemboursements(); }catch(e){} }, 1200);
+
+  function genererBonDeRetourHTML(o){
+    var nom = esc(o.name || o.brand || 'Article');
+    var marque = esc(o.brand || '');
+    var achat = dateFR(o.order_date || o.orderDate);
+    var numero = esc(o.order_number || o.orderNumber || o.ref || '—');
+    var montant = o.amt || o.amount;
+    var aujourd = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+
+    return '<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">'
+      + '<title>Bon de retour — ' + nom + '</title>'
+      + '<style>'
+      + '@page{margin:22mm}'
+      + 'body{font-family:Georgia,serif;color:#111;max-width:640px;margin:0 auto;padding:20px;}'
+      + 'h1{font-size:20px;font-weight:400;border-bottom:2px solid #111;padding-bottom:12px;margin-bottom:24px;}'
+      + '.ligne{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #ddd;font-size:14px;}'
+      + '.lbl{color:#666;}'
+      + '.val{font-weight:600;}'
+      + '.motif{margin-top:24px;padding:16px;border:1px solid #ccc;min-height:70px;font-size:13px;}'
+      + '.avert{margin-top:28px;padding:14px;background:#fdf3e2;border:1px solid #e8c98a;font-size:11.5px;line-height:1.6;color:#5a4a20;}'
+      + '.pied{margin-top:30px;font-size:11px;color:#999;text-align:center;}'
+      + '@media print{.noprint{display:none}}'
+      + '</style></head><body>'
+      + '<h1>Bon de retour</h1>'
+      + '<div class="ligne"><span class="lbl">Article</span><span class="val">' + nom + (marque && marque!==nom ? ' — '+marque : '') + '</span></div>'
+      + '<div class="ligne"><span class="lbl">Référence de commande</span><span class="val">' + numero + '</span></div>'
+      + (achat ? '<div class="ligne"><span class="lbl">Date d\\'achat</span><span class="val">' + achat + '</span></div>' : '')
+      + (montant ? '<div class="ligne"><span class="lbl">Montant</span><span class="val">' + Number(montant).toFixed(2).replace('.',',') + ' €</span></div>' : '')
+      + '<div class="ligne"><span class="lbl">Date du retour</span><span class="val">' + aujourd + '</span></div>'
+      + '<div class="motif"><div class="lbl" style="font-size:12px;margin-bottom:8px;">Motif du retour</div></div>'
+      + '<div class="avert">Ce document est un bon de référence à joindre au colis, généré par CLERVIO. <strong>Ce n\\'est pas une étiquette d\\'affranchissement</strong> : l\\'adresse de retour et le mode d\\'envoi restent ceux indiqués par le vendeur dans sa procédure de retour.</div>'
+      + '<div class="pied">Généré par CLERVIO le ' + aujourd + '</div>'
+      + '<div class="noprint" style="margin-top:24px;text-align:center;"><button onclick="window.print()" style="padding:12px 28px;font-size:14px;cursor:pointer;">Imprimer</button></div>'
+      + '</body></html>';
+  }
+
+  window.imprimerBonRetour = function(orderId){
+    try{
+      var todo = (typeof ORDS !== 'undefined' ? ORDS : []);
+      var o = todo.find(function(x){ return String(x.id)===String(orderId); });
+      if (!o){ journal('err','bon de retour : commande introuvable'); return; }
+      var html = genererBonDeRetourHTML(o);
+      var w = window.open('', '_blank');
+      if (!w){ if (typeof toast==='function') toast('Autorisez les fenêtres pop-up pour imprimer le bon.'); return; }
+      w.document.open(); w.document.write(html); w.document.close();
+      journal('log','bon de retour généré : ' + (o.name||o.brand||'?'));
+    }catch(e){ journal('err','bon de retour : ' + ((e&&e.message)||e)); }
+  };
 })();
