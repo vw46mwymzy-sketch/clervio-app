@@ -1108,8 +1108,9 @@ function initSupabase(){
       if(_pendingMailImport){
         sessionStorage.removeItem('clervio_pending_import')
         go('p-email-sources')
-        // Le sélecteur de période a été retiré : l'import démarre directement.
-        setTimeout(()=>{ try{ startMailImport() }catch(_e){} }, 400)
+        // L'import démarre désormais depuis la capture du jeton elle-même
+        // (js/11-email.js), une fois la connexion réellement confirmée —
+        // plus de déclenchement à l'aveugle sur un simple délai.
       }
       else go('p-home')
 
