@@ -342,41 +342,11 @@ function showForgotPassword(){
   go('p-forgot')
 }
 
-async function sendResetEmail(){
-  const email = document.getElementById('forgot-email')?.value?.trim()
-  if(!email){
-    highlight('forgot-email')
-    toast('Entrez votre adresse email')
-    return
-  }
-
-  const btn = document.querySelector('#p-forgot .bg')
-  if(btn){ btn.textContent = 'Envoi en cours…'; btn.disabled = true }
-
-  try{
-    if(supa){
-      const { error } = await supa.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '?reset=true'
-      })
-      if(error){
-        toast('❌ ' + (error.message || "Erreur lors de l'envoi"))
-        if(btn){ btn.textContent = 'Envoyer le lien'; btn.disabled = false }
-        return
-      }
-    }
-    // Afficher la confirmation
-    const confirm = document.getElementById('forgot-confirm')
-    if(confirm) confirm.style.display = 'block'
-    const form = document.querySelector('#p-forgot .inp')
-    if(form) form.style.display = 'none'
-    if(btn) btn.style.display = 'none'
-    document.querySelector('#p-forgot .bt').textContent = 'Retour à la connexion'
-
-  }catch(e){
-    toast('❌ Erreur réseau')
-    if(btn){ btn.textContent = 'Envoyer le lien'; btn.disabled = false }
-  }
-}
+/* sendResetEmail vivait ici en double — la version active est
+   dans js/26-motdepasse.js (chargée après, donc prioritaire),
+   qui ne révèle jamais si une adresse existe ou non. Celle-ci
+   ne s'exécutait plus jamais ; retirée le 03/08 pour ne pas
+   laisser un futur changement ici sans effet réel. */
 
 async function updatePassword(){
   const newPwd = document.getElementById('new-password')?.value
