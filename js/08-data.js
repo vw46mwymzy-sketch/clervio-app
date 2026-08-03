@@ -101,6 +101,7 @@ async function fetchOrders(){
     warrantyEndsAt: o.warranty_ends_at || null,
     refundStatus: o.refund_status || null,
     refundAmount: (o.refund_amount != null ? Number(o.refund_amount) : null),
+    notes: o.notes || '',
     ref:      o.order_number || null,
     invoiceUrl:o.invoice_url || null
   }))
