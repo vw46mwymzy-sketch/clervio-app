@@ -11,11 +11,9 @@
 
   function n(v){ return Array.isArray(v) ? v.length : 0; }
 
-  function lire(nom){
-    try{ return typeof window[nom] !== 'undefined' ? window[nom] : (eval(nom) || []); }
-    catch(e){ return []; }
-  }
-
+  /* lire() a été retirée le 03/08 : un brouillon jamais appelé,
+     remplacé par collections() juste en dessous — trois lectures
+     explicites plutôt qu'un eval() générique sur du texte. */
   function collections(){
     var o = [], w = [], s = [];
     try{ o = (typeof ORDS !== 'undefined' && Array.isArray(ORDS)) ? ORDS : []; }catch(e){}
