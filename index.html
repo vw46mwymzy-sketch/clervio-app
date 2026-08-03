@@ -1108,10 +1108,8 @@ function initSupabase(){
       if(_pendingMailImport){
         sessionStorage.removeItem('clervio_pending_import')
         go('p-email-sources')
-        const _ps = document.getElementById('import-period-section')
-        if(_ps) _ps.style.display='block'
-        // Lancer l'import tout de suite : le provider_token n'est valable que maintenant.
-        setTimeout(()=>{ try{ startMailImport() }catch(_e){ toast('Touchez « Analyser mes emails » pour lancer l’import') } }, 400)
+        // Le sélecteur de période a été retiré : l'import démarre directement.
+        setTimeout(()=>{ try{ startMailImport() }catch(_e){} }, 400)
       }
       else go('p-home')
 
