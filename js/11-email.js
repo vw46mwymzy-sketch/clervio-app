@@ -203,6 +203,25 @@ async function importOutlookClient(session,token){
    la faille : une redirection OAuth recharge la page, referme
    la fenêtre qui portait les jetons, et ils étaient perdus si
    personne ne les récupérait à cet instant précis. */
+/* Le compteur du profil ('Aucun email connecté') était figé
+   en dur dans le HTML : rien ne le mettait jamais à jour,
+   qu'il y ait zéro ou trois boîtes connectées. */
+async function rafraichirCompteurEmails(){
+  var el = document.getElementById('email-sources-count')
+  if (!el || !supa || !currentUser) return
+  try{
+    var r = await supa.from('email_sources')
+      .select('email', { count: 'exact', head: false })
+      .eq('user_id', currentUser.id)
+      .is('revoked_at', null)
+    var n = (r && r.data) ? r.data.length : 0
+    if (n === 0) el.textContent = 'Aucun email connecté'
+    else if (n === 1) el.textContent = r.data[0].email
+    else el.textContent = n + ' boîtes connectées'
+  }catch(e){}
+}
+window.rafraichirCompteurEmails = rafraichirCompteurEmails
+
 async function capturerJetonAuRetourOAuth(){
   try{
     if (location.search.indexOf('mail=connected') === -1) return
@@ -223,9 +242,11 @@ async function capturerJetonAuRetourOAuth(){
             ? 'jeton de renouvellement capturé au retour Google'
             : 'jeton capturé, sans renouvellement — Google ne l\'a pas fourni')
         }
+        toast('Boîte connectée.')
       }catch(e){ /* échec silencieux : le jeton sert quand même pour cette session */ }
     }
 
+    setTimeout(rafraichirCompteurEmails, 300)
     const propre = location.pathname
     try{ history.replaceState(null, '', propre) }catch(e){}
   }catch(e){}
