@@ -272,18 +272,36 @@ if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded
 else initCaptureJetonOAuth()
 
 async function conserverJetonAvecReprise(email, accessToken, refreshToken){
-  var essai = 0, ok = false
+  var essai = 0, ok = false, derniereErreur = null
+
+  try{
+    var diag = await supa.auth.getSession()
+    var s = diag && diag.data && diag.data.session
+    journal('log', 'avant appel — session: ' + (s ? 'présente' : 'absente')
+      + ', access_token: ' + (s && s.access_token ? (s.access_token.length + ' car.') : 'absent')
+      + ', expire: ' + (s && s.expires_at ? new Date(s.expires_at*1000).toISOString() : '—'))
+  }catch(eDiag){ journal('err', 'diag session : ' + ((eDiag&&eDiag.message)||eDiag)) }
+
   while (essai < 3 && !ok){
     try{
-      await supa.functions.invoke('gmail-token', { body:{
+      var r = await supa.functions.invoke('gmail-token', { body:{
         action:'conserver', email:email, access_token:accessToken,
         refresh_token: refreshToken || '', expires_in: 3600
       }})
+      if (r && r.error){
+        derniereErreur = r.error
+        throw r.error
+      }
       ok = true
     }catch(e){
+      derniereErreur = e
       essai++
       if (essai < 3) await new Promise(function(r){ setTimeout(r, 600 * essai) })
     }
+  }
+  if (!ok && derniereErreur){
+    journal('err', 'conservation jeton — échec final : ' + (derniereErreur.message || derniereErreur.name || JSON.stringify(derniereErreur)).slice(0,200)
+      + (derniereErreur.context && derniereErreur.context.status ? (' [status ' + derniereErreur.context.status + ']') : ''))
   }
   return ok
 }
