@@ -99,6 +99,8 @@ async function fetchOrders(){
     retour:   o.return_deadline ? new Date(o.return_deadline).toLocaleDateString('fr-FR',{day:'numeric',month:'long'}) : null,
     returnDeadline: o.return_deadline || null,
     warrantyEndsAt: o.warranty_ends_at || null,
+    refundStatus: o.refund_status || null,
+    refundAmount: (o.refund_amount != null ? Number(o.refund_amount) : null),
     ref:      o.order_number || null,
     invoiceUrl:o.invoice_url || null
   }))
