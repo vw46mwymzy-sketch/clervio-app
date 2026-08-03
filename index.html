@@ -2738,41 +2738,6 @@ async function signOut(){
       </div>
     </div>
 
-    <!-- Sélecteur de période d'import -->
-    <div id="import-period-section" style="display:none;margin-bottom:24px;">
-      <div style="height:1px;background:rgba(255,255,255,.07);margin-bottom:20px;"></div>
-      <p class="sl" style="margin-bottom:6px;">Période d'historique à importer</p>
-      <p style="font-size:12px;color:var(--d2);margin-bottom:16px;line-height:1.6;">CLERVIO analysera vos emails passés pour retrouver commandes, abonnements et garanties.</p>
-
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
-        <!-- 3 mois (recommandé) -->
-        <div id="period-3m" onclick="selectPeriod('3months')" class="cd" style="display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;border:1.5px solid rgba(201,168,76,.4);background:rgba(201,168,76,.06);">
-          <div style="width:20px;height:20px;border-radius:50%;border:2px solid var(--g);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <div id="dot-3m" style="width:10px;height:10px;border-radius:50%;background:var(--g);"></div>
-          </div>
-          <div style="flex:1;">
-            <div style="font-size:13px;color:var(--cr);font-weight:500;">3 derniers mois <span style="font-size:10px;color:var(--g);margin-left:6px;font-weight:400;">Recommandé</span></div>
-            <div style="font-size:11px;color:var(--d2);margin-top:2px;">~200 emails · Analyse en 15-30 secondes</div>
-          </div>
-        </div>
-
-        <!-- 12 mois -->
-        <div id="period-12m" onclick="selectPeriod('12months')" class="cd" style="display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;border:1.5px solid rgba(255,255,255,.08);">
-          <div style="width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <div id="dot-12m" style="width:10px;height:10px;border-radius:50%;background:transparent;"></div>
-          </div>
-          <div style="flex:1;">
-            <div style="font-size:13px;color:var(--cr);font-weight:500;">12 derniers mois</div>
-            <div style="font-size:11px;color:var(--d2);margin-top:2px;">~800 emails · Analyse en 1-3 minutes · Utilise plus de crédits IA</div>
-          </div>
-        </div>
-      </div>
-
-      <button id="start-import-btn" class="bg fw" onclick="startMailImport()" style="font-size:14px;padding:15px;">
-        Analyser mes emails (3 mois)
-      </button>
-    </div>
-
     <!-- Progression import -->
     <div id="import-progress" style="display:none;margin-bottom:24px;">
       <div style="padding:20px;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:18px;">
