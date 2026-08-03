@@ -266,6 +266,8 @@
     if (!o){ journal('err','réclamation : données manquantes'); return; }
     var r = genererReclamation(o);
     var titres = { retractation:'Rétractation', garantie:'Garantie', conformite:'Réclamation' };
+    var _libellesType = { retractation:'Lettre de rétractation générée', garantie:'Lettre de mise en jeu de garantie générée', conformite:'Lettre de réclamation (garantie légale) générée' };
+    ajouterAuJournal(o.id, _libellesType[r.type] || 'Lettre de réclamation générée');
     var suiviDisponible = (r.type === 'garantie' || r.type === 'conformite') ? o.id : null;
     afficherLettre(titres[r.type] || 'Réclamation', r.texte, suiviDisponible);
     journal('log','lettre de réclamation générée (' + r.type + ') : ' + (o.name||o.brand||'?'));
