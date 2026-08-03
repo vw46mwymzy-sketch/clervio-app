@@ -252,4 +252,25 @@
     afficherLettre(titres[r.type] || 'Réclamation', r.texte, suiviDisponible);
     journal('log','lettre de réclamation générée (' + r.type + ') : ' + (o.name||o.brand||'?'));
   };
+
+  /* Le compteur de l'accueil affichait « 0 » figé dans le HTML,
+     jamais relié aux remboursements réellement suivis. */
+  function surNavigationRemboursements(){
+    if (typeof window.go !== 'function' || window.go.__remb) return;
+    var orig = window.go;
+    var w = function(id){
+      var r = orig.apply(window, arguments);
+      if (id === 'p-home') setTimeout(function(){
+        try{ if (typeof rafraichirRemboursements === 'function') rafraichirRemboursements(); }catch(e){}
+      }, 200);
+      return r;
+    };
+    w.__remb = true;
+    window.go = w;
+  }
+  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', surNavigationRemboursements);
+  else surNavigationRemboursements();
+  window.addEventListener('load', surNavigationRemboursements);
+  setTimeout(surNavigationRemboursements, 1000);
+  setTimeout(function(){ try{ if (typeof rafraichirRemboursements === 'function') rafraichirRemboursements(); }catch(e){} }, 1200);
 })();
