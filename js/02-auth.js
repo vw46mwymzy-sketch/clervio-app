@@ -144,3 +144,53 @@ function startFaceID(){
   }
 }
 
+
+
+(function(){
+  if (window.CLERVIO_RECONNEXION) return;
+  window.CLERVIO_RECONNEXION = true;
+
+  async function remplirReconnexion(){
+    try{
+      var profil = (typeof currentProfile !== 'undefined' && currentProfile) ? currentProfile : null;
+      var email = (typeof currentUser !== 'undefined' && currentUser && currentUser.email) ? currentUser.email : '';
+
+      if ((!profil || !email) && typeof supa !== 'undefined' && supa){
+        try{
+          var s = await supa.auth.getSession();
+          var session = s && s.data && s.data.session;
+          if (session && session.user){
+            if (!email) email = session.user.email || '';
+            if (!profil){
+              var r = await supa.from('profiles').select('full_name').eq('id', session.user.id).maybeSingle();
+              if (r && r.data) profil = r.data;
+            }
+          }
+        }catch(e){}
+      }
+
+      var nom = (profil && (profil.full_name || profil.name)) || (email ? email.split('@')[0] : '') || 'Votre compte';
+      var elNom = document.getElementById('reconnect-name');
+      if (elNom) elNom.textContent = nom;
+      var elAvatar = document.querySelector('#p-faceid-reconnect .sr');
+      if (elAvatar) elAvatar.textContent = (nom.trim().charAt(0) || 'C').toUpperCase();
+    }catch(e){}
+  }
+
+  function surNavigation(){
+    if (typeof window.go !== 'function' || window.go.__reconnexion) return;
+    var orig = window.go;
+    var w = function(id){
+      var r = orig.apply(window, arguments);
+      if (id === 'p-faceid-reconnect') setTimeout(remplirReconnexion, 30);
+      return r;
+    };
+    w.__reconnexion = true;
+    window.go = w;
+  }
+
+  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', surNavigation);
+  else surNavigation();
+  window.addEventListener('load', surNavigation);
+  setTimeout(surNavigation, 900);
+})();
