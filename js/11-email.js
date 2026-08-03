@@ -229,25 +229,11 @@ async function capturerJetonAuRetourOAuth(){
 
     const { data:{ session } } = await supa.auth.getSession()
     if (session?.provider_token){
-      /* Trois tentatives avant d'abandonner : une simple coupure
-         réseau d'une fraction de seconde ne doit pas faire perdre
-         le jeton de renouvellement, qui n'est fourni qu'une fois. */
-      var essai = 0, ok = false
-      while (essai < 3 && !ok){
-        try{
-          await supa.functions.invoke('gmail-token', { body:{
-            action:'conserver',
-            email: (currentUser.email || '').toLowerCase(),
-            access_token: session.provider_token,
-            refresh_token: session.provider_refresh_token || '',
-            expires_in: 3600
-          }})
-          ok = true
-        }catch(e){
-          essai++
-          if (essai < 3) await new Promise(function(r){ setTimeout(r, 600 * essai) })
-        }
-      }
+      var ok = await conserverJetonAvecReprise(
+        (currentUser.email || '').toLowerCase(),
+        session.provider_token,
+        session.provider_refresh_token || ''
+      )
       if (typeof window.CLERVIO_DIAG !== 'undefined' && window.CLERVIO_DIAG.log){
         window.CLERVIO_DIAG.log('email', ok
           ? (session.provider_refresh_token ? 'jeton de renouvellement capturé' : 'jeton capturé sans renouvellement')
@@ -264,22 +250,34 @@ async function capturerJetonAuRetourOAuth(){
 if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', capturerJetonAuRetourOAuth)
 else capturerJetonAuRetourOAuth()
 
+async function conserverJetonAvecReprise(email, accessToken, refreshToken){
+  var essai = 0, ok = false
+  while (essai < 3 && !ok){
+    try{
+      await supa.functions.invoke('gmail-token', { body:{
+        action:'conserver', email:email, access_token:accessToken,
+        refresh_token: refreshToken || '', expires_in: 3600
+      }})
+      ok = true
+    }catch(e){
+      essai++
+      if (essai < 3) await new Promise(function(r){ setTimeout(r, 600 * essai) })
+    }
+  }
+  return ok
+}
+
 async function jetonGmailValide(){
   if(!currentUser || !supa) return null
   try{
     const { data:{ session } } = await supa.auth.getSession()
 
-    /* Une session fraîche porte les jetons : on les met à l'abri. */
     if(session?.provider_token){
-      try{
-        await supa.functions.invoke('gmail-token', { body:{
-          action:'conserver',
-          email: (currentUser.email || '').toLowerCase(),
-          access_token: session.provider_token,
-          refresh_token: session.provider_refresh_token || '',
-          expires_in: 3600
-        }})
-      }catch(e){ /* la conservation ne doit pas bloquer l'import */ }
+      conserverJetonAvecReprise(
+        (currentUser.email || '').toLowerCase(),
+        session.provider_token,
+        session.provider_refresh_token || ''
+      ).catch(function(){})
       return session.provider_token
     }
 
