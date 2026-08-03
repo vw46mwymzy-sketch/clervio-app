@@ -245,6 +245,13 @@ function initCaptureJetonOAuth(){
       }
       toast(ok ? 'Boîte connectée.' : 'Connecté, mais la synchronisation en arrière-plan pourrait ne pas tenir. Réessayez si besoin.')
       setTimeout(function(){ if (typeof rafraichirCompteurEmails==='function') rafraichirCompteurEmails() }, 300)
+
+      if (ok && sessionStorage.getItem('clervio_pending_import') === '1'){
+        sessionStorage.removeItem('clervio_pending_import')
+        setTimeout(function(){
+          try{ if (typeof startMailImport === 'function') startMailImport() }catch(e){}
+        }, 300)
+      }
     }finally{
       try{ history.replaceState(null, '', location.pathname) }catch(e){}
     }
