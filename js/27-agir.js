@@ -159,6 +159,22 @@
   };
 
   /* ── Points d'entrée ── */
+  window.aiderReclamationParId = function(id){
+    try{
+      var o = (typeof ORDS !== 'undefined' ? ORDS : []).find(function(x){ return String(x.id)===String(id); });
+      if (o) aiderReclamation(o);
+    }catch(e){ journal('err','lookup réclamation : ' + ((e&&e.message)||e)); }
+  };
+  window.aiderResiliationParId = function(id){
+    try{
+      var todo = [];
+      try{ todo = todo.concat(typeof SUBS !== 'undefined' ? SUBS : []); }catch(x){}
+      try{ todo = todo.concat(typeof CONTR !== 'undefined' ? CONTR : []); }catch(x){}
+      var s = todo.find(function(x){ return String(x.id)===String(id); });
+      if (s) aiderResiliation(s);
+    }catch(e){ journal('err','lookup résiliation : ' + ((e&&e.message)||e)); }
+  };
+
   window.aiderResiliation = function(sub){
     if (!sub){ journal('err','résiliation : données manquantes'); return; }
     var texte = genererResiliation(sub);
