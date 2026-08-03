@@ -416,4 +416,17 @@
       journal('log','dossier de litige généré : ' + (o.name||o.brand||'?'));
     }catch(e){ journal('err','dossier litige : ' + ((e&&e.message)||e)); }
   };
+
+  window.trackDelivery = function(orderId, tracking){
+    try{
+      if (!tracking){ journal('err','suivi : numéro absent'); return; }
+      var todo = (typeof ORDS !== 'undefined' ? ORDS : []);
+      var o = todo.find(function(x){ return String(x.id)===String(orderId); });
+      var transporteur = (o && o.carrier) ? String(o.carrier) : '';
+      var requete = (transporteur ? transporteur + ' ' : '') + 'suivi colis ' + tracking;
+      var url = 'https://www.google.com/search?q=' + encodeURIComponent(requete);
+      window.open(url, '_blank', 'noopener');
+      journal('log', 'suivi ouvert : ' + (transporteur || 'transporteur inconnu'));
+    }catch(e){ journal('err','suivi : ' + ((e&&e.message)||e)); }
+  };
 })();
