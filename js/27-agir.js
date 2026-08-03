@@ -159,6 +159,21 @@
   };
 
   /* ── Points d'entrée ── */
+  /* Passer un identifiant plutôt qu'un objet complet dans un onclick :
+     plus sûr que de sérialiser des guillemets dans du HTML. */
+  window.aiderReclamationParId = function(id){
+    try{
+      var o = (typeof ORDS !== 'undefined' ? ORDS : []).find(function(x){ return String(x.id)===String(id); });
+      if (o) aiderReclamation(o);
+    }catch(e){ journal('err','lookup réclamation : ' + ((e&&e.message)||e)); }
+  };
+  window.aiderResiliationParId = function(id){
+    try{
+      var s = (typeof SUBS !== 'undefined' ? SUBS : []).find(function(x){ return String(x.id)===String(id); });
+      if (s) aiderResiliation(s);
+    }catch(e){ journal('err','lookup résiliation : ' + ((e&&e.message)||e)); }
+  };
+
   window.aiderResiliation = function(sub){
     if (!sub){ journal('err','résiliation : données manquantes'); return; }
     var texte = genererResiliation(sub);
