@@ -182,6 +182,67 @@
     journal('log','lettre de résiliation générée : ' + (sub.name||sub.brand||'?'));
   };
 
+  async function marquerRemboursement(orderId, statut, montant){
+    if (typeof supa === 'undefined' || !supa || typeof currentUser === 'undefined' || !currentUser) return false;
+    try{
+      var maj = { refund_status: statut };
+      if (montant !== undefined) maj.refund_amount = montant;
+      var r = await supa.from('orders').update(maj).eq('id', orderId).eq('user_id', currentUser.id);
+      if (r && r.error){ journal('err','maj remboursement : '+r.error.message); return false; }
+      return true;
+    }catch(e){ journal('err','maj remboursement : '+((e&&e.message)||e)); return false; }
+  }
+
+  window.suivreRemboursement = async function(orderId){
+    var ok = await marquerRemboursement(orderId, 'attente');
+    if (ok){
+      if (typeof toast === 'function') toast('Remboursement suivi. CLERVIO vous le rappellera.');
+      try{ document.getElementById('agir-overlay').remove(); }catch(e){}
+      try{ if (typeof rechargerDonnees === 'function') await rechargerDonnees(); }catch(e){}
+      try{ if (typeof rafraichirRemboursements === 'function') rafraichirRemboursements(); }catch(e){}
+      try{ if (typeof showOrd === 'function') showOrd(orderId); }catch(e){}
+    }
+  };
+
+  window.confirmerRemboursementRecu = async function(orderId, montantDefaut){
+    var saisie = null;
+    try{ saisie = window.prompt('Montant reçu (€)', montantDefaut != null ? String(montantDefaut) : ''); }catch(e){}
+    if (saisie === null) return;
+    var n = parseFloat(String(saisie).replace(',','.'));
+    if (isNaN(n) || n < 0){ if (typeof toast === 'function') toast('Montant invalide.'); return; }
+    var ok = await marquerRemboursement(orderId, 'recu', n);
+    if (ok){
+      if (typeof toast === 'function') toast('Remboursement enregistré : ' + n.toFixed(2).replace('.',',') + ' €');
+      try{ if (typeof rechargerDonnees === 'function') await rechargerDonnees(); }catch(e){}
+      try{ if (typeof rafraichirRemboursements === 'function') rafraichirRemboursements(); }catch(e){}
+      try{ if (typeof showOrd === 'function') showOrd(orderId); }catch(e){}
+    }
+  };
+
+  window.marquerRemboursementRefuse = async function(orderId){
+    var ok = true;
+    try{ ok = window.confirm('Le marchand a-t-il refusé le remboursement ?'); }catch(e){}
+    if (!ok) return;
+    var fait = await marquerRemboursement(orderId, 'refuse');
+    if (fait){
+      if (typeof toast === 'function') toast('Noté. Vous pouvez saisir le médiateur de la consommation si besoin.');
+      try{ if (typeof rechargerDonnees === 'function') await rechargerDonnees(); }catch(e){}
+      try{ if (typeof rafraichirRemboursements === 'function') rafraichirRemboursements(); }catch(e){}
+      try{ if (typeof showOrd === 'function') showOrd(orderId); }catch(e){}
+    }
+  };
+
+  window.rafraichirRemboursements = async function(){
+    var el = document.querySelector('.stat-refunds');
+    if (!el || typeof supa === 'undefined' || !supa || typeof currentUser === 'undefined' || !currentUser) return;
+    try{
+      var r = await supa.from('orders').select('id',{count:'exact',head:true})
+        .eq('user_id', currentUser.id).eq('refund_status','attente');
+      var n = (r && typeof r.count === 'number') ? r.count : 0;
+      el.textContent = String(n);
+    }catch(e){ journal('err','compteur remboursements : '+((e&&e.message)||e)); }
+  };
+
   window.aiderReclamation = function(o){
     if (!o){ journal('err','réclamation : données manquantes'); return; }
     var r = genererReclamation(o);
