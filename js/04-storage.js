@@ -98,6 +98,17 @@ function showOrd(id){
   if(o.warr){
     html+='<div class="cd tp" onclick="go(\'p-vault\')" style="display:flex;align-items:center;gap:12px;"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span style="font-size:13px;color:var(--d1);flex:1;">🛡 Garantie · '+escapeHTML(o.warr)+' mois</span><span style="font-size:11px;color:var(--g);">Voir dans le coffre →</span></div>'
   }
+  if(o.refundStatus){
+    var _lbl = o.refundStatus==='attente' ? 'Remboursement en attente' : (o.refundStatus==='recu' ? 'Remboursement reçu' : 'Remboursement refusé')
+    var _coul = o.refundStatus==='attente' ? 'var(--gh)' : (o.refundStatus==='recu' ? '#8FBF7F' : '#E08A7A')
+    html+='<div class="cd" style="margin-top:18px;padding:16px 18px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:'+(o.refundStatus==='attente'?'12':'0')+'px;">'
+      +'<span style="font-size:12.5px;color:'+_coul+';">● '+_lbl+'</span>'
+      +(o.refundAmount!=null?'<span style="font-size:13px;color:var(--cr);">'+o.refundAmount.toFixed(2).replace('.',',')+' €</span>':'')
+      +'</div>'
+      +(o.refundStatus==='attente'?'<div style="display:flex;gap:8px;"><button data-id="'+escapeHTML(o.id)+'" data-m="'+(o.amt||0)+'" onclick="confirmerRemboursementRecu(this.dataset.id,parseFloat(this.dataset.m))" style="flex:1;height:38px;border:none;border-radius:100px;background:rgba(143,191,127,.14);color:#8FBF7F;font-size:12px;font-family:inherit;">Reçu</button><button data-id="'+escapeHTML(o.id)+'" onclick="marquerRemboursementRefuse(this.dataset.id)" style="flex:1;height:38px;border:none;border-radius:100px;background:rgba(224,138,122,.10);color:#E08A7A;font-size:12px;font-family:inherit;">Refusé</button></div>':'')
+      +'</div>'
+  }
   html+='<button data-id="'+escapeHTML(o.id)+'" onclick="aiderReclamationParId(this.dataset.id)" style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;background:none;border:1px solid rgba(201,168,76,.24);border-radius:100px;padding:14px;margin-top:18px;color:var(--cr);font-size:13px;cursor:pointer;font-family:inherit;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Faire une réclamation</button>'
   html+='<button data-id="'+escapeHTML(o.id)+'" onclick="rangerDansCoffre(this.dataset.id)" style="display:flex;align-items:center;justify-content:center;gap:9px;width:100%;background:none;border:1px solid rgba(237,224,200,.10);border-radius:100px;padding:14px;margin-top:18px;color:var(--d1);font-size:13px;cursor:pointer;font-family:inherit;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--d1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Ranger dans le coffre</button>'
   html+='<div style="margin-top:26px;padding-top:17px;border-top:1px solid rgba(237,224,200,.08);display:flex;justify-content:space-between;gap:12px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--d2);">'
