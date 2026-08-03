@@ -343,6 +343,9 @@ async function startMailImport(){
     return
   }
 
+  const { data:{ session } } = await supa.auth.getSession()
+  if(!session){ toast('Session expirée — reconnectez-vous.'); return }
+
   const progressEl=document.getElementById('import-progress'), periodSection=document.getElementById('import-period-section')
   if(progressEl) progressEl.style.display='block'
   if(periodSection) periodSection.style.display='none'
