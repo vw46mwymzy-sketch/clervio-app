@@ -183,6 +183,22 @@
     journal('log','lettre de résiliation générée : ' + (sub.name||sub.brand||'?'));
   };
 
+  function dateJournal(){
+    return new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})
+      + ' ' + new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  }
+
+  async function ajouterAuJournal(orderId, ligne){
+    if (typeof supa === 'undefined' || !supa || typeof currentUser === 'undefined' || !currentUser) return;
+    try{
+      var lu = await supa.from('orders').select('notes').eq('id', orderId).eq('user_id', currentUser.id).maybeSingle();
+      var existant = (lu && lu.data && lu.data.notes) ? lu.data.notes : '';
+      var nouvelle = '[' + dateJournal() + '] ' + ligne;
+      var complet = existant ? (existant + '\\n' + nouvelle) : nouvelle;
+      await supa.from('orders').update({ notes: complet }).eq('id', orderId).eq('user_id', currentUser.id);
+    }catch(e){ journal('err','journal litige : ' + ((e&&e.message)||e)); }
+  }
+
   async function marquerRemboursement(orderId, statut, montant){
     if (typeof supa === 'undefined' || !supa || typeof currentUser === 'undefined' || !currentUser) return false;
     try{
@@ -190,6 +206,8 @@
       if (montant !== undefined) maj.refund_amount = montant;
       var r = await supa.from('orders').update(maj).eq('id', orderId).eq('user_id', currentUser.id);
       if (r && r.error){ journal('err','maj remboursement : '+r.error.message); return false; }
+      var _libelles = { attente:'Réclamation suivie — remboursement en attente', recu:'Remboursement reçu' + (montant!=null?' ('+Number(montant).toFixed(2).replace('.',',')+' €)':''), refuse:'Remboursement refusé par le marchand' };
+      ajouterAuJournal(orderId, _libelles[statut] || ('Statut : '+statut));
       return true;
     }catch(e){ journal('err','maj remboursement : '+((e&&e.message)||e)); return false; }
   }
