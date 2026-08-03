@@ -222,42 +222,54 @@ async function rafraichirCompteurEmails(){
 }
 window.rafraichirCompteurEmails = rafraichirCompteurEmails
 
-async function capturerJetonAuRetourOAuth(tentative){
-  tentative = tentative || 0
-  try{
-    if (location.search.indexOf('mail=connected') === -1) return
-    if (!supa || !currentUser){
-      if (tentative < 15) setTimeout(function(){ capturerJetonAuRetourOAuth(tentative+1) }, 400)
-      return
-    }
+function initCaptureJetonOAuth(){
+  if (location.search.indexOf('mail=connected') === -1) return
+  if (typeof supa === 'undefined' || !supa){ setTimeout(initCaptureJetonOAuth, 300); return }
 
-    const { data:{ session } } = await supa.auth.getSession()
+  var dejaTraite = false
 
-    if (!session?.provider_token){
-      if (tentative < 15){ setTimeout(function(){ capturerJetonAuRetourOAuth(tentative+1) }, 400); return }
-      journal('err', 'jeton absent après ' + tentative + ' tentatives, abandon')
+  async function tenterCapture(session){
+    if (dejaTraite || !session || !session.provider_token) return
+    dejaTraite = true
+    var email = (session.user && session.user.email) || (typeof currentUser !== 'undefined' && currentUser && currentUser.email) || ''
+    try{
+      var ok = await conserverJetonAvecReprise(
+        email.toLowerCase(),
+        session.provider_token,
+        session.provider_refresh_token || ''
+      )
+      if (typeof window.CLERVIO_DIAG !== 'undefined' && window.CLERVIO_DIAG.log){
+        window.CLERVIO_DIAG.log('email', ok
+          ? (session.provider_refresh_token ? 'jeton de renouvellement capturé' : 'jeton capturé sans renouvellement')
+          : 'échec de la conservation après trois tentatives')
+      }
+      toast(ok ? 'Boîte connectée.' : 'Connecté, mais la synchronisation en arrière-plan pourrait ne pas tenir. Réessayez si besoin.')
+      setTimeout(function(){ if (typeof rafraichirCompteurEmails==='function') rafraichirCompteurEmails() }, 300)
+    }finally{
       try{ history.replaceState(null, '', location.pathname) }catch(e){}
-      return
     }
+  }
 
-    var ok = await conserverJetonAvecReprise(
-      (currentUser.email || '').toLowerCase(),
-      session.provider_token,
-      session.provider_refresh_token || ''
-    )
-    if (typeof window.CLERVIO_DIAG !== 'undefined' && window.CLERVIO_DIAG.log){
-      window.CLERVIO_DIAG.log('email', ok
-        ? (session.provider_refresh_token ? 'jeton de renouvellement capturé' : 'jeton capturé sans renouvellement')
-        : 'échec de la conservation après trois tentatives — reconnexion nécessaire dans une heure')
-    }
-    toast(ok ? 'Boîte connectée.' : 'Connecté, mais la synchronisation en arrière-plan pourrait ne pas tenir. Réessayez si besoin.')
-
-    setTimeout(rafraichirCompteurEmails, 300)
-    try{ history.replaceState(null, '', location.pathname) }catch(e){}
+  try{
+    supa.auth.onAuthStateChange(function(event, session){
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') tenterCapture(session)
+    })
   }catch(e){}
+
+  try{
+    supa.auth.getSession().then(function(r){ tenterCapture(r && r.data && r.data.session) })
+  }catch(e){}
+
+  setTimeout(function(){
+    if (!dejaTraite){
+      dejaTraite = true
+      journal('err', 'aucun événement d\'authentification exploitable après 10s')
+      try{ history.replaceState(null, '', location.pathname) }catch(e){}
+    }
+  }, 10000)
 }
-if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', function(){ capturerJetonAuRetourOAuth(0) })
-else capturerJetonAuRetourOAuth(0)
+if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', initCaptureJetonOAuth)
+else initCaptureJetonOAuth()
 
 async function conserverJetonAvecReprise(email, accessToken, refreshToken){
   var essai = 0, ok = false
