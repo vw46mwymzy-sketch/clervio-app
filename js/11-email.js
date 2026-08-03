@@ -278,6 +278,8 @@ function initCaptureJetonOAuth(){
 if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', initCaptureJetonOAuth)
 else initCaptureJetonOAuth()
 
+function journal(t,m){ try{ var D=window.CLERVIO_DIAG; if(D&&D[t]) D[t]('email',m); }catch(e){} }
+
 async function conserverJetonAvecReprise(email, accessToken, refreshToken){
   var essai = 0, ok = false, derniereErreur = null
 
