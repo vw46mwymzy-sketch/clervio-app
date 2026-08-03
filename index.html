@@ -160,9 +160,9 @@ input,button{font-family:'Inter',sans-serif;}
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ PAGES */
-.pg{position:absolute;inset:0;display:none;flex-direction:column;overflow:visible;}
+.pg{position:absolute;inset:0;display:none;flex-direction:column;overflow-x:hidden;overflow-y:visible;}
 .pg.on{display:flex;animation:pgin .45s var(--e2) both;}
-.sc{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+.sc{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;max-width:100%;}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ ORB */
 .ob{
