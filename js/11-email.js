@@ -229,21 +229,31 @@ async function capturerJetonAuRetourOAuth(){
 
     const { data:{ session } } = await supa.auth.getSession()
     if (session?.provider_token){
-      try{
-        await supa.functions.invoke('gmail-token', { body:{
-          action:'conserver',
-          email: (currentUser.email || '').toLowerCase(),
-          access_token: session.provider_token,
-          refresh_token: session.provider_refresh_token || '',
-          expires_in: 3600
-        }})
-        if (typeof window.CLERVIO_DIAG !== 'undefined' && window.CLERVIO_DIAG.log){
-          window.CLERVIO_DIAG.log('email', session.provider_refresh_token
-            ? 'jeton de renouvellement capturé au retour Google'
-            : 'jeton capturé, sans renouvellement — Google ne l\'a pas fourni')
+      /* Trois tentatives avant d'abandonner : une simple coupure
+         réseau d'une fraction de seconde ne doit pas faire perdre
+         le jeton de renouvellement, qui n'est fourni qu'une fois. */
+      var essai = 0, ok = false
+      while (essai < 3 && !ok){
+        try{
+          await supa.functions.invoke('gmail-token', { body:{
+            action:'conserver',
+            email: (currentUser.email || '').toLowerCase(),
+            access_token: session.provider_token,
+            refresh_token: session.provider_refresh_token || '',
+            expires_in: 3600
+          }})
+          ok = true
+        }catch(e){
+          essai++
+          if (essai < 3) await new Promise(function(r){ setTimeout(r, 600 * essai) })
         }
-        toast('Boîte connectée.')
-      }catch(e){ /* échec silencieux : le jeton sert quand même pour cette session */ }
+      }
+      if (typeof window.CLERVIO_DIAG !== 'undefined' && window.CLERVIO_DIAG.log){
+        window.CLERVIO_DIAG.log('email', ok
+          ? (session.provider_refresh_token ? 'jeton de renouvellement capturé' : 'jeton capturé sans renouvellement')
+          : 'échec de la conservation après trois tentatives — reconnexion nécessaire dans une heure')
+      }
+      toast(ok ? 'Boîte connectée.' : 'Connecté, mais la synchronisation en arrière-plan pourrait ne pas tenir. Réessayez si besoin.')
     }
 
     setTimeout(rafraichirCompteurEmails, 300)
