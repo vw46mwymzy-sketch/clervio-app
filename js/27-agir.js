@@ -429,4 +429,30 @@
       journal('log', 'suivi ouvert : ' + (transporteur || 'transporteur inconnu'));
     }catch(e){ journal('err','suivi : ' + ((e&&e.message)||e)); }
   };
+
+  var origineScanre = 'p-orders';
+
+  function surNavigationScan(){
+    if (typeof window.go !== 'function' || window.go.__scanOrigine) return;
+    var orig = window.go;
+    var w = function(id){
+      if (id === 'p-scan'){
+        try{
+          var actif = document.querySelector('.pg.on');
+          if (actif && actif.id && actif.id !== 'p-scan') origineScanre = actif.id;
+        }catch(e){}
+      }
+      return orig.apply(window, arguments);
+    };
+    w.__scanOrigine = true;
+    window.go = w;
+  }
+  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', surNavigationScan);
+  else surNavigationScan();
+  window.addEventListener('load', surNavigationScan);
+  setTimeout(surNavigationScan, 900);
+
+  window.retourDepuisScan = function(){
+    try{ go(origineScanre); }catch(e){ try{ go('p-orders'); }catch(e2){} }
+  };
 })();
