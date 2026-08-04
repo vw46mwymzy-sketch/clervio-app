@@ -40,61 +40,11 @@ async function callAIEdge(msg, context){
   }catch(e){ return null }
 }
 
-/* ══ CONCIERGE IA ══════════════════════════════════════ */
-
-function displayAIResponse(msgs, text){
-  /* Le modèle produit du markdown : gras, listes, séparateurs.
-     Non rendu, il s'affiche en brut — astérisques et tirets visibles.
-     L'échappement passe toujours en premier : le texte vient de l'IA,
-     donc de l'extérieur. */
-  const formatted = escapeHTML(text)
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/(^|<br\/>)\s*[-–—]{3,}\s*(?=<br\/>|$)/g, '$1<span style="display:block;height:1px;background:rgba(237,224,200,.10);margin:12px 0;"></span>')
-    .replace(/(^|\n)\s*[-•]\s+/g, '$1• ')
-    .replace(/\*(?!\s)([^*\n]+?)(?<!\s)\*/g, '<em>$1</em>')
-    .split('\n').join('<br/>')
-  msgs.innerHTML += '<div style="margin-bottom:14px;">' +
-    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">' +
-      '<div style="width:24px;height:24px;border-radius:8px;background:rgba(201,168,76,.15);display:flex;align-items:center;justify-content:center;font-size:12px;">V</div>' +
-      '<span style="font-size:11px;color:var(--d2);">CLERVIO</span>' +
-    '</div>' +
-    '<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px 16px 16px 4px;padding:14px 16px;font-size:13px;color:var(--d1);line-height:1.7;">' + formatted + '</div>' +
-  '</div>'
-  msgs.scrollTop = msgs.scrollHeight
-}
-
-async function sendAI(){
-  const inp = document.getElementById('ai-inp')
-  const msg = inp?.value?.trim()
-  if(!msg) return
-  inp.value = ''
-  const sugg = document.getElementById('aisugg')
-  if(sugg) sugg.style.display = 'none'
-  const msgs = document.getElementById('aimsgs')
-  msgs.innerHTML += '<div style="display:flex;justify-content:flex-end;margin-bottom:14px;">' +
-    '<div style="background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.2);border-radius:16px 16px 4px 16px;padding:12px 16px;max-width:80%;font-size:13px;color:var(--cr);line-height:1.6;">' + escapeHTML(msg) + '</div>' +
-  '</div>'
-  const loaderId = 'ai-loader-' + Date.now()
-  msgs.innerHTML += '<div id="' + loaderId + '" style="display:flex;gap:6px;margin-bottom:14px;padding:4px 0;">' +
-    '<div style="width:6px;height:6px;border-radius:50%;background:var(--g);animation:sk 1.2s .0s infinite;"></div>' +
-    '<div style="width:6px;height:6px;border-radius:50%;background:var(--g);animation:sk 1.2s .2s infinite;"></div>' +
-    '<div style="width:6px;height:6px;border-radius:50%;background:var(--g);animation:sk 1.2s .4s infinite;"></div>' +
-  '</div>'
-  msgs.scrollTop = msgs.scrollHeight
-  try{
-    const userContext = buildUserContext()
-    const loader = document.getElementById(loaderId)
-    const edgeRes = await callAIEdge(msg, userContext)
-    if(loader) loader.remove()
-    if(edgeRes){ displayAIResponse(msgs, edgeRes); return }
-    msgs.innerHTML += '<div style="margin-bottom:14px;padding:12px 16px;background:rgba(255,59,48,.08);border:1px solid rgba(255,59,48,.15);border-radius:16px;font-size:13px;color:rgba(255,59,48,.9);">Concierge IA indisponible — configurez CLAUDE_API_KEY dans Supabase.</div>'
-    msgs.scrollTop = msgs.scrollHeight
-  }catch(e){
-    const loader = document.getElementById(loaderId)
-    if(loader) loader.remove()
-    displayAIResponse(msgs, "Désolé, une erreur s'est produite. Réessayez.")
-  }
-}
+/* displayAIResponse() et sendAI() vivaient ici, jamais appelées —
+   un second chat entier, cherchant #ai-inp qui n'existe sur aucun
+   écran. Le vrai chemin passe par sAI()/sAIi() dans 05-ai.js, qui
+   utilisent bien buildUserContext() et callAIEdge() ci-dessus.
+   Retiré le 04/08 après lecture complète de chaque écran. */
 
 // Détecter le retour après connexion Gmail
 window.addEventListener('load',function(){/* doublon gmail=connected retiré : géré par mail=connected */})
