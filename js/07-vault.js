@@ -223,9 +223,57 @@ async function renameCurrentFolder(){
   toast('✓ Dossier renommé')
 }
 
-function addDocToFolder(){
+async function addDocToFolder(){
   hideFolderMenu()
-  toast('Suivi en temps réel — Bientôt disponible')
+  if(!currentUser || !supa){ toast('Connectez-vous d\\'abord'); return }
+  const folderId = currentFolderId
+  if(!folderId) return
+
+  let docs = []
+  try{
+    const r = await supa.from('vault_documents')
+      .select('id,name,brand,doc_date,folder_id')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending:false })
+    if(r.error) throw r.error
+    docs = r.data || []
+  }catch(e){ toast('Chargement impossible'); return }
+
+  if(!docs.length){ toast('Aucun document dans le coffre pour l\\'instant'); return }
+
+  const dispo = docs.filter(d => String(d.folder_id||'') !== String(folderId))
+  const overlay = document.createElement('div')
+  overlay.id = 'pick-doc-overlay'
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:200;background:rgba(5,4,6,.86);backdrop-filter:blur(6px);display:flex;align-items:flex-end;'
+  let lignes = dispo.length
+    ? dispo.map(d => '<button data-id="'+escapeHTML(d.id)+'" style="width:100%;text-align:left;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.06);padding:14px 4px;color:var(--cr);font-size:14px;font-family:inherit;">' +
+        escapeHTML(d.name||d.brand||'Document') +
+        (d.doc_date ? '<span style="display:block;font-size:11px;color:var(--d2);margin-top:2px;">'+escapeHTML(d.doc_date)+'</span>' : '') +
+      '</button>').join('')
+    : '<div style="padding:20px 4px;color:var(--d2);font-size:13px;">Tous vos documents sont déjà dans ce dossier.</div>'
+  overlay.innerHTML =
+    '<div style="width:100%;max-width:430px;margin:0 auto;background:linear-gradient(180deg,#141217,#0C0B0E);border-radius:24px 24px 0 0;padding:26px 22px calc(env(safe-area-inset-bottom,0px) + 22px);max-height:70vh;display:flex;flex-direction:column;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">' +
+        '<span style="font-family:\\'Cormorant Garamond\\',serif;font-size:1.4rem;color:var(--cr);">Ajouter un document</span>' +
+        '<button id="pick-doc-close" style="background:none;border:none;color:var(--d2);font-size:22px;">×</button>' +
+      '</div>' +
+      '<div style="overflow-y:auto;">' + lignes + '</div>' +
+    '</div>'
+  document.body.appendChild(overlay)
+
+  document.getElementById('pick-doc-close').onclick = () => overlay.remove()
+  overlay.querySelectorAll('button[data-id]').forEach(btn => {
+    btn.onclick = async () => {
+      const docId = btn.dataset.id
+      try{
+        const r = await supa.from('vault_documents').update({ folder_id: folderId }).eq('id', docId).eq('user_id', currentUser.id)
+        if(r.error) throw r.error
+        toast('Document ajouté au dossier')
+        overlay.remove()
+        if(typeof openFolder === 'function') openFolder(folderId)
+      }catch(e){ toast('Échec de l\\'ajout') }
+    }
+  })
 }
 async function deleteCurrentFolder(){
   hideFolderMenu()
