@@ -225,7 +225,7 @@ async function renameCurrentFolder(){
 
 async function addDocToFolder(){
   hideFolderMenu()
-  if(!currentUser || !supa){ toast('Connectez-vous d\\'abord'); return }
+  if(!currentUser || !supa){ toast('Connectez-vous d\'abord'); return }
   const folderId = currentFolderId
   if(!folderId) return
 
@@ -239,7 +239,7 @@ async function addDocToFolder(){
     docs = r.data || []
   }catch(e){ toast('Chargement impossible'); return }
 
-  if(!docs.length){ toast('Aucun document dans le coffre pour l\\'instant'); return }
+  if(!docs.length){ toast('Aucun document dans le coffre pour l\'instant'); return }
 
   const dispo = docs.filter(d => String(d.folder_id||'') !== String(folderId))
   const overlay = document.createElement('div')
@@ -271,7 +271,7 @@ async function addDocToFolder(){
         toast('Document ajouté au dossier')
         overlay.remove()
         if(typeof openFolder === 'function') openFolder(folderId)
-      }catch(e){ toast('Échec de l\\'ajout') }
+      }catch(e){ toast('Échec de l\'ajout') }
     }
   })
 }
