@@ -254,7 +254,7 @@ async function addDocToFolder(){
   overlay.innerHTML =
     '<div style="width:100%;max-width:430px;margin:0 auto;background:linear-gradient(180deg,#141217,#0C0B0E);border-radius:24px 24px 0 0;padding:26px 22px calc(env(safe-area-inset-bottom,0px) + 22px);max-height:70vh;display:flex;flex-direction:column;">' +
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">' +
-        '<span style="font-family:\\'Cormorant Garamond\\',serif;font-size:1.4rem;color:var(--cr);">Ajouter un document</span>' +
+        '<span style="font-family:\'Cormorant Garamond\',serif;font-size:1.4rem;color:var(--cr);">Ajouter un document</span>' +
         '<button id="pick-doc-close" style="background:none;border:none;color:var(--d2);font-size:22px;">×</button>' +
       '</div>' +
       '<div style="overflow-y:auto;">' + lignes + '</div>' +
