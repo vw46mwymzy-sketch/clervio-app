@@ -146,13 +146,19 @@ async function confirmScannedDocument(){
     file_added_at: new Date().toISOString()
   }
 
-  const { error } = await supa.from('vault_documents').insert(ligne)
-  if(error){ toast('❌ ' + (error.message || 'Erreur')); return }
+  const btnD = document.getElementById('scan-confirm-doc-btn')
+  if(btnD){ if(btnD.disabled) return; btnD.disabled = true }
+  try{
+    const { error } = await supa.from('vault_documents').insert(ligne)
+    if(error){ toast('❌ ' + (error.message || 'Erreur')); if(btnD) btnD.disabled = false; return }
 
-  lastScanResult = null
-  if(typeof rechargerDonnees === 'function'){ try{ await rechargerDonnees() }catch(e){} }
-  renderScan('done')
-  toast('✓ Rangé dans votre coffre')
+    lastScanResult = null
+    if(typeof rechargerDonnees === 'function'){ try{ await rechargerDonnees() }catch(e){} }
+    renderScan('done')
+    toast('✓ Rangé dans votre coffre')
+  } finally {
+    if(btnD) btnD.disabled = false
+  }
 }
 
 async function confirmScannedOrder(){
@@ -172,12 +178,18 @@ async function confirmScannedOrder(){
     dt:formatDateFR(orderDate), orderDate,
     warr:warrantyMonths, tracking:orderNumber || null, manual:false
   }
-  const saved = await saveOrderToSupabase(order)
-  if(!saved) return
-  ORDS = await fetchOrders()
-  lastScanResult = null
-  renderScan('done')
-  toast('✓ Commande sauvegardée')
+  const btnO = document.getElementById('scan-confirm-order-btn')
+  if(btnO){ if(btnO.disabled) return; btnO.disabled = true }
+  try{
+    const saved = await saveOrderToSupabase(order)
+    if(!saved){ if(btnO) btnO.disabled = false; return }
+    ORDS = await fetchOrders()
+    lastScanResult = null
+    renderScan('done')
+    toast('✓ Commande sauvegardée')
+  } finally {
+    if(btnO) btnO.disabled = false
+  }
 }
 
 function renderScan(phase, payload){
