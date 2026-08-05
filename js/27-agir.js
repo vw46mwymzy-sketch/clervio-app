@@ -430,29 +430,33 @@
     }catch(e){ journal('err','suivi : ' + ((e&&e.message)||e)); }
   };
 
-  var origineScanre = 'p-orders';
+  var ECRANS_RETOUR_CONTEXTUEL = ['p-scan', 'p-pricing'];
+  var origines = {};
 
-  function surNavigationScan(){
-    if (typeof window.go !== 'function' || window.go.__scanOrigine) return;
+  function surNavigationRetourContextuel(){
+    if (typeof window.go !== 'function' || window.go.__retourContextuel) return;
     var orig = window.go;
     var w = function(id){
-      if (id === 'p-scan'){
+      if (ECRANS_RETOUR_CONTEXTUEL.indexOf(id) !== -1){
         try{
           var actif = document.querySelector('.pg.on');
-          if (actif && actif.id && actif.id !== 'p-scan') origineScanre = actif.id;
+          if (actif && actif.id && ECRANS_RETOUR_CONTEXTUEL.indexOf(actif.id) === -1) origines[id] = actif.id;
         }catch(e){}
       }
       return orig.apply(window, arguments);
     };
-    w.__scanOrigine = true;
+    w.__retourContextuel = true;
     window.go = w;
   }
-  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', surNavigationScan);
-  else surNavigationScan();
-  window.addEventListener('load', surNavigationScan);
-  setTimeout(surNavigationScan, 900);
+  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', surNavigationRetourContextuel);
+  else surNavigationRetourContextuel();
+  window.addEventListener('load', surNavigationRetourContextuel);
+  setTimeout(surNavigationRetourContextuel, 900);
 
-  window.retourDepuisScan = function(){
-    try{ go(origineScanre); }catch(e){ try{ go('p-orders'); }catch(e2){} }
+  window.retourContextuel = function(ecranActuel, repli){
+    var dest = origines[ecranActuel] || repli;
+    try{ go(dest); }catch(e){ try{ go(repli); }catch(e2){} }
   };
+
+  window.retourDepuisScan = function(){ window.retourContextuel('p-scan', 'p-orders'); };
 })();
