@@ -1203,8 +1203,21 @@ function initSupabase(){
     }
 
     // Auth state géré dans initSupabase()
-async function loadProfile(){
+async function loadProfile(tentative){
+      tentative = tentative || 0
       if(!currentUser || !supa) return
+      /* currentUser peut être défini avant que la session elle-même
+         ne soit prête côté client — trouvé le 05/08 sur la toute
+         première inscription d'un nouvel utilisateur (401 une
+         seconde après la création du compte). Même défaut que sur
+         la capture du jeton Gmail, ici sur le tout premier appel
+         authentifié de la session. */
+      const { data: sessionData } = await supa.auth.getSession()
+      if(!sessionData?.session){
+        if(tentative < 10){ setTimeout(() => loadProfile(tentative+1), 300); return }
+        console.warn('Profile loading: session absente après 10 tentatives')
+        return
+      }
       const { data, error } = await supa
         .from('profiles')
         .select('*')
