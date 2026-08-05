@@ -397,12 +397,18 @@ async function submitOrder(){
     tracking:tracking||null, manual:true
   }
 
-  const saved = await saveOrderToSupabase(order)
-  if(!saved) return
-  ORDS = await fetchOrders()
-  toast('✓ Commande "'+name+'" ajoutée')
-  clearOrderForm()
-  go('p-orders')
+  const btnO = document.getElementById('ao-submit-btn')
+  if(btnO){ if(btnO.disabled) return; btnO.disabled = true }
+  try{
+    const saved = await saveOrderToSupabase(order)
+    if(!saved){ if(btnO) btnO.disabled = false; return }
+    ORDS = await fetchOrders()
+    toast('✓ Commande "'+name+'" ajoutée')
+    clearOrderForm()
+    go('p-orders')
+  } finally {
+    if(btnO) btnO.disabled = false
+  }
 }
 
 function clearOrderForm(){
@@ -436,16 +442,22 @@ async function submitSub(){
     res:selectedSubType === 'subs', renew:renew ? formatDateFR(renew) : null, manual:true
   }
 
-  const saved = await saveSubToSupabase(newSub)
-  if(!saved) return
-  if(currentUser && supa){
-    await loadVaultData()
-  }else{
-    SUBS.unshift(newSub)
+  const btnS = document.getElementById('as-submit-btn')
+  if(btnS){ if(btnS.disabled) return; btnS.disabled = true }
+  try{
+    const saved = await saveSubToSupabase(newSub)
+    if(!saved){ if(btnS) btnS.disabled = false; return }
+    if(currentUser && supa){
+      await loadVaultData()
+    }else{
+      SUBS.unshift(newSub)
+    }
+    toast('✓ "'+name+'" ajouté au Coffre-Fort')
+    clearSubForm()
+    goVaultTab(selectedSubType === 'subs' ? 'subs' : 'contracts')
+  } finally {
+    if(btnS) btnS.disabled = false
   }
-  toast('✓ "'+name+'" ajouté au Coffre-Fort')
-  clearSubForm()
-  goVaultTab(selectedSubType === 'subs' ? 'subs' : 'contracts')
 }
 
 function clearSubForm(){
