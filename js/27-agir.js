@@ -47,7 +47,7 @@
     lignes.push('Je vous remercie de votre compréhension.');
     lignes.push('');
     lignes.push('Cordialement.');
-    return lignes.join('\\n');
+    return lignes.join('\n');
   }
 
   /* ── Réclamation : rétractation, garantie commerciale, ou garantie légale ── */
@@ -69,12 +69,12 @@
       lignes.push('');
       lignes.push('Madame, Monsieur,');
       lignes.push('');
-      lignes.push('Par la présente, j\\'exerce mon droit de rétractation concernant ma commande de ' + nom
+      lignes.push('Par la présente, j\'exerce mon droit de rétractation concernant ma commande de ' + nom
         + (marque && marque !== nom ? ' (' + marque + ')' : '')
         + (achat ? ', passée le ' + achat : '')
         + (numero ? ', référence ' + numero : '') + '.');
       lignes.push('');
-      lignes.push('Conformément à l\\'article L221-18 du Code de la consommation, je dispose de 14 jours pour me rétracter sans avoir à justifier de motif. Je vous demande de bien vouloir procéder au remboursement' + (montant ? ' de ' + montant : '') + ' selon les modalités prévues.');
+      lignes.push('Conformément à l\'article L221-18 du Code de la consommation, je dispose de 14 jours pour me rétracter sans avoir à justifier de motif. Je vous demande de bien vouloir procéder au remboursement' + (montant ? ' de ' + montant : '') + ' selon les modalités prévues.');
       lignes.push('');
       lignes.push('Je me tiens à votre disposition pour les modalités de retour du produit.');
       lignes.push('');
@@ -85,7 +85,7 @@
       lignes.push('');
       lignes.push('Madame, Monsieur,');
       lignes.push('');
-      lignes.push('J\\'ai acheté ' + nom + (marque && marque !== nom ? ' (' + marque + ')' : '')
+      lignes.push('J\'ai acheté ' + nom + (marque && marque !== nom ? ' (' + marque + ')' : '')
         + (achat ? ' le ' + achat : '') + (numero ? ', commande n° ' + numero : '') + '.');
       lignes.push('');
       lignes.push('Ce produit présente un défaut de fonctionnement et je souhaite faire jouer la garantie dont il bénéficie encore. Je vous remercie de m\\'indiquer la marche à suivre pour la réparation, l\\'échange, ou à défaut le remboursement du produit.');
@@ -101,7 +101,7 @@
       lignes.push('');
       lignes.push('Madame, Monsieur,');
       lignes.push('');
-      lignes.push('J\\'ai acheté ' + nom + (marque && marque !== nom ? ' (' + marque + ')' : '')
+      lignes.push('J\'ai acheté ' + nom + (marque && marque !== nom ? ' (' + marque + ')' : '')
         + (achat ? ' le ' + achat : '') + (numero ? ', commande n° ' + numero : '') + '.');
       lignes.push('');
       lignes.push('Ce produit présente un défaut. Conformément aux articles L217-3 et suivants du Code de la consommation relatifs à la garantie légale de conformité, applicable pendant deux ans à compter de la livraison, je vous demande la réparation ou le remplacement du produit, sans frais de ma part.');
@@ -111,7 +111,7 @@
       lignes.push('Cordialement.');
     }
 
-    return { texte: lignes.join('\\n'), type: joursRetour>=0?'retractation':(joursGarantie>=0?'garantie':'conformite') };
+    return { texte: lignes.join('\n'), type: joursRetour>=0?'retractation':(joursGarantie>=0?'garantie':'conformite') };
   }
 
   /* ── Interface : une lettre à copier ou envoyer ── */
@@ -125,15 +125,15 @@
     ov.innerHTML =
       '<div style="width:100%;max-width:430px;margin:0 auto;background:linear-gradient(180deg,#141217,#0C0B0E);border-radius:24px 24px 0 0;padding:26px 22px calc(env(safe-area-inset-bottom,0px) + 22px);max-height:86vh;display:flex;flex-direction:column;">'
       +   '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">'
-      +     '<span style="font-family:\\'Cormorant Garamond\\',serif;font-size:1.5rem;color:var(--cr);">' + esc(titre) + '</span>'
-      +     '<button onclick="document.getElementById(\\'agir-overlay\\').remove()" style="background:none;border:none;color:var(--d2);font-size:22px;padding:4px;">×</button>'
+      +     '<span style="font-family:\'Cormorant Garamond\',serif;font-size:1.5rem;color:var(--cr);">' + esc(titre) + '</span>'
+      +     '<button onclick="document.getElementById(\'agir-overlay\').remove()" style="background:none;border:none;color:var(--d2);font-size:22px;padding:4px;">×</button>'
       +   '</div>'
       +   '<div style="font-size:11.5px;color:var(--d2);line-height:1.5;margin-bottom:14px;">Un brouillon, pas un envoi automatique. Relisez, adaptez si besoin, puis envoyez-le où le service client vous répond habituellement.</div>'
       +   '<textarea id="agir-texte" readonly style="flex:1;min-height:280px;background:rgba(255,255,255,.03);border:1px solid rgba(237,224,200,.10);border-radius:14px;padding:16px;color:var(--cr);font-size:13.5px;line-height:1.65;font-family:inherit;resize:none;margin-bottom:16px;">' + esc(texte) + '</textarea>'
       +   (orderIdPourSuivi ? '<button onclick="suivreRemboursement(\'' + esc(orderIdPourSuivi) + '\')" style="width:100%;height:44px;border:1px solid rgba(201,168,76,.28);border-radius:100px;background:none;color:var(--gh);font-size:12.5px;font-family:inherit;margin-bottom:10px;">Suivre ce remboursement dans CLERVIO</button>' : '')
       +   '<div style="display:flex;gap:10px;">'
       +     '<button onclick="window.copierLettre()" style="flex:1;height:50px;border:1px solid rgba(237,224,200,.16);border-radius:100px;background:none;color:var(--cr);font-size:14px;font-family:inherit;">Copier le texte</button>'
-      +     '<button onclick="window.envoyerLettre(\\'' + esc(titre).replace(/'/g,"\\\\'") + '\\')" style="flex:1;height:50px;border:none;border-radius:100px;background:linear-gradient(102deg,var(--gd),var(--g) 26%,var(--gh) 52%,var(--g) 78%,var(--gd));color:#0B0906;font-size:14px;font-weight:500;font-family:inherit;">Envoyer par e-mail</button>'
+      +     '<button onclick="window.envoyerLettre(\'' + esc(titre) + '\')" style="flex:1;height:50px;border:none;border-radius:100px;background:linear-gradient(102deg,var(--gd),var(--g) 26%,var(--gh) 52%,var(--g) 78%,var(--gd));color:#0B0906;font-size:14px;font-weight:500;font-family:inherit;">Envoyer par e-mail</button>'
       +   '</div>'
       + '</div>';
     document.body.appendChild(ov);
@@ -151,10 +151,10 @@
   window.envoyerLettre = function(sujet){
     var t = document.getElementById('agir-texte');
     if (!t) return;
-    var corps = t.value.split('\\n').slice(2).join('\\n'); /* le sujet est déjà dans le corps, mailto le reprend séparément */
-    var lignes = t.value.split('\\n');
-    var objetLigne = (lignes[0] || '').replace(/^Objet\\s*:\\s*/i,'');
-    var reste = lignes.slice(2).join('\\n');
+    var corps = t.value.split('\n').slice(2).join('\n'); /* le sujet est déjà dans le corps, mailto le reprend séparément */
+    var lignes = t.value.split('\n');
+    var objetLigne = (lignes[0] || '').replace(/^Objet\s*:\s*/i,'');
+    var reste = lignes.slice(2).join('\n');
     var url = 'mailto:?subject=' + encodeURIComponent(objetLigne) + '&body=' + encodeURIComponent(reste);
     window.location.href = url;
   };
@@ -194,7 +194,7 @@
       var lu = await supa.from('orders').select('notes').eq('id', orderId).eq('user_id', currentUser.id).maybeSingle();
       var existant = (lu && lu.data && lu.data.notes) ? lu.data.notes : '';
       var nouvelle = '[' + dateJournal() + '] ' + ligne;
-      var complet = existant ? (existant + '\\n' + nouvelle) : nouvelle;
+      var complet = existant ? (existant + '\n' + nouvelle) : nouvelle;
       await supa.from('orders').update({ notes: complet }).eq('id', orderId).eq('user_id', currentUser.id);
     }catch(e){ journal('err','journal litige : ' + ((e&&e.message)||e)); }
   }
@@ -319,11 +319,11 @@
       + '<h1>Bon de retour</h1>'
       + '<div class="ligne"><span class="lbl">Article</span><span class="val">' + nom + (marque && marque!==nom ? ' — '+marque : '') + '</span></div>'
       + '<div class="ligne"><span class="lbl">Référence de commande</span><span class="val">' + numero + '</span></div>'
-      + (achat ? '<div class="ligne"><span class="lbl">Date d\\'achat</span><span class="val">' + achat + '</span></div>' : '')
+      + (achat ? '<div class="ligne"><span class="lbl">Date d\'achat</span><span class="val">' + achat + '</span></div>' : '')
       + (montant ? '<div class="ligne"><span class="lbl">Montant</span><span class="val">' + Number(montant).toFixed(2).replace('.',',') + ' €</span></div>' : '')
       + '<div class="ligne"><span class="lbl">Date du retour</span><span class="val">' + aujourd + '</span></div>'
       + '<div class="motif"><div class="lbl" style="font-size:12px;margin-bottom:8px;">Motif du retour</div></div>'
-      + '<div class="avert">Ce document est un bon de référence à joindre au colis, généré par CLERVIO. <strong>Ce n\\'est pas une étiquette d\\'affranchissement</strong> : l\\'adresse de retour et le mode d\\'envoi restent ceux indiqués par le vendeur dans sa procédure de retour.</div>'
+      + '<div class="avert">Ce document est un bon de référence à joindre au colis, généré par CLERVIO. <strong>Ce n\'est pas une étiquette d\'affranchissement</strong> : l\'adresse de retour et le mode d\'envoi restent ceux indiqués par le vendeur dans sa procédure de retour.</div>'
       + '<div class="pied">Généré par CLERVIO le ' + aujourd + '</div>'
       + '<div class="noprint" style="margin-top:24px;text-align:center;"><button onclick="window.print()" style="padding:12px 28px;font-size:14px;cursor:pointer;">Imprimer</button></div>'
       + '</body></html>';
@@ -350,13 +350,13 @@
     var montant = o.amt || o.amount;
     var aujourd = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
 
-    var lignesJournal = (o.notes || '').split('\\n').filter(function(l){ return l.trim(); });
+    var lignesJournal = (o.notes || '').split('\n').filter(function(l){ return l.trim(); });
     var journalHTML = lignesJournal.length
       ? lignesJournal.map(function(l){
-          var m = l.match(/^\\[([^\\]]+)\\]\\s*(.*)$/);
+          var m = l.match(/^\[([^\]]+)\]\s*(.*)$/);
           return '<div class="evt"><span class="evt-d">' + esc(m?m[1]:'') + '</span><span class="evt-t">' + esc(m?m[2]:l) + '</span></div>';
         }).join('')
-      : '<div class="evt"><span class="evt-t" style="color:#999;">Aucune démarche enregistrée pour l\\'instant.</span></div>';
+      : '<div class="evt"><span class="evt-t" style="color:#999;">Aucune démarche enregistrée pour l\'instant.</span></div>';
 
     var statutLabels = { attente:'Remboursement en attente', recu:'Remboursement reçu', refuse:'Remboursement refusé' };
     var statutActuel = o.refundStatus ? (statutLabels[o.refundStatus] || o.refundStatus) : 'Aucun remboursement en cours de suivi';
@@ -385,7 +385,7 @@
       + '<h2>Achat concerné</h2>'
       + '<div class="ligne"><span class="lbl">Article</span><span class="val">' + nom + (marque && marque!==nom ? ' — '+marque : '') + '</span></div>'
       + '<div class="ligne"><span class="lbl">Référence de commande</span><span class="val">' + numero + '</span></div>'
-      + (achat ? '<div class="ligne"><span class="lbl">Date d\\'achat</span><span class="val">' + achat + '</span></div>' : '')
+      + (achat ? '<div class="ligne"><span class="lbl">Date d\'achat</span><span class="val">' + achat + '</span></div>' : '')
       + (montant ? '<div class="ligne"><span class="lbl">Montant</span><span class="val">' + Number(montant).toFixed(2).replace('.',',') + ' €</span></div>' : '')
 
       + '<h2>Chronologie des démarches</h2>'
@@ -396,8 +396,8 @@
 
       + '<h2>Justificatif</h2>'
       + (o.facture
-          ? '<div class="piece">Une facture ou un justificatif est conservé dans le coffre CLERVIO associé à cette commande. Joignez-le séparément à ce dossier : ouvrez la commande dans l\\'application, section « Facture », pour l\\'exporter.</div>'
-          : '<div class="piece">Aucun justificatif n\\'est actuellement attaché à cette commande dans CLERVIO.</div>')
+          ? '<div class="piece">Une facture ou un justificatif est conservé dans le coffre CLERVIO associé à cette commande. Joignez-le séparément à ce dossier : ouvrez la commande dans l\\'application, section « Facture », pour l\'exporter.</div>'
+          : '<div class="piece">Aucun justificatif n\'est actuellement attaché à cette commande dans CLERVIO.</div>')
 
       + '<div class="pied">Document généré automatiquement à partir des informations saisies dans CLERVIO. Il constitue une aide à la constitution de votre dossier et ne remplace pas un conseil juridique.</div>'
       + '<div class="noprint" style="margin-top:22px;text-align:center;"><button onclick="window.print()" style="padding:12px 28px;font-size:14px;cursor:pointer;">Imprimer / Enregistrer en PDF</button></div>'
