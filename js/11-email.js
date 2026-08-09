@@ -85,21 +85,35 @@ async function beginMailOAuth(provider){
   }
   try{
     const oauthProvider=isGmail?'google':'azure'
-    let result=typeof supa.auth.linkIdentity==='function'
-      ? await supa.auth.linkIdentity({provider:oauthProvider,options})
-      : await supa.auth.signInWithOAuth({provider:oauthProvider,options})
-    if(result.error){
-      // Le même compte peut déjà servir à la connexion CLERVIO (ou linkIdentity peut
-      // échouer pour d'autres raisons : 404, session expirée, etc). Dans tous les cas,
-      // on retente via signInWithOAuth qui redemande le consentement avec les scopes mail
-      // sans jamais créer de second utilisateur.
-      console.warn('linkIdentity a échoué, repli sur signInWithOAuth:', result.error)
-      result=await supa.auth.signInWithOAuth({provider:oauthProvider,options})
+
+    const dejaLie = !!(currentUser.identities || []).find(function(i){ return i.provider === oauthProvider })
+
+    let result
+    if (dejaLie) {
+      result = await supa.auth.signInWithOAuth({provider:oauthProvider,options})
+    } else {
+      result = typeof supa.auth.linkIdentity==='function'
+        ? await supa.auth.linkIdentity({provider:oauthProvider,options})
+        : await supa.auth.signInWithOAuth({provider:oauthProvider,options})
+      if(result.error){
+        console.warn('linkIdentity a échoué, repli sur signInWithOAuth:', result.error)
+        result=await supa.auth.signInWithOAuth({provider:oauthProvider,options})
+      }
     }
     if(result.error) throw result.error
   }catch(e){
     console.error(e)
     toast('❌ ' + (e.message || 'Connexion impossible'))
+    try{
+      if (typeof supa !== 'undefined' && supa && currentUser){
+        await supa.from('client_errors').insert({
+          user_id: currentUser.id,
+          module: 'beginMailOAuth',
+          message: 'échec connexion ' + provider + ' : ' + ((e && e.message) || e),
+          page: window.location.pathname
+        })
+      }
+    }catch(e2){}
   }
 }
 
