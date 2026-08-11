@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   CLERVIO — Quiet Motion
+   CLERVIO — Motion System
    Une orchestration légère des transitions, révélations et retours
    tactiles. Tous les mouvements restent fonctionnels, interrompables
    et sont désactivés lorsque l’utilisateur le demande.
@@ -9,7 +9,6 @@
 
   const root = document.documentElement
   const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-  const precisePointer = window.matchMedia('(hover: hover) and (pointer: fine)')
   const visitedPages = new Set()
   const revealSeen = new WeakSet()
   let reduced = reduceQuery.matches
@@ -164,27 +163,6 @@
   document.addEventListener('pointercancel',clearPressed,{passive:true})
   window.addEventListener('blur',clearPressed)
 
-  function enableSignalTilt(){
-    if(reduced || !precisePointer.matches) return
-    const card = document.getElementById('home-signal')
-    if(!card) return
-    card.addEventListener('pointermove',event => {
-      const rect = card.getBoundingClientRect()
-      const x = (event.clientX - rect.left) / rect.width - .5
-      const y = (event.clientY - rect.top) / rect.height - .5
-      card.style.setProperty('--tilt-x',`${(-y * 2.4).toFixed(2)}deg`)
-      card.style.setProperty('--tilt-y',`${(x * 2.8).toFixed(2)}deg`)
-      card.style.setProperty('--glow-x',`${((x + .5) * 100).toFixed(1)}%`)
-      card.style.setProperty('--glow-y',`${((y + .5) * 100).toFixed(1)}%`)
-    },{passive:true})
-    card.addEventListener('pointerleave',() => {
-      card.style.removeProperty('--tilt-x')
-      card.style.removeProperty('--tilt-y')
-      card.style.removeProperty('--glow-x')
-      card.style.removeProperty('--glow-y')
-    })
-  }
-
   window.addEventListener('clervio:navigated',event => {
     const pageId = event.detail?.to
     if(!pageId) return
@@ -196,7 +174,6 @@
   function start(){
     observeDynamicContent()
     observeReveals()
-    enableSignalTilt()
     const active = document.querySelector('.pg.on')?.id
     if(active && active !== 'p-splash') pageEntrance(active,true)
   }

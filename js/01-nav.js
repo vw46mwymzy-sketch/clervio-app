@@ -6,14 +6,14 @@ const NH=`<nav class="nav" aria-label="Navigation principale">
   <button type="button" class="ni" data-nav-page="p-orders" onclick="go('p-orders')" aria-label="Achats"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3L3 7v13a1 1 0 001 1h16a1 1 0 001-1V7l-3-4z"/><path d="M3 7h18M16 11a4 4 0 01-8 0"/></svg><span>Achats</span></button>
   <button type="button" class="ni" data-nav-page="p-vault" onclick="go('p-vault')" aria-label="Coffre"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="11" rx="2"/><path d="M7 10V7a5 5 0 0110 0v3"/></svg><span>Coffre</span></button>
   <button type="button" class="ni" data-nav-page="p-home" onclick="go('p-home')" aria-label="Accueil"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-7 9 7v10a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1z"/></svg><span>Accueil</span></button>
-  <button type="button" class="ni" data-nav-page="p-ai" onclick="go('p-ai')" aria-label="Concierge"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8L18 15z"/></svg><span>Concierge</span></button>
+  <button type="button" class="ni" data-nav-page="p-ai" onclick="go('p-ai')" aria-label="CLERVIO"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5h14v11H9l-4 3V5z"/><path d="M9 9h6M9 12h4"/></svg><span>Clervio</span></button>
   <button type="button" class="ni" data-nav-page="p-profile" onclick="go('p-profile')" aria-label="Profil"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profil</span></button>
 </nav>`
 
 document.querySelectorAll('.navslot').forEach(slot=>{ slot.innerHTML=NH })
 
 const NAV_TITLES={
-  'p-home':'Accueil','p-orders':'Achats','p-vault':'Coffre','p-ai':'Concierge','p-profile':'Profil',
+  'p-home':'Accueil','p-orders':'Achats','p-vault':'Coffre','p-ai':'Clervio','p-profile':'Profil',
   'p-scan':'Scanner','p-add-order':'Ajouter un achat','p-add-sub':'Ajouter un abonnement',
   'p-email-sources':'Sources connectées','p-pricing':'Tarifs','p-login':'Connexion'
 }
@@ -66,15 +66,18 @@ function go(id,options={}){
   updateNavigationState(id)
 
   try{
-    if(id==='p-profile' && currentUser){
+    const demoProfile=typeof isLocalDemo==='function' && isLocalDemo()
+    if(id==='p-profile' && (currentUser || demoProfile)){
       if(typeof loadEmailSourcesCount==='function') loadEmailSourcesCount()
-      const name=(currentProfile?.full_name||'').split(' ')[0]||(currentUser.email||'').split('@')[0]||'Utilisateur'
+      const name=(currentProfile?.full_name||'').split(' ')[0]||(currentUser?.email||'').split('@')[0]||'Utilisateur'
       const nameEl=document.getElementById('profile-name')
       if(nameEl) nameEl.textContent=name
-      const avatarEl=document.querySelector('#p-profile .sr')
+      const avatarEl=document.getElementById('prof-init')
       if(avatarEl) avatarEl.textContent=(name[0]||'Q').toUpperCase()
       const badgeEl=document.getElementById('profile-badge')
       if(badgeEl) badgeEl.textContent=currentProfile?.plan==='premium'?'Premium':'Découverte'
+      const planDetail=document.getElementById('prof-abo-detail')
+      if(planDetail && demoProfile) planDetail.textContent='Découverte · gratuit'
     }
   }catch(e){ console.warn('Profile update error:',e) }
 

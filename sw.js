@@ -3,12 +3,12 @@
    toutes les requêtes non GET restent strictement réseau.
    ════════════════════════════════════════════════════════ */
 
-const VERSION = '2026-08-11-legendary-2';
+const VERSION = '2026-08-11-system-1';
 const STATIC_CACHE = 'clervio-static-' + VERSION;
 const PAGE_CACHE = 'clervio-pages-' + VERSION;
 const APP_SHELL = [
   '/index.html','/offline.html','/manifest.json',
-  '/css/atmosphere.css','/css/legendary.css',
+  '/css/atmosphere.css','/css/legendary.css','/css/system.css',
   '/js/00-diagnostic.js','/js/01-nav.js','/js/02-auth.js','/js/03-analyse.js',
   '/js/04-storage.js','/js/05-ai.js','/js/06-scan.js','/js/07-vault.js',
   '/js/08-data.js','/js/09-compte.js','/js/10-home.js','/js/11-email.js',

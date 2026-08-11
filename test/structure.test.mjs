@@ -8,9 +8,19 @@ const html = readFileSync(join(root,'index.html'),'utf8');
 
 test('charge la fondation Quiet Intelligence',()=>{
   assert.match(html,/css\/legendary\.css/);
+  assert.match(html,/css\/legendary\.css[\s\S]*css\/system\.css/);
   assert.match(html,/js\/28-intelligence\.js/);
   assert.match(html,/js\/29-motion\.js/);
   assert.doesNotMatch(html,/role=["']application["']/);
+});
+
+test('la direction Clervio System évite les codes visuels IA génériques',()=>{
+  const system = readFileSync(join(root,'css/system.css'),'utf8');
+  assert.doesNotMatch(system,/Cormorant/i);
+  assert.doesNotMatch(system,/#(?:C9A84C|D6B769)/i);
+  assert.match(system,/--sys-blue:#315FF4/);
+  assert.match(html,/class="ob1-preview"/);
+  assert.doesNotMatch(html,/Demander à CLERVIO/);
 });
 
 test('le motion design respecte les préférences utilisateur',()=>{

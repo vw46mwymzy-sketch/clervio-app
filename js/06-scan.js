@@ -254,7 +254,7 @@ function renderScan(phase, payload){
       <div style="position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle,rgba(200,168,74,.06) 0%,transparent 70%);border-radius:50%;pointer-events:none;"></div>
       <p class="sl" style="margin-bottom:14px;position:relative;z-index:1;">Ajouter un achat</p>
       <h1 class="sr" style="font-size:2.2rem;font-weight:300;color:var(--cr);margin-bottom:10px;position:relative;z-index:1;">Scanner<br/>une facture</h1>
-      <p style="font-size:13px;color:var(--d1);margin-bottom:34px;line-height:1.65;position:relative;z-index:1;">L’IA analyse l’image et extrait automatiquement les informations à vérifier.</p>
+      <p style="font-size:13px;color:var(--d1);margin-bottom:34px;line-height:1.65;position:relative;z-index:1;">Les informations utiles sont extraites de l’image, puis présentées pour validation.</p>
       <button type="button" onclick="document.getElementById('scan-camera-input').click()" style="width:100%;display:flex;align-items:center;gap:16px;background:var(--s1);border:1px solid var(--cv-line);border-radius:20px;padding:18px 20px;margin-bottom:10px;cursor:pointer;transition:all .25s var(--e1);box-shadow:0 4px 16px rgba(0,0,0,.3);color:inherit;text-align:left;">
         <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
         <div><div style="font-size:13px;color:var(--cr);font-weight:500;margin-bottom:2px;">Prendre une photo</div><div style="font-size:11px;color:var(--d2);">Facture, ticket, bon de livraison</div></div>
@@ -279,7 +279,7 @@ function renderScan(phase, payload){
     c.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:40px;position:relative;">
       <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(100,60,5,.12) 0%,transparent 70%);pointer-events:none;"></div>
       ${previewHtml}
-      <p class="sl" style="margin-bottom:10px;text-align:center;position:relative;z-index:1;">Analyse IA en cours</p>
+      <p class="sl" style="margin-bottom:10px;text-align:center;position:relative;z-index:1;">Analyse sécurisée en cours</p>
       <h2 id="scan-status" style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--cr);text-align:center;margin-bottom:8px;position:relative;z-index:1;">Préparation du document…</h2>
       <p style="font-size:12px;color:var(--d2);margin-bottom:32px;position:relative;z-index:1;">Les informations devront être validées avant l’ajout</p>
       <div class="pt" style="width:100%;max-width:240px;margin-bottom:10px;position:relative;z-index:1;"><div class="pf" id="spb" style="width:0%;"></div></div>
