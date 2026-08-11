@@ -88,7 +88,7 @@
       lignes.push('J\'ai acheté ' + nom + (marque && marque !== nom ? ' (' + marque + ')' : '')
         + (achat ? ' le ' + achat : '') + (numero ? ', commande n° ' + numero : '') + '.');
       lignes.push('');
-      lignes.push('Ce produit présente un défaut de fonctionnement et je souhaite faire jouer la garantie dont il bénéficie encore. Je vous remercie de m\\'indiquer la marche à suivre pour la réparation, l\\'échange, ou à défaut le remboursement du produit.');
+      lignes.push('Ce produit présente un défaut de fonctionnement et je souhaite faire jouer la garantie dont il bénéficie encore. Je vous remercie de m\'indiquer la marche à suivre pour la réparation, l\'échange, ou à défaut le remboursement du produit.');
       lignes.push('');
       lignes.push('Je reste à votre disposition pour tout justificatif complémentaire.');
       lignes.push('');
@@ -396,7 +396,7 @@
 
       + '<h2>Justificatif</h2>'
       + (o.facture
-          ? '<div class="piece">Une facture ou un justificatif est conservé dans le coffre CLERVIO associé à cette commande. Joignez-le séparément à ce dossier : ouvrez la commande dans l\\'application, section « Facture », pour l\'exporter.</div>'
+          ? '<div class="piece">Une facture ou un justificatif est conservé dans le coffre CLERVIO associé à cette commande. Joignez-le séparément à ce dossier : ouvrez la commande dans l\'application, section « Facture », pour l\'exporter.</div>'
           : '<div class="piece">Aucun justificatif n\'est actuellement attaché à cette commande dans CLERVIO.</div>')
 
       + '<div class="pied">Document généré automatiquement à partir des informations saisies dans CLERVIO. Il constitue une aide à la constitution de votre dossier et ne remplace pas un conseil juridique.</div>'

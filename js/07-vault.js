@@ -37,6 +37,7 @@ function folderStorageKey(){
 
 /* Cache local séparé pour chaque compte. */
 function loadFolders(){
+  if(typeof isLocalDemo === 'function' && isLocalDemo()) return FOLDERS
   if(FOLDERS.length) return FOLDERS
   try{
     const cached = JSON.parse(localStorage.getItem(folderStorageKey()) || '[]')
@@ -47,6 +48,7 @@ function loadFolders(){
 
 function saveFolders(folders){
   FOLDERS = Array.isArray(folders) ? folders : []
+  if(typeof isLocalDemo === 'function' && isLocalDemo()) return
   try{ localStorage.setItem(folderStorageKey(), JSON.stringify(FOLDERS)) }catch(e){}
 }
 
@@ -496,6 +498,7 @@ function highlight(id){
 
 /* Charger les abonnements sauvegardés */
 function loadSavedSubs(){
+  if(typeof isLocalDemo === 'function' && isLocalDemo()) return
   // Ne charger localStorage que si pas d'utilisateur connecté
   if(currentUser) return // Données viennent de Supabase
   try{
@@ -503,4 +506,3 @@ function loadSavedSubs(){
     saved.forEach(s=>{ if(!SUBS.find(x=>x.id===s.id)) SUBS.unshift(s) })
   } catch(e){}
 }
-

@@ -45,6 +45,7 @@ function addMsg(role, text){
 async function sAI(text){
   const message = String(text || '').trim()
   if(!message) return
+  if(message.length > 800){ toast('Votre question ne peut pas dépasser 800 caractères'); return }
   const suggestions = document.getElementById('aisugg')
   if(suggestions) suggestions.style.display = 'none'
   addMsg('me', message)
@@ -65,6 +66,7 @@ function sAIi(){
   const input = document.getElementById('aiinp')
   const message = input?.value?.trim()
   if(!message) return
+  if(message.length > 800){ toast('Votre question ne peut pas dépasser 800 caractères'); return }
   input.value = ''
   sAI(message)
 }
@@ -100,4 +102,3 @@ async function editPersonalInfo(){
 function openSupport(){
   window.location.href = 'mailto:contact@clervio.app?subject=Aide%20CLERVIO'
 }
-
