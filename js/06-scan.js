@@ -246,6 +246,7 @@ async function confirmScannedOrder(){
 
 function renderScan(phase, payload){
   const c=document.getElementById('sc-c');if(!c)return
+  c.dataset.scanPhase=phase
   if(phase==='choice'){
     lastScanResult = null
     lastScanFile = null

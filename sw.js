@@ -3,7 +3,7 @@
    toutes les requêtes non GET restent strictement réseau.
    ════════════════════════════════════════════════════════ */
 
-const VERSION = '2026-08-11-legendary-1';
+const VERSION = '2026-08-11-legendary-2';
 const STATIC_CACHE = 'clervio-static-' + VERSION;
 const PAGE_CACHE = 'clervio-pages-' + VERSION;
 const APP_SHELL = [
@@ -16,7 +16,7 @@ const APP_SHELL = [
   '/js/16-barre.js','/js/17-autotest.js','/js/18-contexte.js','/js/19-push.js',
   '/js/20-profil.js','/js/21-concierge.js','/js/22-coffre.js','/js/23-quota.js',
   '/js/24-offres.js','/js/25-facture.js','/js/26-motdepasse.js','/js/27-agir.js',
-  '/js/28-intelligence.js',
+  '/js/28-intelligence.js','/js/29-motion.js',
   '/icons/icon-192.png','/icons/icon-512.png','/icons/badge-72.png','/icons/apple-touch-icon.png'
 ];
 

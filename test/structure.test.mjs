@@ -9,7 +9,18 @@ const html = readFileSync(join(root,'index.html'),'utf8');
 test('charge la fondation Quiet Intelligence',()=>{
   assert.match(html,/css\/legendary\.css/);
   assert.match(html,/js\/28-intelligence\.js/);
+  assert.match(html,/js\/29-motion\.js/);
   assert.doesNotMatch(html,/role=["']application["']/);
+});
+
+test('le motion design respecte les préférences utilisateur',()=>{
+  const motion = readFileSync(join(root,'js/29-motion.js'),'utf8');
+  const styles = readFileSync(join(root,'css/legendary.css'),'utf8');
+  assert.match(motion,/prefers-reduced-motion/);
+  assert.match(motion,/IntersectionObserver/);
+  assert.match(motion,/clervio:navigated/);
+  assert.match(styles,/@media \(prefers-reduced-motion:reduce\)/);
+  assert.match(styles,/animation-iteration-count:1/);
 });
 
 test('les écrans centraux utilisent des contrôles sémantiques',()=>{
