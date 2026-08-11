@@ -6,6 +6,16 @@
 
 const VERSION = '2026-07-29';
 
+function notificationTarget(value) {
+  try {
+    const url = new URL(typeof value === 'string' ? value : '/', self.location.origin);
+    if (url.origin !== self.location.origin) return '/';
+    return url.pathname + url.search + url.hash;
+  } catch (err) {
+    return '/';
+  }
+}
+
 self.addEventListener('install', () => {
   self.skipWaiting();
 });
@@ -36,7 +46,7 @@ self.addEventListener('push', (e) => {
     tag: d.tag || 'clervio',
     renotify: false,
     requireInteraction: false,
-    data: { url: d.url || '/', recu: Date.now() }
+    data: { url: notificationTarget(d.url), recu: Date.now() }
   };
 
   e.waitUntil(self.registration.showNotification(titre, options));
@@ -44,7 +54,7 @@ self.addEventListener('push', (e) => {
 
 self.addEventListener('notificationclick', (e) => {
   e.notification.close();
-  const cible = (e.notification.data && e.notification.data.url) || '/';
+  const cible = notificationTarget(e.notification.data && e.notification.data.url);
 
   e.waitUntil((async () => {
     const liste = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });

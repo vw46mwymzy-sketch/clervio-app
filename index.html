@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://jwvhqtrofwmozhiajwip.supabase.co wss://jwvhqtrofwmozhiajwip.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://jwvhqtrofwmozhiajwip.supabase.co wss://jwvhqtrofwmozhiajwip.supabase.co; worker-src 'self'; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests;">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -994,6 +994,10 @@ button:active,.tp:active,.cd.tp:active{
     let supa = null
     let currentUser = null
     let currentProfile = null
+    function isLocalDemo(){
+      try{ return sessionStorage.getItem('clervio-demo-mode') === '1' }
+      catch(e){ return false }
+    }
 function initSupabase(){
       if(!window.supabase || supa) return
       try{
@@ -1001,6 +1005,7 @@ function initSupabase(){
         supa.auth.onAuthStateChange((event, session) => {
           // Sortir du verrou interne Supabase avant tout autre appel à la base.
           setTimeout(async () => {
+            if(isLocalDemo() && event !== 'PASSWORD_RECOVERY') return
             if(event === 'SIGNED_IN' && session?.user){
               currentUser = session.user
               await loadProfile()
@@ -1039,12 +1044,13 @@ function initSupabase(){
       })
     }
 
-    // ── GESTION DES 3 ÉTATS DE SESSION ──────────────────
+    // ── GESTION DES 4 ÉTATS DE SESSION ──────────────────
     // État 1: loadingSession (pendant vérification)
     // État 2: authenticated (user connecté)
-    // État 3: unauthenticated (pas connecté)
+    // État 3: demo (données fictives locales, aucune session)
+    // État 4: unauthenticated (pas connecté)
 
-    let sessionState = 'loading' // loading | authenticated | unauthenticated
+    let sessionState = 'loading' // loading | authenticated | demo | unauthenticated
     let sessionTimeout = null
     let sessionResolutionStarted = false
 
@@ -1056,6 +1062,11 @@ function initSupabase(){
       }, 6500)
 
       try{
+        if(isLocalDemo()){
+          await waitForAppReady()
+          await enterLocalDemo()
+          return
+        }
         // Attendre le SDK sans lancer plusieurs résolutions concurrentes.
         for(let attempt=0; !supa && attempt<30; attempt++){
           await new Promise(resolve => setTimeout(resolve, 200))
@@ -1088,10 +1099,8 @@ function initSupabase(){
       const ls = document.getElementById('loading-screen')
       const _elapsed = Date.now()-(window._appStartTime||0); const _wait=Math.max(0,3000-_elapsed); setTimeout(()=>{if(ls){ls.classList.add('hidden');setTimeout(()=>ls.remove(),400)}},_wait)
 
-      const isDemo = sessionStorage.getItem('clervio-demo-mode') === '1' ||
-                     (currentUser && ['demo@clervio.app','demo@vaulto.app'].includes(currentUser.email))
       const db = document.getElementById('demo-banner')
-      if(db){ if(isDemo) db.classList.add('visible'); else db.classList.remove('visible') }
+      if(db) db.classList.remove('visible')
 
       // Charger chaque source une seule fois avant d'afficher les statistiques.
       const [vaultResult, ordersResult] = await Promise.allSettled([
@@ -1119,7 +1128,7 @@ function initSupabase(){
 
     async function setUnauthenticated(){
       await waitForAppReady()
-      if(sessionState === 'authenticated') return
+      if(sessionState === 'authenticated' || sessionState === 'demo') return
       sessionState = 'unauthenticated'
       clearTimeout(sessionTimeout)
       const ls = document.getElementById('loading-screen')
@@ -1155,7 +1164,6 @@ function initSupabase(){
       trackDelivery: 'https://jwvhqtrofwmozhiajwip.supabase.co/functions/v1/track-delivery',
       ingestGmail:   'https://jwvhqtrofwmozhiajwip.supabase.co/functions/v1/ingest-gmail',
       userAccount:   'https://jwvhqtrofwmozhiajwip.supabase.co/functions/v1/user-account',
-      demoLogin:     'https://jwvhqtrofwmozhiajwip.supabase.co/functions/v1/demo-login',
       sendEmail:     'https://jwvhqtrofwmozhiajwip.supabase.co/functions/v1/send-email',
       scanDocument:  'https://jwvhqtrofwmozhiajwip.supabase.co/functions/v1/scan-document',
     }
@@ -1286,6 +1294,7 @@ async function loadProfile(tentative){
       return true
     }
 async function signOut(){
+      if(isLocalDemo()) return exitLocalDemo()
       if(activeRealtimeChannel && supa){
         try{ await supa.removeChannel(activeRealtimeChannel) }catch(e){}
         activeRealtimeChannel = null
@@ -1394,7 +1403,7 @@ async function signOut(){
 <!-- ══ DEMO BANNER ══════════════════════════════════════ -->
 <div id="demo-banner">
   <p>⚡ Mode démonstration — Les données affichées sont fictives</p>
-  <button onclick="go('p-login');hideDemoBanner()">Créer mon espace</button>
+  <button onclick="exitLocalDemo()">Créer mon espace</button>
 </div>
 
 <!-- ══ LOADING SCREEN ═══════════════════════════════════ -->
@@ -2082,7 +2091,7 @@ async function signOut(){
        En flux normal elle sortait de l'écran : la zone de messages
        en flex:1 la poussait hors du viewport. -->
   <div style="position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);z-index:40;max-width:430px;margin:0 auto;padding:12px 16px;background:linear-gradient(180deg,rgba(5,4,6,.86),rgba(5,4,6,.97));backdrop-filter:blur(14px);border-top:1px solid rgba(201,168,76,.13);display:flex;gap:10px;align-items:center;">
-    <input id="aiinp" class="inp" placeholder="Posez une question…" style="border-radius:100px;padding:13px 20px;font-size:14px;" onkeydown="if(event.key==='Enter')sAIi()">
+    <input id="aiinp" class="inp" placeholder="Posez une question…" maxlength="800" autocomplete="off" style="border-radius:100px;padding:13px 20px;font-size:14px;" onkeydown="if(event.key==='Enter')sAIi()">
     <button onclick="sAIi()" style="width:46px;height:46px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;background:linear-gradient(150deg,#F5E870,var(--g),var(--gl));box-shadow:0 2px 0 rgba(0,0,0,.4),0 6px 20px rgba(201,168,76,.55),0 0 0 1px rgba(255,255,255,.15),inset 0 1px 0 rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;transition:background .25s, opacity .25s;">
       <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#07060C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9" fill="#07060C" stroke="none"/></svg>
     </button>
@@ -2842,10 +2851,10 @@ async function signOut(){
     <p style="font-size:13px;color:var(--d2);margin-bottom:32px;line-height:1.7;">Choisissez un mot de passe sécurisé d'au moins 8 caractères.</p>
 
     <label class="sl" style="display:block;margin-bottom:8px;">Nouveau mot de passe</label>
-    <input id="new-password" class="inp" type="password" placeholder="8 caractères minimum" style="margin-bottom:16px;">
+    <input id="new-password" class="inp" type="password" minlength="8" maxlength="128" autocomplete="new-password" placeholder="8 caractères minimum" style="margin-bottom:16px;">
 
     <label class="sl" style="display:block;margin-bottom:8px;">Confirmer le mot de passe</label>
-    <input id="confirm-password" class="inp" type="password" placeholder="Répétez le mot de passe" style="margin-bottom:10px;">
+    <input id="confirm-password" class="inp" type="password" minlength="8" maxlength="128" autocomplete="new-password" placeholder="Répétez le mot de passe" style="margin-bottom:10px;">
 
     <!-- Indicateur de force -->
     <div id="pwd-strength" style="height:3px;border-radius:2px;background:rgba(255,255,255,.08);margin-bottom:24px;overflow:visible;">

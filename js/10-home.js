@@ -49,66 +49,73 @@ async function updateDashboardStats(stats){
 }
 
 
-/* ══ CONNEXION COMPTE DÉMO ══════════════════════════════ */
+/* ══ MODE DÉMO LOCAL — aucune session ni donnée partagée ═ */
+const CLERVIO_DEMO_DATA = Object.freeze({
+  orders: [
+    { id:'demo-o1', brand:'Apple', name:'iPhone 16 Pro', amt:1299, st:'Livré', sc:'g', dt:'14 juin 2026', orderDate:'2026-06-14', warr:24, warrantyEndsAt:'2028-06-14' },
+    { id:'demo-o2', brand:'Amazon', name:'Machine à café', amt:189.90, st:'En transit', sc:'o', dt:'16 juil. 2026', orderDate:'2026-07-16', carrier:'Colissimo' },
+    { id:'demo-o3', brand:'Nike', name:'Air Max', amt:149.99, st:'Livré', sc:'g', dt:'8 mai 2026', orderDate:'2026-05-08' }
+  ],
+  subscriptions: [
+    { id:'demo-s1', type:'subs', name:'Netflix', sub:'Premium', amt:19.99, freq:'mois', next:'3 sept.', st:'active', res:true },
+    { id:'demo-s2', type:'subs', name:'iCloud+', sub:'2 To', amt:9.99, freq:'mois', next:'10 sept.', st:'active', res:true }
+  ],
+  warranties: [
+    { id:'demo-w1', brand:'Apple', name:'iPhone 16 Pro', exp:'14 juin 2028', days:673, st:'g' },
+    { id:'demo-w2', brand:"De'Longhi", name:'Machine à café', exp:'1 juil. 2027', days:324, st:'g' }
+  ],
+  contracts: [
+    { id:'demo-c1', type:'contracts', name:'Assurance habitation', sub:'MAIF', amt:28.50, freq:'mois', next:'1 sept.', renew:'1 janv. 2027', st:'active', res:true }
+  ],
+  documents: [
+    { id:'demo-d1', brand:'Apple', name:'Facture iPhone 16 Pro', sub:'facture', date:'14 juin 2026', chemin:null, poids:0 }
+  ],
+  folders: []
+})
+
+function cloneDemoData(items){
+  return items.map(item => ({ ...item }))
+}
+
+async function enterLocalDemo(){
+  await waitForAppReady()
+  try{ sessionStorage.setItem('clervio-demo-mode','1') }catch(e){}
+  sessionState = 'demo'
+  clearTimeout(sessionTimeout)
+  currentUser = null
+  currentProfile = { full_name:'Lou', plan:'gratuit' }
+  ORDS = cloneDemoData(CLERVIO_DEMO_DATA.orders)
+  SUBS = cloneDemoData(CLERVIO_DEMO_DATA.subscriptions)
+  WARR = cloneDemoData(CLERVIO_DEMO_DATA.warranties)
+  CONTR = cloneDemoData(CLERVIO_DEMO_DATA.contracts)
+  DOCS = cloneDemoData(CLERVIO_DEMO_DATA.documents)
+  FOLDERS = cloneDemoData(CLERVIO_DEMO_DATA.folders)
+  const loading = document.getElementById('loading-screen')
+  if(loading){ loading.classList.add('hidden'); setTimeout(()=>loading.remove(), 400) }
+  showDemoBanner()
+  updateDashboardStats(buildLocalDashboardStats())
+  go('p-home')
+}
+
+function exitLocalDemo(){
+  try{ sessionStorage.removeItem('clervio-demo-mode') }catch(e){}
+  sessionState = 'unauthenticated'
+  currentUser = null
+  currentProfile = null
+  ORDS = []; SUBS = []; WARR = []; CONTR = []; DOCS = []; FOLDERS = []
+  hideDemoBanner()
+  if(typeof openSocialAuth === 'function') openSocialAuth('signup')
+  else go('p-ob2')
+}
+
 async function loginDemo(){
-  // Feedback visuel
-  document.querySelectorAll('button').forEach(b=>{
-    if(b.textContent.includes('démonstration')) { b.textContent='⏳ Connexion...'; b.disabled=true }
-  })
-  const resetBtns=()=>{
-    document.querySelectorAll('button').forEach(b=>{
-      if(b.textContent.includes('Connexion...')){ b.textContent='✨ Explorer la démonstration'; b.disabled=false }
-    })
-  }
-
-  // Attendre Supabase
-  let w=0; while(!supa && w<20){ await new Promise(r=>setTimeout(r,400)); w++ }
-  if(!supa){ toast('❌ Réseau indisponible'); resetBtns(); return }
-
+  const buttons = Array.from(document.querySelectorAll('button')).filter(button => button.textContent.includes('démonstration'))
+  buttons.forEach(button => { button.textContent='⏳ Préparation...'; button.disabled=true })
   try{
-    // Étape 1 : Setup si nécessaire + récupérer session via Edge Function
-    const res = await fetch('https://jwvhqtrofwmozhiajwip.supabase.co/functions/v1/demo-login', {
-      method:'POST',
-      headers:{'Content-Type':'application/json','apikey':'sb_publishable_f_bLtSey70f5OONOPkRYbg_RQOnPFe6'}
-    })
-    const d = await res.json()
-
-    if(d.access_token){
-      // Session directe
-      const {error} = await supa.auth.setSession({
-        access_token: d.access_token,
-        refresh_token: d.refresh_token
-      })
-      if(error){ toast('❌ '+error.message); resetBtns(); return }
-      sessionStorage.setItem('clervio-demo-mode','1')
-      toast('✨ Mode démonstration activé !')
-      setTimeout(()=>showDemoBanner(), 800)
-
-    } else if(d.action_link){
-      // Magic link — ouvrir dans une popup invisible pour capter la session
-      toast('⏳ Finalisation de la connexion...')
-      // Rediriger vers le lien magique
-      window.location.href = d.action_link
-
-    } else {
-      // Dernier recours : essayer connexion directe (si confirm email désactivé)
-      let {data:sd, error:se} = await supa.auth.signInWithPassword({
-        email:'demo@clervio.app', password:'Demo2025!'
-      })
-      if(se){
-        const legacy = await supa.auth.signInWithPassword({ email:'demo@vaulto.app', password:'Demo2025!' })
-        sd = legacy.data; se = legacy.error
-      }
-      if(se){ toast('❌ '+se.message); resetBtns(); return }
-      sessionStorage.setItem('clervio-demo-mode','1')
-      toast('✨ Mode démonstration activé !')
-      setTimeout(()=>showDemoBanner(), 800)
-    }
-
-  }catch(e){
-    console.error(e)
-    toast('❌ Erreur réseau — réessayez')
-    resetBtns()
+    await enterLocalDemo()
+    toast('✨ Mode démonstration local activé !')
+  } finally {
+    buttons.forEach(button => { button.textContent='✨ Explorer la démonstration'; button.disabled=false })
   }
 }
 
@@ -154,5 +161,4 @@ function urlBase64ToUint8Array(base64String){
 
 /* ══ PRICING PAGE LINK ══════════════════════════════════ */
 function showPricing(){ go('p-pricing') }
-
 

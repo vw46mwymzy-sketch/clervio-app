@@ -44,6 +44,7 @@ async function handleEmailAuth(){
   if(!email){ highlight('email-auth-email'); toast('Entrez votre email'); return }
   if(!/^\S+@\S+\.\S+$/.test(email)){ highlight('email-auth-email'); toast('Adresse email invalide'); return }
   if(!pass){ highlight('pwin'); toast('Entrez votre mot de passe'); return }
+  if(pass.length > 128){ highlight('pwin'); toast('Le mot de passe ne peut pas dépasser 128 caractères'); return }
   if(emailAuthMode === 'signup' && pass.length < 8){ highlight('pwin'); toast('Le mot de passe doit contenir au moins 8 caractères'); return }
 
   const submit = document.getElementById('email-auth-submit')
@@ -68,6 +69,7 @@ async function handleEmailAuth(){
 
 // ── Charger les commandes depuis Supabase (+ fallback localStorage)
 async function fetchOrders(){
+  if(typeof isLocalDemo === 'function' && isLocalDemo()) return cloneDemoData(CLERVIO_DEMO_DATA.orders)
   if(!currentUser || !supa) return loadOrders()
 
   const { data, error } = await supa
@@ -109,6 +111,10 @@ async function fetchOrders(){
 
 // ── Sauvegarder commande dans Supabase
 async function saveOrderToSupabase(order){
+  if(typeof isLocalDemo === 'function' && isLocalDemo()){
+    toast('Mode démo : créez votre espace pour enregistrer une commande')
+    return false
+  }
   if(!currentUser || !supa){
     const cached = loadOrders()
     cached.unshift(order)
@@ -137,6 +143,7 @@ async function saveOrderToSupabase(order){
 
 // ── Charger abonnements depuis Supabase
 async function fetchSubscriptions(){
+  if(typeof isLocalDemo === 'function' && isLocalDemo()) return cloneDemoData(CLERVIO_DEMO_DATA.subscriptions)
   if(!currentUser || !supa) return SUBS
   const { data, error } = await supa
     .from('subscriptions')
@@ -162,6 +169,10 @@ async function fetchSubscriptions(){
 
 // ── Sauvegarder abonnement dans Supabase
 async function saveSubToSupabase(sub){
+  if(typeof isLocalDemo === 'function' && isLocalDemo()){
+    toast('Mode démo : créez votre espace pour enregistrer un abonnement')
+    return false
+  }
   if(!currentUser || !supa){
     const saved = JSON.parse(localStorage.getItem('clervio-subs')||'[]')
     saved.unshift(sub)
@@ -181,6 +192,7 @@ async function saveSubToSupabase(sub){
 
 // ── Charger dossiers depuis Supabase
 async function fetchFolders(){
+  if(typeof isLocalDemo === 'function' && isLocalDemo()) return cloneDemoData(CLERVIO_DEMO_DATA.folders)
   if(!currentUser || !supa) return loadFolders()
   const { data, error } = await supa
     .from('vault_folders')
@@ -208,6 +220,10 @@ async function fetchFolders(){
 
 // ── Sauvegarder dossier dans Supabase
 async function saveFolderToSupabase(folder){
+  if(typeof isLocalDemo === 'function' && isLocalDemo()){
+    toast('Mode démo : créez votre espace pour enregistrer un dossier')
+    return null
+  }
   if(!currentUser || !supa){
     const folders = loadFolders()
     folders.unshift(folder)
@@ -238,6 +254,7 @@ async function saveFolderToSupabase(folder){
 
 // ── Stats dashboard temps réel
 async function fetchDashboardStats(){
+  if(typeof isLocalDemo === 'function' && isLocalDemo()) return buildLocalDashboardStats()
   if(!currentUser || !supa) return null
   const { data, error } = await supa.rpc('get_dashboard_stats', { p_user_id: currentUser.id })
   if(error){ console.warn('Dashboard RPC:', error); return null }
@@ -261,6 +278,7 @@ function reverseMapStatus(s){
 // ── Realtime — écouter les updates de commandes
 let activeRealtimeChannel = null
 function subscribeToRealtime(){
+  if(typeof isLocalDemo === 'function' && isLocalDemo()) return
   if(!currentUser || !supa) return
   if(activeRealtimeChannel){
     supa.removeChannel(activeRealtimeChannel).catch(()=>{})
@@ -282,6 +300,13 @@ function subscribeToRealtime(){
 
 /* ══ LOAD EMAIL SOURCES IN PROFILE ══════════════════════ */
 async function loadEmailSourcesCount(){
+  if(typeof isLocalDemo === 'function' && isLocalDemo()){
+    const countEl = document.getElementById('email-sources-count')
+    const listEl = document.getElementById('email-sources-list')
+    if(countEl) countEl.textContent = 'Aucun email connecté en démonstration'
+    if(listEl) listEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--d2);font-size:13px;">Aucun email connecté en démonstration</div>'
+    return
+  }
   if(!currentUser || !supa) return
   try{
     const resp = await supa
@@ -357,6 +382,11 @@ async function updatePassword(){
     toast('Le mot de passe doit faire au moins 8 caractères')
     return
   }
+  if(newPwd.length > 128){
+    highlight('new-password')
+    toast('Le mot de passe ne peut pas dépasser 128 caractères')
+    return
+  }
   if(newPwd !== confirmPwd){
     highlight('confirm-password')
     toast('Les mots de passe ne correspondent pas')
@@ -408,5 +438,4 @@ window.addEventListener('load', function(){
     setTimeout(()=>go('p-reset-password'), 500)
   }
 })
-
 

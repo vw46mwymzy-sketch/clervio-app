@@ -46,6 +46,22 @@
     try{ if (typeof window.toast === 'function') window.toast(msg); }catch(e){}
   }
 
+  function pageNotification(value){
+    var autorisees = {
+      'p-home':true,
+      'p-orders':true,
+      'p-vault':true,
+      'p-ai':true,
+      'p-profile':true
+    };
+    try{
+      var url = new URL(String(value || '/'), window.location.origin);
+      if (url.origin !== window.location.origin) return null;
+      var page = url.hash ? url.hash.replace(/^#/, '') : url.pathname.replace(/^\/+/, '');
+      return autorisees[page] ? page : null;
+    }catch(e){ return null; }
+  }
+
   window.notificationsEtat = function(){
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) return 'non supporte';
     if (iOS() && !installee()) return 'installation requise';
@@ -121,8 +137,9 @@
   try{
     navigator.serviceWorker.addEventListener('message', function(e){
       if (e && e.data && e.data.type === 'push-resouscrire') souscrire(true);
-      if (e && e.data && e.data.type === 'notification' && e.data.url && e.data.url !== '/'){
-        try{ if (typeof window.go === 'function') window.go(e.data.url.replace(/^\//, '')); }catch(err){}
+      if (e && e.data && e.data.type === 'notification'){
+        var page = pageNotification(e.data.url);
+        try{ if (page && typeof window.go === 'function') window.go(page); }catch(err){}
       }
     });
   }catch(e){}

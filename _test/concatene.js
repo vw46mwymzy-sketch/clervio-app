@@ -2381,67 +2381,11 @@ async function updateDashboardStats(stats){
 }
 
 
-/* ══ CONNEXION COMPTE DÉMO ══════════════════════════════ */
+/* La démo est locale dans le bundle de production. Ce fichier concaténé
+   de test ne contient volontairement aucun identifiant partagé. */
 async function loginDemo(){
-  // Feedback visuel
-  document.querySelectorAll('button').forEach(b=>{
-    if(b.textContent.includes('démonstration')) { b.textContent='⏳ Connexion...'; b.disabled=true }
-  })
-  const resetBtns=()=>{
-    document.querySelectorAll('button').forEach(b=>{
-      if(b.textContent.includes('Connexion...')){ b.textContent='✨ Explorer la démonstration'; b.disabled=false }
-    })
-  }
-
-  // Attendre Supabase
-  let w=0; while(!supa && w<20){ await new Promise(r=>setTimeout(r,400)); w++ }
-  if(!supa){ toast('❌ Réseau indisponible'); resetBtns(); return }
-
-  try{
-    // Étape 1 : Setup si nécessaire + récupérer session via Edge Function
-    const res = await fetch('https://jwvhqtrofwmozhiajwip.supabase.co/functions/v1/demo-login', {
-      method:'POST',
-      headers:{'Content-Type':'application/json','apikey':'sb_publishable_f_bLtSey70f5OONOPkRYbg_RQOnPFe6'}
-    })
-    const d = await res.json()
-
-    if(d.access_token){
-      // Session directe
-      const {error} = await supa.auth.setSession({
-        access_token: d.access_token,
-        refresh_token: d.refresh_token
-      })
-      if(error){ toast('❌ '+error.message); resetBtns(); return }
-      sessionStorage.setItem('clervio-demo-mode','1')
-      toast('✨ Mode démonstration activé !')
-      setTimeout(()=>showDemoBanner(), 800)
-
-    } else if(d.action_link){
-      // Magic link — ouvrir dans une popup invisible pour capter la session
-      toast('⏳ Finalisation de la connexion...')
-      // Rediriger vers le lien magique
-      window.location.href = d.action_link
-
-    } else {
-      // Dernier recours : essayer connexion directe (si confirm email désactivé)
-      let {data:sd, error:se} = await supa.auth.signInWithPassword({
-        email:'demo@clervio.app', password:'Demo2025!'
-      })
-      if(se){
-        const legacy = await supa.auth.signInWithPassword({ email:'demo@vaulto.app', password:'Demo2025!' })
-        sd = legacy.data; se = legacy.error
-      }
-      if(se){ toast('❌ '+se.message); resetBtns(); return }
-      sessionStorage.setItem('clervio-demo-mode','1')
-      toast('✨ Mode démonstration activé !')
-      setTimeout(()=>showDemoBanner(), 800)
-    }
-
-  }catch(e){
-    console.error(e)
-    toast('❌ Erreur réseau — réessayez')
-    resetBtns()
-  }
+  if(typeof enterLocalDemo === 'function') return enterLocalDemo()
+  toast('Mode démonstration local indisponible dans ce bundle de test')
 }
 
 
@@ -4685,12 +4629,12 @@ if(currentUser) subscribeToRealtime()
       lignes.push('');
       lignes.push('Madame, Monsieur,');
       lignes.push('');
-      lignes.push('Par la présente, j\\'exerce mon droit de rétractation concernant ma commande de ' + nom
+      lignes.push('Par la présente, j\'exerce mon droit de rétractation concernant ma commande de ' + nom
         + (marque && marque !== nom ? ' (' + marque + ')' : '')
         + (achat ? ', passée le ' + achat : '')
         + (numero ? ', référence ' + numero : '') + '.');
       lignes.push('');
-      lignes.push('Conformément à l\\'article L221-18 du Code de la consommation, je dispose de 14 jours pour me rétracter sans avoir à justifier de motif. Je vous demande de bien vouloir procéder au remboursement' + (montant ? ' de ' + montant : '') + ' selon les modalités prévues.');
+      lignes.push('Conformément à l\'article L221-18 du Code de la consommation, je dispose de 14 jours pour me rétracter sans avoir à justifier de motif. Je vous demande de bien vouloir procéder au remboursement' + (montant ? ' de ' + montant : '') + ' selon les modalités prévues.');
       lignes.push('');
       lignes.push('Je me tiens à votre disposition pour les modalités de retour du produit.');
       lignes.push('');
@@ -4701,10 +4645,10 @@ if(currentUser) subscribeToRealtime()
       lignes.push('');
       lignes.push('Madame, Monsieur,');
       lignes.push('');
-      lignes.push('J\\'ai acheté ' + nom + (marque && marque !== nom ? ' (' + marque + ')' : '')
+      lignes.push('J\'ai acheté ' + nom + (marque && marque !== nom ? ' (' + marque + ')' : '')
         + (achat ? ' le ' + achat : '') + (numero ? ', commande n° ' + numero : '') + '.');
       lignes.push('');
-      lignes.push('Ce produit présente un défaut de fonctionnement et je souhaite faire jouer la garantie dont il bénéficie encore. Je vous remercie de m\\'indiquer la marche à suivre pour la réparation, l\\'échange, ou à défaut le remboursement du produit.');
+      lignes.push('Ce produit présente un défaut de fonctionnement et je souhaite faire jouer la garantie dont il bénéficie encore. Je vous remercie de m\'indiquer la marche à suivre pour la réparation, l\'échange, ou à défaut le remboursement du produit.');
       lignes.push('');
       lignes.push('Je reste à votre disposition pour tout justificatif complémentaire.');
       lignes.push('');
@@ -4717,7 +4661,7 @@ if(currentUser) subscribeToRealtime()
       lignes.push('');
       lignes.push('Madame, Monsieur,');
       lignes.push('');
-      lignes.push('J\\'ai acheté ' + nom + (marque && marque !== nom ? ' (' + marque + ')' : '')
+      lignes.push('J\'ai acheté ' + nom + (marque && marque !== nom ? ' (' + marque + ')' : '')
         + (achat ? ' le ' + achat : '') + (numero ? ', commande n° ' + numero : '') + '.');
       lignes.push('');
       lignes.push('Ce produit présente un défaut. Conformément aux articles L217-3 et suivants du Code de la consommation relatifs à la garantie légale de conformité, applicable pendant deux ans à compter de la livraison, je vous demande la réparation ou le remplacement du produit, sans frais de ma part.');
@@ -4741,15 +4685,15 @@ if(currentUser) subscribeToRealtime()
     ov.innerHTML =
       '<div style="width:100%;max-width:430px;margin:0 auto;background:linear-gradient(180deg,#141217,#0C0B0E);border-radius:24px 24px 0 0;padding:26px 22px calc(env(safe-area-inset-bottom,0px) + 22px);max-height:86vh;display:flex;flex-direction:column;">'
       +   '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">'
-      +     '<span style="font-family:\\'Cormorant Garamond\\',serif;font-size:1.5rem;color:var(--cr);">' + esc(titre) + '</span>'
-      +     '<button onclick="document.getElementById(\\'agir-overlay\\').remove()" style="background:none;border:none;color:var(--d2);font-size:22px;padding:4px;">×</button>'
+      +     '<span style="font-family:\'Cormorant Garamond\',serif;font-size:1.5rem;color:var(--cr);">' + esc(titre) + '</span>'
+      +     '<button onclick="document.getElementById(\'agir-overlay\').remove()" style="background:none;border:none;color:var(--d2);font-size:22px;padding:4px;">×</button>'
       +   '</div>'
       +   '<div style="font-size:11.5px;color:var(--d2);line-height:1.5;margin-bottom:14px;">Un brouillon, pas un envoi automatique. Relisez, adaptez si besoin, puis envoyez-le où le service client vous répond habituellement.</div>'
       +   '<textarea id="agir-texte" readonly style="flex:1;min-height:280px;background:rgba(255,255,255,.03);border:1px solid rgba(237,224,200,.10);border-radius:14px;padding:16px;color:var(--cr);font-size:13.5px;line-height:1.65;font-family:inherit;resize:none;margin-bottom:16px;">' + esc(texte) + '</textarea>'
       +   (orderIdPourSuivi ? '<button onclick="suivreRemboursement(\'' + esc(orderIdPourSuivi) + '\')" style="width:100%;height:44px;border:1px solid rgba(201,168,76,.28);border-radius:100px;background:none;color:var(--gh);font-size:12.5px;font-family:inherit;margin-bottom:10px;">Suivre ce remboursement dans CLERVIO</button>' : '')
       +   '<div style="display:flex;gap:10px;">'
       +     '<button onclick="window.copierLettre()" style="flex:1;height:50px;border:1px solid rgba(237,224,200,.16);border-radius:100px;background:none;color:var(--cr);font-size:14px;font-family:inherit;">Copier le texte</button>'
-      +     '<button onclick="window.envoyerLettre(\\'' + esc(titre).replace(/'/g,"\\\\'") + '\\')" style="flex:1;height:50px;border:none;border-radius:100px;background:linear-gradient(102deg,var(--gd),var(--g) 26%,var(--gh) 52%,var(--g) 78%,var(--gd));color:#0B0906;font-size:14px;font-weight:500;font-family:inherit;">Envoyer par e-mail</button>'
+      +     '<button onclick="window.envoyerLettre(\'' + esc(titre).replace(/'/g,"\\'") + '\')" style="flex:1;height:50px;border:none;border-radius:100px;background:linear-gradient(102deg,var(--gd),var(--g) 26%,var(--gh) 52%,var(--g) 78%,var(--gd));color:#0B0906;font-size:14px;font-weight:500;font-family:inherit;">Envoyer par e-mail</button>'
       +   '</div>'
       + '</div>';
     document.body.appendChild(ov);
@@ -4935,11 +4879,11 @@ if(currentUser) subscribeToRealtime()
       + '<h1>Bon de retour</h1>'
       + '<div class="ligne"><span class="lbl">Article</span><span class="val">' + nom + (marque && marque!==nom ? ' — '+marque : '') + '</span></div>'
       + '<div class="ligne"><span class="lbl">Référence de commande</span><span class="val">' + numero + '</span></div>'
-      + (achat ? '<div class="ligne"><span class="lbl">Date d\\'achat</span><span class="val">' + achat + '</span></div>' : '')
+      + (achat ? '<div class="ligne"><span class="lbl">Date d\'achat</span><span class="val">' + achat + '</span></div>' : '')
       + (montant ? '<div class="ligne"><span class="lbl">Montant</span><span class="val">' + Number(montant).toFixed(2).replace('.',',') + ' €</span></div>' : '')
       + '<div class="ligne"><span class="lbl">Date du retour</span><span class="val">' + aujourd + '</span></div>'
       + '<div class="motif"><div class="lbl" style="font-size:12px;margin-bottom:8px;">Motif du retour</div></div>'
-      + '<div class="avert">Ce document est un bon de référence à joindre au colis, généré par CLERVIO. <strong>Ce n\\'est pas une étiquette d\\'affranchissement</strong> : l\\'adresse de retour et le mode d\\'envoi restent ceux indiqués par le vendeur dans sa procédure de retour.</div>'
+      + '<div class="avert">Ce document est un bon de référence à joindre au colis, généré par CLERVIO. <strong>Ce n\'est pas une étiquette d\'affranchissement</strong> : l\'adresse de retour et le mode d\'envoi restent ceux indiqués par le vendeur dans sa procédure de retour.</div>'
       + '<div class="pied">Généré par CLERVIO le ' + aujourd + '</div>'
       + '<div class="noprint" style="margin-top:24px;text-align:center;"><button onclick="window.print()" style="padding:12px 28px;font-size:14px;cursor:pointer;">Imprimer</button></div>'
       + '</body></html>';
@@ -4969,10 +4913,10 @@ if(currentUser) subscribeToRealtime()
     var lignesJournal = (o.notes || '').split('\\n').filter(function(l){ return l.trim(); });
     var journalHTML = lignesJournal.length
       ? lignesJournal.map(function(l){
-          var m = l.match(/^\\[([^\\]]+)\\]\\s*(.*)$/);
+          var m = l.match(/^\[([^\]]+)\]\s*(.*)$/);
           return '<div class="evt"><span class="evt-d">' + esc(m?m[1]:'') + '</span><span class="evt-t">' + esc(m?m[2]:l) + '</span></div>';
         }).join('')
-      : '<div class="evt"><span class="evt-t" style="color:#999;">Aucune démarche enregistrée pour l\\'instant.</span></div>';
+      : '<div class="evt"><span class="evt-t" style="color:#999;">Aucune démarche enregistrée pour l\'instant.</span></div>';
 
     var statutLabels = { attente:'Remboursement en attente', recu:'Remboursement reçu', refuse:'Remboursement refusé' };
     var statutActuel = o.refundStatus ? (statutLabels[o.refundStatus] || o.refundStatus) : 'Aucun remboursement en cours de suivi';
@@ -5001,7 +4945,7 @@ if(currentUser) subscribeToRealtime()
       + '<h2>Achat concerné</h2>'
       + '<div class="ligne"><span class="lbl">Article</span><span class="val">' + nom + (marque && marque!==nom ? ' — '+marque : '') + '</span></div>'
       + '<div class="ligne"><span class="lbl">Référence de commande</span><span class="val">' + numero + '</span></div>'
-      + (achat ? '<div class="ligne"><span class="lbl">Date d\\'achat</span><span class="val">' + achat + '</span></div>' : '')
+      + (achat ? '<div class="ligne"><span class="lbl">Date d\'achat</span><span class="val">' + achat + '</span></div>' : '')
       + (montant ? '<div class="ligne"><span class="lbl">Montant</span><span class="val">' + Number(montant).toFixed(2).replace('.',',') + ' €</span></div>' : '')
 
       + '<h2>Chronologie des démarches</h2>'
@@ -5012,8 +4956,8 @@ if(currentUser) subscribeToRealtime()
 
       + '<h2>Justificatif</h2>'
       + (o.facture
-          ? '<div class="piece">Une facture ou un justificatif est conservé dans le coffre CLERVIO associé à cette commande. Joignez-le séparément à ce dossier : ouvrez la commande dans l\\'application, section « Facture », pour l\\'exporter.</div>'
-          : '<div class="piece">Aucun justificatif n\\'est actuellement attaché à cette commande dans CLERVIO.</div>')
+          ? '<div class="piece">Une facture ou un justificatif est conservé dans le coffre CLERVIO associé à cette commande. Joignez-le séparément à ce dossier : ouvrez la commande dans l\'application, section « Facture », pour l\'exporter.</div>'
+          : '<div class="piece">Aucun justificatif n\'est actuellement attaché à cette commande dans CLERVIO.</div>')
 
       + '<div class="pied">Document généré automatiquement à partir des informations saisies dans CLERVIO. Il constitue une aide à la constitution de votre dossier et ne remplace pas un conseil juridique.</div>'
       + '<div class="noprint" style="margin-top:22px;text-align:center;"><button onclick="window.print()" style="padding:12px 28px;font-size:14px;cursor:pointer;">Imprimer / Enregistrer en PDF</button></div>'
@@ -5333,4 +5277,3 @@ if(currentUser) subscribeToRealtime()
   if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', auto);
   else auto();
 })();
-
