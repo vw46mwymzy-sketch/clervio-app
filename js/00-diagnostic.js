@@ -94,19 +94,11 @@
     };
   }
 
-  function wrapGo(){
-    if (typeof window.go === 'function' && !window.go.__diag){
-      var orig = window.go;
-      var w = function(p){ push('nav','navigation', String(p)); return orig.apply(window, arguments); };
-      w.__diag = true;
-      window.go = w;
-      push('log','diagnostic','navigation instrumentée');
-    }
-  }
-  window.addEventListener('DOMContentLoaded', wrapGo);
-  window.addEventListener('load', wrapGo);
-  setTimeout(wrapGo, 400);
-  setTimeout(wrapGo, 1500);
+  window.addEventListener('clervio:before-navigate', function(event){
+    var d = event && event.detail;
+    push('nav','navigation', String((d && d.from) || '-') + ' → ' + String((d && d.to) || '-'));
+  });
+  push('log','diagnostic','navigation observée');
 
   function bouton(txt, style, fn){
     var b = document.createElement('button');

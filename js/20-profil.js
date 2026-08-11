@@ -111,21 +111,8 @@
 
   /* L'écran profil peut être atteint à tout moment : on rafraîchit
      à l'ouverture plutôt qu'une seule fois au démarrage. */
-  function surNavigation(){
-    if (typeof window.go !== 'function' || window.go.__profil) return;
-    var orig = window.go;
-    var w = function(id){
-      var r = orig.apply(window, arguments);
-      if (id === 'p-profile') setTimeout(chargerAvecCompteurs, 60);
-      return r;
-    };
-    w.__profil = true;
-    window.go = w;
-  }
-
-  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', surNavigation);
-  else surNavigation();
-  window.addEventListener('load', surNavigation);
-  setTimeout(surNavigation, 900);
+  window.addEventListener('clervio:navigated', function(event){
+    if (event && event.detail && event.detail.to === 'p-profile') setTimeout(chargerAvecCompteurs, 60);
+  });
   setTimeout(charger, 2500);
 })();

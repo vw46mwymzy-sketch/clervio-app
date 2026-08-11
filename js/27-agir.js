@@ -275,23 +275,11 @@
 
   /* Le compteur de l'accueil affichait « 0 » figé dans le HTML,
      jamais relié aux remboursements réellement suivis. */
-  function surNavigationRemboursements(){
-    if (typeof window.go !== 'function' || window.go.__remb) return;
-    var orig = window.go;
-    var w = function(id){
-      var r = orig.apply(window, arguments);
-      if (id === 'p-home') setTimeout(function(){
-        try{ if (typeof rafraichirRemboursements === 'function') rafraichirRemboursements(); }catch(e){}
-      }, 200);
-      return r;
-    };
-    w.__remb = true;
-    window.go = w;
-  }
-  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', surNavigationRemboursements);
-  else surNavigationRemboursements();
-  window.addEventListener('load', surNavigationRemboursements);
-  setTimeout(surNavigationRemboursements, 1000);
+  window.addEventListener('clervio:navigated', function(event){
+    if (event && event.detail && event.detail.to === 'p-home') setTimeout(function(){
+      try{ if (typeof rafraichirRemboursements === 'function') rafraichirRemboursements(); }catch(e){}
+    }, 120);
+  });
   setTimeout(function(){ try{ if (typeof rafraichirRemboursements === 'function') rafraichirRemboursements(); }catch(e){} }, 1200);
 
   function genererBonDeRetourHTML(o){
@@ -433,25 +421,11 @@
   var ECRANS_RETOUR_CONTEXTUEL = ['p-scan', 'p-pricing'];
   var origines = {};
 
-  function surNavigationRetourContextuel(){
-    if (typeof window.go !== 'function' || window.go.__retourContextuel) return;
-    var orig = window.go;
-    var w = function(id){
-      if (ECRANS_RETOUR_CONTEXTUEL.indexOf(id) !== -1){
-        try{
-          var actif = document.querySelector('.pg.on');
-          if (actif && actif.id && ECRANS_RETOUR_CONTEXTUEL.indexOf(actif.id) === -1) origines[id] = actif.id;
-        }catch(e){}
-      }
-      return orig.apply(window, arguments);
-    };
-    w.__retourContextuel = true;
-    window.go = w;
-  }
-  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', surNavigationRetourContextuel);
-  else surNavigationRetourContextuel();
-  window.addEventListener('load', surNavigationRetourContextuel);
-  setTimeout(surNavigationRetourContextuel, 900);
+  window.addEventListener('clervio:before-navigate', function(event){
+    var d = event && event.detail;
+    if (!d || ECRANS_RETOUR_CONTEXTUEL.indexOf(d.to) === -1) return;
+    if (d.from && ECRANS_RETOUR_CONTEXTUEL.indexOf(d.from) === -1) origines[d.to] = d.from;
+  });
 
   window.retourContextuel = function(ecranActuel, repli){
     var dest = origines[ecranActuel] || repli;

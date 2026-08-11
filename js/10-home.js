@@ -46,6 +46,8 @@ async function updateDashboardStats(stats){
   const alertsCount = stats.unread_alerts || 0
   const alertsBadge = document.getElementById('alerts-count')
   if(alertsBadge) alertsBadge.textContent = alertsCount > 0 ? alertsCount + ' alerte' + (alertsCount>1?'s':'') : ''
+
+  if(window.ClervioIntelligence) window.ClervioIntelligence.renderHome()
 }
 
 
@@ -120,45 +122,5 @@ async function loginDemo(){
 }
 
 
-/* ══ PUSH NOTIFICATIONS ═════════════════════════════════ */
-async function requestPushPermission(){
-  if(!('Notification' in window)){ toast('Notifications non supportées sur ce navigateur'); return }
-  if(Notification.permission === 'granted'){ toast('✓ Notifications déjà activées'); return }
-  if(Notification.permission === 'denied'){ toast('Notifications bloquées — activez-les dans les réglages Safari'); return }
-
-  const perm = await Notification.requestPermission()
-  if(perm === 'granted'){
-    toast('✓ Notifications activées')
-    // Enregistrer le SW pour les push
-    if('serviceWorker' in navigator){
-      const reg = await navigator.serviceWorker.ready
-      // VAPID key à configurer
-      const vapidKey = 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDkBWine6tBeOTJTQRJA87fKiAICEFMeCn-S_3WQ0u8'
-      try{
-        const sub = await reg.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(vapidKey)
-        })
-        // Sauvegarder la subscription dans Supabase
-        if(supa && currentUser){
-          await supa.from('profiles').update({
-            push_subscription: JSON.stringify(sub)
-          }).eq('id', currentUser.id)
-        }
-      }catch(e){ console.warn('Push subscribe:', e) }
-    }
-  } else {
-    toast('Notifications refusées')
-  }
-}
-
-function urlBase64ToUint8Array(base64String){
-  const padding = '='.repeat((4 - base64String.length % 4) % 4)
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
-  const rawData = window.atob(base64)
-  return new Uint8Array([...rawData].map(c => c.charCodeAt(0)))
-}
-
 /* ══ PRICING PAGE LINK ══════════════════════════════════ */
 function showPricing(){ go('p-pricing') }
-

@@ -177,20 +177,7 @@ function startFaceID(){
     }catch(e){}
   }
 
-  function surNavigation(){
-    if (typeof window.go !== 'function' || window.go.__reconnexion) return;
-    var orig = window.go;
-    var w = function(id){
-      var r = orig.apply(window, arguments);
-      if (id === 'p-faceid-reconnect') setTimeout(remplirReconnexion, 30);
-      return r;
-    };
-    w.__reconnexion = true;
-    window.go = w;
-  }
-
-  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', surNavigation);
-  else surNavigation();
-  window.addEventListener('load', surNavigation);
-  setTimeout(surNavigation, 900);
+  window.addEventListener('clervio:navigated', function(event){
+    if (event && event.detail && event.detail.to === 'p-faceid-reconnect') setTimeout(remplirReconnexion, 30);
+  });
 })();

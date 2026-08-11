@@ -1,12 +1,29 @@
 /* ══ SCAN ═══════════════════════════════════════════ */
 /* ══ PHOTO HANDLER & ANALYSE DOCUMENT ═══════════════ */
 let lastScanResult = null
+let lastScanFile = null
 
 function handlePhoto(input){
   if(!input.files || !input.files[0]) return
   const file = input.files[0]
   input.value = ''
+  lastScanFile = file
   analyzeDocument(file)
+}
+
+function scanFileExtension(file){
+  const map={'application/pdf':'pdf','image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/heic':'heic','image/heif':'heif'}
+  return map[String(file?.type||'').toLowerCase()] || null
+}
+
+async function uploadValidatedScanFile(file){
+  if(!file || !supa || !currentUser) return null
+  const ext=scanFileExtension(file)
+  if(!ext) return null
+  const path=currentUser.id+'/'+(crypto.randomUUID?crypto.randomUUID():String(Date.now()))+'.'+ext
+  const { error }=await supa.storage.from('coffre').upload(path,file,{contentType:file.type,upsert:false})
+  if(error) throw error
+  return { path,size:file.size,mime:file.type }
 }
 
 function fileToBase64(file){
@@ -84,13 +101,16 @@ async function analyzeDocument(file){
     return
   }
 
+  let timeout = null
   try{
     const { data: { session } } = await supa.auth.getSession()
     if(!session) throw new Error('Session expirée — reconnectez-vous')
-    updateScanProgress(20, 'Chiffrement du document…')
+    updateScanProgress(20, 'Préparation sécurisée…')
     const dataBase64 = await fileToBase64(file)
     updateScanProgress(38, 'Envoi sécurisé…')
 
+    const controller = new AbortController()
+    timeout = setTimeout(()=>controller.abort(),25000)
     const response = await fetch(EDGE.scanDocument, {
       method:'POST',
       headers:{
@@ -100,9 +120,13 @@ async function analyzeDocument(file){
       body:JSON.stringify({
         filename:file.name,
         mime_type:file.type,
-        data_base64:dataBase64
-      })
+        data_base64:dataBase64,
+        conserver:false
+      }),
+      signal:controller.signal
     })
+    clearTimeout(timeout)
+    timeout = null
     updateScanProgress(72, 'Extraction des informations…')
     const payload = await response.json().catch(()=>({}))
     if(!response.ok) throw new Error(payload.error || 'Service d’analyse indisponible')
@@ -112,7 +136,9 @@ async function analyzeDocument(file){
     setTimeout(()=>renderScan('result', result),250)
   }catch(error){
     console.error('Document scan:', error)
-    renderScan('error',{message:error.message || 'Analyse impossible pour le moment.'})
+    renderScan('error',{message:error?.name==='AbortError'?'L’analyse a dépassé le délai prévu. Réessayez avec une image plus légère.':(error.message || 'Analyse impossible pour le moment.')})
+  }finally{
+    if(timeout) clearTimeout(timeout)
   }
 }
 /* Une facture déjà réglée n'a rien à faire dans « Commandes » :
@@ -149,12 +175,21 @@ async function confirmScannedDocument(){
   const btnD = document.getElementById('scan-confirm-doc-btn')
   if(btnD){ if(btnD.disabled) return; btnD.disabled = true }
   try{
-    const { error } = await supa.from('vault_documents').insert(ligne)
-    if(error){ toast('❌ ' + (error.message || 'Erreur')); if(btnD) btnD.disabled = false; return }
+    if(lastScanFile && typeof coffreDeposer === 'function'){
+      const result = await coffreDeposer(lastScanFile,{
+        nom:ligne.name,type:ligne.type,marque:ligne.brand,montant:ligne.amount,
+        devise:ligne.currency,date:ligne.doc_date,garantie_mois:ligne.warranty_months,source:'scan_validé'
+      })
+      if(!result) return
+    } else {
+      const { error } = await supa.from('vault_documents').insert(ligne)
+      if(error){ toast('❌ ' + (error.message || 'Erreur')); return }
+    }
 
     lastScanResult = null
+    lastScanFile = null
     if(typeof rechargerDonnees === 'function'){ try{ await rechargerDonnees() }catch(e){} }
-    renderScan('done')
+    renderScan('done',{destination:'vault'})
     toast('✓ Rangé dans votre coffre')
   } finally {
     if(btnD) btnD.disabled = false
@@ -173,20 +208,37 @@ async function confirmScannedOrder(){
   if(!name){ highlight('scan-name'); return }
 
   const scMap = {'Livré':'g','En transit':'o','Expédiée':'o','Confirmée':'b','En attente':'b','Retour':'r'}
+  let uploaded = null
   const order = {
     id:Date.now(), brand, name, amt:amount, st:status, sc:scMap[status]||'b',
     dt:formatDateFR(orderDate), orderDate,
-    warr:warrantyMonths, tracking:orderNumber || null, manual:false
+    warr:warrantyMonths, orderNumber:orderNumber || null, tracking:null, manual:false
   }
   const btnO = document.getElementById('scan-confirm-order-btn')
   if(btnO){ if(btnO.disabled) return; btnO.disabled = true }
   try{
+    if(lastScanFile){
+      uploaded = await uploadValidatedScanFile(lastScanFile)
+      if(uploaded){
+        order.invoicePath=uploaded.path
+        order.invoiceSize=uploaded.size
+        order.invoiceMime=uploaded.mime
+      }
+    }
     const saved = await saveOrderToSupabase(order)
-    if(!saved){ if(btnO) btnO.disabled = false; return }
+    if(!saved){
+      if(uploaded?.path){ try{ await supa.storage.from('coffre').remove([uploaded.path]) }catch(e){} }
+      return
+    }
     ORDS = await fetchOrders()
     lastScanResult = null
-    renderScan('done')
+    lastScanFile = null
+    renderScan('done',{destination:'orders'})
     toast('✓ Commande sauvegardée')
+  } catch(error){
+    if(uploaded?.path){ try{ await supa.storage.from('coffre').remove([uploaded.path]) }catch(e){} }
+    console.error('Scan confirmation:',error)
+    toast('Enregistrement impossible — réessayez')
   } finally {
     if(btnO) btnO.disabled = false
   }
@@ -195,22 +247,24 @@ async function confirmScannedOrder(){
 function renderScan(phase, payload){
   const c=document.getElementById('sc-c');if(!c)return
   if(phase==='choice'){
+    lastScanResult = null
+    lastScanFile = null
     c.innerHTML=`<div style="padding:92px 24px 40px;position:relative;">
       <div style="position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle,rgba(200,168,74,.06) 0%,transparent 70%);border-radius:50%;pointer-events:none;"></div>
       <p class="sl" style="margin-bottom:14px;position:relative;z-index:1;">Ajouter un achat</p>
       <h1 class="sr" style="font-size:2.2rem;font-weight:300;color:var(--cr);margin-bottom:10px;position:relative;z-index:1;">Scanner<br/>une facture</h1>
       <p style="font-size:13px;color:var(--d1);margin-bottom:34px;line-height:1.65;position:relative;z-index:1;">L’IA analyse l’image et extrait automatiquement les informations à vérifier.</p>
-      <div onclick="document.getElementById('scan-camera-input').click()" style="display:flex;align-items:center;gap:16px;background:var(--s1);border:1px solid var(--ln2);border-top:1px solid rgba(255,255,255,.06);border-radius:20px;padding:18px 20px;margin-bottom:10px;cursor:pointer;transition:all .25s var(--e);box-shadow:0 4px 16px rgba(0,0,0,.3);">
+      <button type="button" onclick="document.getElementById('scan-camera-input').click()" style="width:100%;display:flex;align-items:center;gap:16px;background:var(--s1);border:1px solid var(--cv-line);border-radius:20px;padding:18px 20px;margin-bottom:10px;cursor:pointer;transition:all .25s var(--e1);box-shadow:0 4px 16px rgba(0,0,0,.3);color:inherit;text-align:left;">
         <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
         <div><div style="font-size:13px;color:var(--cr);font-weight:500;margin-bottom:2px;">Prendre une photo</div><div style="font-size:11px;color:var(--d2);">Facture, ticket, bon de livraison</div></div>
-      </div>
-      <div onclick="document.getElementById('scan-gallery-input').click()" style="display:flex;align-items:center;gap:16px;background:var(--s1);border:1px solid var(--ln2);border-top:1px solid rgba(255,255,255,.06);border-radius:20px;padding:18px 20px;cursor:pointer;transition:all .25s var(--e);box-shadow:0 4px 16px rgba(0,0,0,.3);">
+      </button>
+      <button type="button" onclick="document.getElementById('scan-gallery-input').click()" style="width:100%;display:flex;align-items:center;gap:16px;background:var(--s1);border:1px solid var(--cv-line);border-radius:20px;padding:18px 20px;cursor:pointer;transition:all .25s var(--e1);box-shadow:0 4px 16px rgba(0,0,0,.3);color:inherit;text-align:left;">
         <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
         <div><div style="font-size:13px;color:var(--cr);font-weight:500;margin-bottom:2px;">Choisir depuis la galerie</div><div style="font-size:11px;color:var(--d2);">Photo existante ou PDF</div></div>
-      </div>
+      </button>
       <input id="scan-camera-input" type="file" accept="image/*" capture="environment" hidden onchange="handlePhoto(this)">
       <input id="scan-gallery-input" type="file" accept="image/*,application/pdf" hidden onchange="handlePhoto(this)">
-      <p style="font-size:11px;color:var(--d2);text-align:center;margin-top:28px;line-height:1.75;">Document transmis uniquement pour l’analyse<br/>Validation obligatoire avant enregistrement</p>
+      <p style="font-size:11px;color:var(--d2);text-align:center;margin-top:28px;line-height:1.75;">Transmis via une connexion sécurisée pour l’analyse<br/>Aucun fichier conservé avant votre validation</p>
     </div>`
     return
   }
@@ -244,13 +298,13 @@ function renderScan(phase, payload){
         <span class="ba ba-g">Analyse terminée${confidence}</span>
       </div>
       <h2 class="sr" style="font-size:1.8rem;font-weight:300;color:var(--cr);margin-bottom:24px;">Vérifiez les informations</h2>
-      <div style="margin-bottom:15px;"><label class="sl" style="display:block;margin-bottom:7px;">Marque</label><input id="scan-brand" class="inp" value="${escapeHTML(result.brand)}"></div>
-      <div style="margin-bottom:15px;"><label class="sl" style="display:block;margin-bottom:7px;">Produit</label><input id="scan-name" class="inp" value="${escapeHTML(result.name)}"></div>
-      <div style="margin-bottom:15px;"><label class="sl" style="display:block;margin-bottom:7px;">Montant (€)</label><input id="scan-amount" class="inp" type="number" min="0" step="0.01" value="${result.amount || ''}"></div>
-      <div style="margin-bottom:15px;"><label class="sl" style="display:block;margin-bottom:7px;">Date</label><input id="scan-date" class="inp" type="date" value="${escapeHTML(result.orderDate)}"></div>
-      <div style="margin-bottom:15px;"><label class="sl" style="display:block;margin-bottom:7px;">N° commande</label><input id="scan-number" class="inp" value="${escapeHTML(result.orderNumber)}"></div>
-      <div style="margin-bottom:15px;"><label class="sl" style="display:block;margin-bottom:7px;">Statut</label><select id="scan-status-value" class="inp">${statuses.map(status=>`<option ${status===result.status?'selected':''}>${status}</option>`).join('')}</select></div>
-      <div style="margin-bottom:22px;"><label class="sl" style="display:block;margin-bottom:7px;">Garantie</label><select id="scan-warranty" class="inp"><option value="0">Non détectée</option>${[6,12,24,36,60].map(months=>`<option value="${months}" ${months===result.warrantyMonths?'selected':''}>${months} mois</option>`).join('')}</select></div>
+      <div style="margin-bottom:15px;"><label for="scan-brand" class="sl" style="display:block;margin-bottom:7px;">Marque</label><input id="scan-brand" class="inp" value="${escapeHTML(result.brand)}"></div>
+      <div style="margin-bottom:15px;"><label for="scan-name" class="sl" style="display:block;margin-bottom:7px;">Produit</label><input id="scan-name" class="inp" value="${escapeHTML(result.name)}"></div>
+      <div style="margin-bottom:15px;"><label for="scan-amount" class="sl" style="display:block;margin-bottom:7px;">Montant (€)</label><input id="scan-amount" class="inp" type="number" min="0" step="0.01" value="${result.amount || ''}"></div>
+      <div style="margin-bottom:15px;"><label for="scan-date" class="sl" style="display:block;margin-bottom:7px;">Date</label><input id="scan-date" class="inp" type="date" value="${escapeHTML(result.orderDate)}"></div>
+      <div style="margin-bottom:15px;"><label for="scan-number" class="sl" style="display:block;margin-bottom:7px;">N° commande</label><input id="scan-number" class="inp" value="${escapeHTML(result.orderNumber)}"></div>
+      <div style="margin-bottom:15px;"><label for="scan-status-value" class="sl" style="display:block;margin-bottom:7px;">Statut</label><select id="scan-status-value" class="inp">${statuses.map(status=>`<option ${status===result.status?'selected':''}>${status}</option>`).join('')}</select></div>
+      <div style="margin-bottom:22px;"><label for="scan-warranty" class="sl" style="display:block;margin-bottom:7px;">Garantie</label><select id="scan-warranty" class="inp"><option value="0">Non détectée</option>${[6,12,24,36,60].map(months=>`<option value="${months}" ${months===result.warrantyMonths?'selected':''}>${months} mois</option>`).join('')}</select></div>
       <p class="sl" style="margin-bottom:10px;">Où le ranger ?</p>
       <button class="bg fw lg" id="scan-confirm-order-btn" onclick="confirmScannedOrder()">Suivre comme un achat</button>
       <p style="font-size:11.5px;color:var(--d2);line-height:1.5;margin:7px 0 14px;">Pour une commande en cours : livraison, garantie, retour.</p>
@@ -273,6 +327,6 @@ function renderScan(phase, payload){
     return
   }
 
-  c.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:40px;text-align:center;"><div class="ob ob-m" style="margin-bottom:28px;"></div><h2 class="sr" style="font-size:1.9rem;color:var(--cr);font-weight:300;margin-bottom:10px;">Commande ajoutée</h2><p style="font-size:13px;color:var(--d2);margin-bottom:36px;line-height:1.65;">Visible dans vos achats<br/>et votre Coffre-Fort</p><button class="bg" onclick="go('p-orders')">Retour aux commandes</button></div>`
+  const inVault = payload?.destination === 'vault'
+  c.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:40px;text-align:center;"><div class="ob ob-m" style="margin-bottom:28px;"></div><h2 class="sr" style="font-size:1.9rem;color:var(--cr);font-weight:300;margin-bottom:10px;">${inVault?'Document rangé':'Achat ajouté'}</h2><p style="font-size:13px;color:var(--d2);margin-bottom:36px;line-height:1.65;">${inVault?'La preuve est conservée dans votre coffre.':'La commande et sa preuve sont maintenant suivies.'}</p><button class="bg" onclick="${inVault?"go('p-vault')":"go('p-orders')"}">${inVault?'Ouvrir le coffre':'Voir la commande'}</button></div>`
 }
-
