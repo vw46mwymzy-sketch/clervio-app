@@ -3,7 +3,7 @@
    toutes les requêtes non GET restent strictement réseau.
    ════════════════════════════════════════════════════════ */
 
-const VERSION = '2026-08-11-system-1';
+const VERSION = '2026-08-12-system-2';
 const STATIC_CACHE = 'clervio-static-' + VERSION;
 const PAGE_CACHE = 'clervio-pages-' + VERSION;
 const APP_SHELL = [

@@ -14,11 +14,12 @@ test('charge la fondation Quiet Intelligence',()=>{
   assert.doesNotMatch(html,/role=["']application["']/);
 });
 
-test('la direction Clervio System évite les codes visuels IA génériques',()=>{
+test('la direction Clervio System conserve l’identité noire et dorée sans codes IA génériques',()=>{
   const system = readFileSync(join(root,'css/system.css'),'utf8');
   assert.doesNotMatch(system,/Cormorant/i);
-  assert.doesNotMatch(system,/#(?:C9A84C|D6B769)/i);
-  assert.match(system,/--sys-blue:#315FF4/);
+  assert.match(system,/--sys-bg:#09090B/);
+  assert.match(system,/--sys-gold:#C9A869/);
+  assert.doesNotMatch(system,/#315FF4|49,95,244/i);
   assert.match(html,/class="ob1-preview"/);
   assert.doesNotMatch(html,/Demander à CLERVIO/);
 });
