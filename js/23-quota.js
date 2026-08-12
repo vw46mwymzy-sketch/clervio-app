@@ -91,20 +91,7 @@
 
   window.rafraichirQuota = rendre;
 
-  function surNavigation(){
-    if (typeof window.go !== 'function' || window.go.__quota) return;
-    var orig = window.go;
-    var w = function(id){
-      var r = orig.apply(window, arguments);
-      if (id === 'p-profile') setTimeout(rendre, 90);
-      return r;
-    };
-    w.__quota = true;
-    window.go = w;
-  }
-
-  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', surNavigation);
-  else surNavigation();
-  window.addEventListener('load', surNavigation);
-  setTimeout(surNavigation, 1000);
+  window.addEventListener('clervio:navigated', function(event){
+    if (event && event.detail && event.detail.to === 'p-profile') setTimeout(rendre, 90);
+  });
 })();

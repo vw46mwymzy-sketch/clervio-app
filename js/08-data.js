@@ -131,6 +131,7 @@ async function saveOrderToSupabase(order){
     order_date:      order.orderDate || new Date().toISOString().split('T')[0],
     warranty_months: order.warr || null,
     tracking_number: order.tracking || null,
+    order_number:    order.orderNumber || order.ref || null,
     invoice_path:    order.invoicePath || null,
     invoice_size:    order.invoiceSize || null,
     invoice_mime:    order.invoiceMime || null,
@@ -438,4 +439,3 @@ window.addEventListener('load', function(){
     setTimeout(()=>go('p-reset-password'), 500)
   }
 })
-

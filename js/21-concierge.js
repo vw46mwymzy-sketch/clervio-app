@@ -46,46 +46,7 @@
   }
 
   function suggestions(){
-    var zone = document.getElementById('aisugg');
-    if (!zone) return;
-    var boutons = zone.querySelectorAll('button');
-    if (!boutons.length) return;
-
-    var c = collections();
-    var propositions = [];
-
-    /* Une garantie qui approche de son terme prime sur tout le reste */
-    var urgente = null;
-    for (var i = 0; i < c.w.length; i++){
-      var d = Number(c.w[i] && c.w[i].days);
-      if (!isNaN(d) && d > 0 && d <= 120 && (!urgente || d < Number(urgente.days))) urgente = c.w[i];
-    }
-    if (urgente) propositions.push('Quelles garanties expirent bientôt ?');
-
-    if (c.s.length){
-      propositions.push('Combien me coûtent mes abonnements par an ?');
-    }
-
-    var enRoute = null;
-    for (var j = 0; j < c.o.length; j++){
-      var st = String((c.o[j] && c.o[j].st) || '').toLowerCase();
-      if (st.indexOf('transit') > -1 || st.indexOf('expédi') > -1){ enRoute = c.o[j]; break; }
-    }
-    if (enRoute && enRoute.brand){
-      propositions.push('Où en est ma commande ' + String(enRoute.brand) + ' ?');
-    }
-
-    if (c.o.length) propositions.push('Combien ai-je dépensé ce mois-ci ?');
-    propositions.push('Que peux-tu faire pour moi ?');
-
-    for (var k = 0; k < boutons.length; k++){
-      if (propositions[k]) {
-        boutons[k].textContent = propositions[k];
-        boutons[k].style.display = '';
-      } else {
-        boutons[k].style.display = 'none';
-      }
-    }
+    try{ if (typeof window.prepareAI === 'function') window.prepareAI(); }catch(e){}
   }
 
   function rafraichir(){
@@ -96,21 +57,8 @@
   }
   window.rafraichirConcierge = rafraichir;
 
-  function surNavigation(){
-    if (typeof window.go !== 'function' || window.go.__concierge) return;
-    var orig = window.go;
-    var w = function(id){
-      var r = orig.apply(window, arguments);
-      if (id === 'p-ai') setTimeout(rafraichir, 70);
-      return r;
-    };
-    w.__concierge = true;
-    window.go = w;
-  }
-
-  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', surNavigation);
-  else surNavigation();
-  window.addEventListener('load', surNavigation);
-  setTimeout(surNavigation, 900);
+  window.addEventListener('clervio:navigated', function(event){
+    if (event && event.detail && event.detail.to === 'p-ai') setTimeout(rafraichir, 20);
+  });
   setTimeout(rafraichir, 2600);
 })();

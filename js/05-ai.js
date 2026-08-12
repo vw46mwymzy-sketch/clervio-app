@@ -1,78 +1,191 @@
-/* ══ AI ═════════════════════════════════════════════ */
+/* ══ CONCIERGE — réponses vérifiables ═══════════════════ */
 function escapeHTML(value){
   return String(value ?? '').replace(/[&<>"']/g, char => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
   })[char])
 }
 
-function localAIReply(message){
-  const q = message.toLowerCase()
-  if(q.includes('garantie')){
-    const warranty = WARR.find(w => q.includes(String(w.brand||'').toLowerCase()) || q.includes(String(w.name||'').toLowerCase())) || WARR[0]
-    return warranty ? `La garantie ${warranty.brand || ''} ${warranty.name || ''} expire le ${warranty.exp || 'date non renseignée'}.` : "Je ne trouve aucune garantie correspondante dans votre coffre."
+let aiConversationStarted = false
+let aiRequestInFlight = false
+
+function aiEngine(){ return window.ClervioIntelligence || null }
+
+function localAIAnswer(message){
+  const engine = aiEngine()
+  if(engine) return engine.localAnswer(message)
+  return {
+    text:"Je n'ai pas encore assez de données vérifiables pour répondre.",
+    evidence:'Aucune donnée',evidenceCount:0,action:'add-order',actionLabel:'Ajouter un achat'
   }
-  if(q.includes('abonnement') || q.includes('renouvelle')){
-    const sub = SUBS.find(s => q.includes(String(s.name||'').toLowerCase())) || SUBS[0]
-    return sub ? `${sub.name} coûte ${Number(sub.amt||0).toFixed(2)} €/${sub.freq || 'mois'}${sub.renew ? ` et se renouvelle le ${sub.renew}` : ''}.` : "Je ne trouve aucun abonnement correspondant."
-  }
-  if(q.includes('rembours')){
-    const refund = ORDS.find(o => /retour|rembours/i.test(String(o.st||'')) && (q.includes(String(o.brand||'').toLowerCase()) || q.includes(String(o.name||'').toLowerCase())))
-    return refund ? `Le dossier ${refund.brand} — ${refund.name} est actuellement indiqué « ${refund.st} ».` : "Aucun remboursement correspondant n'est enregistré pour le moment."
-  }
-  if(ORDS.length || SUBS.length || WARR.length){
-    return `Votre espace contient ${ORDS.length} commande${ORDS.length>1?'s':''}, ${WARR.length} garantie${WARR.length>1?'s':''} et ${SUBS.length} abonnement${SUBS.length>1?'s':''}. Précisez le marchand ou le produit à vérifier.`
-  }
-  return "Je n'ai pas encore assez de données. Ajoutez une commande ou connectez Gmail pour que je puisse vous répondre précisément."
 }
 
-function addMsg(role, text){
+/* Compatibilité avec les anciens appels console. */
+function localAIReply(message){ return localAIAnswer(message).text }
+
+function assistantAvatar(){
+  const avatar = document.createElement('div')
+  avatar.className = 'ai-avatar'
+  avatar.setAttribute('aria-hidden','true')
+  avatar.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/></svg>'
+  return avatar
+}
+
+function addMsg(role, payload){
   const container = document.getElementById('aimsgs')
   if(!container) return
-  const row = document.createElement('div')
-  row.style.cssText = `display:flex;gap:10px;flex-direction:${role==='ai'?'row':'row-reverse'};`
+  const answer = typeof payload === 'string' ? { text:payload } : (payload || {})
+  const row = document.createElement('article')
+  row.className = 'ai-message ' + (role === 'ai' ? 'ai-message--assistant' : 'ai-message--user')
+
   if(role === 'ai'){
-    row.innerHTML = `<div class="ob ob-xs" style="margin-top:3px;flex-shrink:0;"></div><div class="bai">${escapeHTML(text).replace(/\n/g,'<br/>')}</div>`
+    row.appendChild(assistantAvatar())
+    const content = document.createElement('div')
+    content.className = 'ai-answer'
+    const bubble = document.createElement('div')
+    bubble.className = 'ai-bubble'
+    bubble.textContent = answer.text || "Je ne peux pas répondre pour le moment."
+    content.appendChild(bubble)
+
+    if(answer.evidence){
+      const evidence = document.createElement('div')
+      evidence.className = 'ai-evidence'
+      const pill = document.createElement('span')
+      pill.className = 'ai-evidence__pill'
+      pill.textContent = 'Source : ' + answer.evidence
+      evidence.appendChild(pill)
+      content.appendChild(evidence)
+    }
+
+    if(answer.action && answer.actionLabel){
+      const followups = document.createElement('div')
+      followups.className = 'ai-followups'
+      const button = document.createElement('button')
+      button.type = 'button'
+      button.className = 'ai-followup'
+      button.dataset.clervioAction = answer.action
+      button.textContent = answer.actionLabel
+      followups.appendChild(button)
+      content.appendChild(followups)
+    }
+    row.appendChild(content)
   } else {
     const bubble = document.createElement('div')
-    bubble.className = 'bme'
-    bubble.textContent = text
+    bubble.className = 'ai-bubble'
+    bubble.textContent = answer.text || String(payload || '')
     row.appendChild(bubble)
   }
+
   container.appendChild(row)
-  container.scrollTop = container.scrollHeight
+  requestAnimationFrame(() => { container.scrollTop = container.scrollHeight })
+}
+
+function createAILoader(){
+  const loader = document.createElement('div')
+  loader.className = 'ai-loader'
+  loader.setAttribute('role','status')
+  loader.innerHTML = '<span class="sr-only">CLERVIO vérifie votre coffre</span><span class="ai-loader__dot"></span><span class="ai-loader__dot"></span><span class="ai-loader__dot"></span><span aria-hidden="true">Vérification…</span>'
+  return loader
+}
+
+function isDeterministicQuestion(message){
+  return /garanti|abonn|renouvel|rembours|commande|livr|transit|dépens|depens|coût|cout|faire pour moi/i.test(message)
+}
+
+function prepareAI(){
+  const engine = aiEngine()
+  const list = document.getElementById('ai-suggestion-list')
+  const suggestions = document.getElementById('aisugg')
+  const messages = document.getElementById('aimsgs')
+  if(suggestions) suggestions.style.display = aiConversationStarted ? 'none' : ''
+  if(messages) messages.style.display = aiConversationStarted ? 'flex' : 'none'
+  if(list && engine){
+    list.innerHTML = ''
+    engine.suggestions().forEach(item => {
+      const button = document.createElement('button')
+      button.type = 'button'
+      button.className = 'ai-suggestion'
+      button.dataset.aiSuggestion = ''
+      button.innerHTML = '<span class="ai-suggestion__icon">' + engine.icon(item.icon) + '</span><span class="ai-suggestion__copy"></span>'
+      button.querySelector('.ai-suggestion__copy').textContent = item.text
+      button.addEventListener('click',() => sAI(item.text))
+      list.appendChild(button)
+    })
+  }
+  updateAIComposer()
+}
+
+function resetAIConversation(){
+  if(aiRequestInFlight) return
+  aiConversationStarted = false
+  const messages = document.getElementById('aimsgs')
+  if(messages) messages.innerHTML = ''
+  prepareAI()
+  const input = document.getElementById('aiinp')
+  if(input){ input.value = ''; input.style.height = ''; input.focus({preventScroll:true}) }
+}
+
+function updateAIComposer(){
+  const input = document.getElementById('aiinp')
+  const send = document.getElementById('ai-send')
+  if(input){ input.style.height = 'auto'; input.style.height = Math.min(120,input.scrollHeight) + 'px' }
+  if(send) send.disabled = aiRequestInFlight || !input?.value?.trim()
 }
 
 async function sAI(text){
   const message = String(text || '').trim()
-  if(!message) return
+  if(!message || aiRequestInFlight) return
   if(message.length > 800){ toast('Votre question ne peut pas dépasser 800 caractères'); return }
-  const suggestions = document.getElementById('aisugg')
-  if(suggestions) suggestions.style.display = 'none'
-  addMsg('me', message)
+
+  aiConversationStarted = true
+  aiRequestInFlight = true
+  prepareAI()
+  addMsg('me',{text:message})
 
   const container = document.getElementById('aimsgs')
-  const loader = document.createElement('div')
-  loader.style.cssText = 'display:flex;gap:6px;margin:2px 0 14px 10px;'
-  loader.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:var(--g);animation:sk 1.2s infinite;"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--g);animation:sk 1.2s .2s infinite;"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--g);animation:sk 1.2s .4s infinite;"></span>'
-  if(container) container.appendChild(loader)
+  const loader = createAILoader()
+  if(container){ container.setAttribute('aria-busy','true'); container.appendChild(loader) }
+  updateAIComposer()
 
-  const context = buildUserContext()
-  const response = await callAIEdge(message, context)
-  loader.remove()
-  addMsg('ai', response || localAIReply(message))
+  const local = localAIAnswer(message)
+  let answer = local
+  try{
+    if(!isDeterministicQuestion(message)){
+      const edge = await callAIEdge(message,buildUserContext())
+      if(edge?.reply){
+        const ev = aiEngine()?.evidence(message)
+        answer = {
+          text:edge.reply,
+          evidence:ev?.label || 'Votre coffre',
+          evidenceCount:ev?.count || 0,
+          action:ev?.action || '',
+          actionLabel:ev?.actionLabel || ''
+        }
+      }
+    } else {
+      await new Promise(resolve => setTimeout(resolve,180))
+    }
+  }catch(e){ answer = local }
+  finally{
+    loader.remove()
+    if(container) container.removeAttribute('aria-busy')
+    aiRequestInFlight = false
+    updateAIComposer()
+  }
+  addMsg('ai',answer)
 }
 
 function sAIi(){
   const input = document.getElementById('aiinp')
   const message = input?.value?.trim()
-  if(!message) return
+  if(!message || aiRequestInFlight) return
   if(message.length > 800){ toast('Votre question ne peut pas dépasser 800 caractères'); return }
   input.value = ''
+  updateAIComposer()
   sAI(message)
 }
 
 /* ══ TOAST ══════════════════════════════════════════ */
-function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2900)}
+function toast(msg){const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.setAttribute('aria-live','polite');t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2900)}
 
 function openDocumentUrl(url){
   try{

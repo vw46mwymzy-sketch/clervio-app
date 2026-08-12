@@ -41,24 +41,11 @@
     }catch(e){}
   }
 
-  function enrober(){
-    if (typeof window.go !== 'function' || window.go.__contexte) return;
-    var orig = window.go;
-    var enveloppe = function(id){
-      var r = orig.apply(window, arguments);
-      if (PARENT[id]) setTimeout(function(){ verifier(id); }, DELAI);
-      return r;
-    };
-    enveloppe.__contexte = true;
-    window.go = enveloppe;
-    if (window.CLERVIO_DIAG && window.CLERVIO_DIAG.log){
-      window.CLERVIO_DIAG.log('contexte', 'garde-fou actif');
-    }
+  window.addEventListener('clervio:navigated', function(event){
+    var id = event && event.detail && event.detail.to;
+    if (PARENT[id]) setTimeout(function(){ verifier(id); }, DELAI);
+  });
+  if (window.CLERVIO_DIAG && window.CLERVIO_DIAG.log){
+    window.CLERVIO_DIAG.log('contexte', 'garde-fou actif');
   }
-
-  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', enrober);
-  else enrober();
-  window.addEventListener('load', enrober);
-  setTimeout(enrober, 800);
-  setTimeout(enrober, 2500);
 })();

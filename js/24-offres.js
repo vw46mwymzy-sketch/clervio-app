@@ -96,19 +96,11 @@
     }catch(e){}
   }
 
-  function surNavigation(){
-    if (typeof window.go !== 'function' || window.go.__offres) return;
-    var orig = window.go;
-    var w = function(id){
-      var r = orig.apply(window, arguments);
-      if (id === 'p-pricing') setTimeout(rendre, 80);
-      return r;
-    };
-    w.__offres = true;
-    window.go = w;
-  }
+  window.addEventListener('clervio:navigated', function(event){
+    if (event && event.detail && event.detail.to === 'p-pricing') setTimeout(rendre, 80);
+  });
 
-  function demarrer(){ surNavigation(); ouvrirPro(); }
+  function demarrer(){ ouvrirPro(); }
 
   if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', demarrer);
   else demarrer();

@@ -3,61 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#06050A">
+<meta name="theme-color" content="#09090B">
 <title>CLERVIO — Hors ligne</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,'DM Sans',sans-serif;
-  background:linear-gradient(160deg,#0A0812 0%,#06050A 100%);
-  color:#F5F0E8;min-height:100vh;min-height:100svh;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:32px;
+  min-height:100vh;min-height:100svh;padding:32px;
+  display:flex;align-items:center;justify-content:center;
+  color:#F5F2EB;background:#09090B;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;
 }
-.logo{
-  width:88px;height:88px;margin-bottom:36px;position:relative;
-  animation:pulse 3s ease-in-out infinite;
+main{width:min(100%,360px)}
+.mark{
+  width:52px;height:52px;margin-bottom:32px;border-radius:16px;
+  display:grid;place-items:center;color:#C9A869;background:#121214;
+  border:1px solid rgba(201,168,105,.22);box-shadow:none;
 }
-.logo svg{width:100%;height:100%}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
-h1{
-  font-family:'Cormorant Garamond',Georgia,serif;
-  font-size:34px;font-weight:400;line-height:1.25;
-  margin-bottom:14px;color:#F5F0E8;
+.mark svg{width:30px;height:30px}
+.eyebrow{margin-bottom:12px;color:#E2CA92;font-size:11px;font-weight:750;letter-spacing:.08em;text-transform:uppercase}
+h1{max-width:9ch;margin-bottom:16px;font-size:42px;font-weight:780;line-height:.98;letter-spacing:-.06em}
+p{max-width:34ch;margin-bottom:30px;color:#B7B2A8;font-size:15px;line-height:1.6}
+button{
+  width:100%;min-height:52px;border:0;border-radius:15px;
+  color:#0C0B09;background:#C9A869;font:700 15px/1 inherit;cursor:pointer;
+  box-shadow:none;transition:transform 140ms ease,background 180ms ease;
 }
-h1 em{color:#EDD870;font-style:italic}
-p{font-size:15px;line-height:1.6;color:rgba(245,240,232,.55);max-width:300px;margin-bottom:36px}
-.hint{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:14px 24px;border-radius:100px;
-  background:rgba(237,216,112,.08);border:1px solid rgba(237,216,112,.2);
-  font-size:14px;color:#EDD870;cursor:pointer;min-height:44px;
-  transition:transform .15s cubic-bezier(.34,1.56,.64,1);
-}
-.hint:active{transform:scale(.97)}
-.dot{width:8px;height:8px;border-radius:50%;background:#EDD870;animation:blink 1.6s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+button:active{transform:scale(.985)}
+button:focus-visible{outline:2px solid #E2CA92;outline-offset:4px}
+@media (prefers-reduced-motion:reduce){button{transition:none}}
 </style>
 </head>
 <body>
-<div class="logo" aria-hidden="true">
-<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-<defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" stop-color="#FFF5C0"/><stop offset="45%" stop-color="#EDD870"/><stop offset="100%" stop-color="#C9A84C"/>
-</linearGradient></defs>
-<path d="M 340 175 A 110 110 0 1 0 340 337" fill="none" stroke="url(#g)" stroke-width="16" stroke-linecap="round"/>
-<circle cx="332" cy="256" r="15" fill="url(#g)"/>
-</svg>
-</div>
-<h1>Vous êtes <em>hors ligne.</em></h1>
-<p>CLERVIO garde vos données en sécurité. Reconnectez-vous à Internet pour retrouver votre coffre.</p>
-<button class="hint" onclick="location.reload()">
-<span class="dot"></span>
-Réessayer
-</button>
-<script>
-window.addEventListener('online', () => location.reload())
-</script>
+<main>
+  <div class="mark" aria-hidden="true">
+    <svg viewBox="0 0 64 64" fill="none"><path d="M44 16a20 20 0 1 0 0 32" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><rect x="41" y="29" width="7" height="7" rx="2" fill="currentColor"/></svg>
+  </div>
+  <p class="eyebrow">Connexion interrompue</p>
+  <h1>Vous êtes hors ligne.</h1>
+  <p>Vos données restent protégées. Reconnectez-vous pour retrouver vos achats et vos documents.</p>
+  <button type="button" onclick="location.reload()">Réessayer</button>
+</main>
+<script>window.addEventListener('online',()=>location.reload())</script>
 </body>
 </html>

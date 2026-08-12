@@ -133,6 +133,27 @@
   window.requestPushPermission = function(){ return souscrire(false); };
   window.activerNotifications  = function(){ return souscrire(false); };
 
+  window.revoquerNotifications = async function(){
+    try{
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) return true;
+      var reg = await navigator.serviceWorker.getRegistration();
+      if (!reg) return true;
+      var abo = await reg.pushManager.getSubscription();
+      if (!abo) return true;
+      if (typeof supa !== 'undefined' && supa && typeof currentUser !== 'undefined' && currentUser && currentUser.id){
+        var suppression = await supa.from('push_subscriptions').delete()
+          .eq('user_id', currentUser.id).eq('endpoint', abo.endpoint);
+        if (suppression && suppression.error) journal('err','révocation serveur : '+suppression.error.message);
+      }
+      await abo.unsubscribe();
+      journal('log','appareil désabonné');
+      return true;
+    }catch(e){
+      journal('err','révocation : '+(e && e.message ? e.message : e));
+      return false;
+    }
+  };
+
   /* Renouvellement demandé par le navigateur */
   try{
     navigator.serviceWorker.addEventListener('message', function(e){

@@ -10,13 +10,13 @@
   /* page : { retour: id ou null } — null = pas de chevron */
   var CONFIG = {
     'p-folder':         { retour: 'p-vault'   },
-    'p-add-order':      { retour: 'p-vault'   },
+    'p-add-order':      { retour: 'p-orders'  },
     'p-add-sub':        { retour: 'p-vault'   },
     'p-legal':          { retour: 'p-profile' },
     'p-privacy':        { retour: 'p-legal'   },
     'p-pro':            { retour: 'p-ob1'     },
     'p-ob2':            { retour: 'p-ob1'     },
-    'p-login':          { retour: 'p-ob1'     },
+    'p-login':          { retour: 'p-ob2'     },
     'p-cgv':            { retour: 'p-legal'   },
     'p-pricing':        { retour: 'p-profile' },
     'p-email-sources':  { retour: 'p-profile' },
@@ -36,7 +36,7 @@
     var barre = document.createElement('div');
     barre.className = 'ctb';
     style(barre, 'display:grid;grid-template-columns:44px 1fr 44px;align-items:center;'
-      + 'padding:calc(env(safe-area-inset-top,0px) + 46px) 22px 14px;'
+      + 'padding:calc(env(safe-area-inset-top,0px) + 12px) 20px 12px;'
       + 'border-bottom:1px solid rgba(237,224,200,.09);flex-shrink:0;');
 
     var gauche = document.createElement('div');
@@ -48,15 +48,26 @@
         + 'color:rgba(237,224,200,.55);cursor:pointer;padding:0;');
       b.innerHTML = CHEVRON;
       b.onclick = function(){
-        try{ if (typeof window.go === 'function') window.go(cfg.retour); }catch(e){}
+        try{
+          if (typeof window.clervioBack === 'function') window.clervioBack(cfg.retour);
+          else if (typeof window.go === 'function') window.go(cfg.retour);
+        }catch(e){}
       };
       gauche.appendChild(b);
     }
 
     var titre = document.createElement('div');
-    titre.textContent = 'CLERVIO';
-    style(titre, 'text-align:center;font-size:12px;font-weight:500;letter-spacing:.32em;'
-      + 'text-indent:.32em;color:var(--cr);font-family:Inter,-apple-system,sans-serif;');
+    var noms = {
+      'p-folder':'Dossier','p-add-order':'Nouvel achat','p-add-sub':'Nouvel abonnement',
+      'p-legal':'Informations','p-privacy':'Confidentialité','p-pro':'Professionnels',
+      'p-ob2':'Compte CLERVIO','p-login':'Connexion','p-cgv':'Conditions',
+      'p-pricing':'Tarifs','p-email-sources':'Sources','p-forgot':'Mot de passe',
+      'p-reset-password':'Nouveau mot de passe','p-orders':'Achats','p-vault':'Coffre',
+      'p-profile':'Profil','p-od':'Achat','p-sd':'Élément','p-scan':'Scanner'
+    };
+    titre.textContent = noms[page] || 'CLERVIO';
+    style(titre, 'text-align:center;font-size:13px;font-weight:600;letter-spacing:.02em;'
+      + 'color:var(--cr);font-family:Inter,-apple-system,sans-serif;');
 
     var droite = document.createElement('div');
 

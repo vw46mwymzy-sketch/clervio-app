@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Icône CLERVIO</title>
+  <rect width="512" height="512" fill="#09090B"/>
+  <path d="M360 150A150 150 0 1 0 360 362" fill="none" stroke="#C9A869" stroke-width="34" stroke-linecap="round"/>
+  <rect x="339" y="235" width="42" height="42" rx="12" fill="#C9A869"/>
+</svg>

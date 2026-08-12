@@ -69,29 +69,69 @@ window.springTo = function(el, props, done){
 ;(function initSessionTimeout(){
   const TIMEOUT_MS = 30 * 60 * 1000
   const WARN_MS = 2 * 60 * 1000
-  let timer = null, warnTimer = null, warned = false
+  const KEY = 'clervio-last-activity'
+  let timer = null, warnTimer = null, lastTouchWrite = 0, expiring = false
 
-  function resetTimer(){
-    clearTimeout(timer); clearTimeout(warnTimer); warned = false
-    if(typeof currentUser === "undefined" || !currentUser) return
-    warnTimer = setTimeout(() => {
-      warned = true
-      if(typeof toast === "function") toast("⏱️ Déconnexion dans 2 minutes par inactivité")
-    }, TIMEOUT_MS - WARN_MS)
-    timer = setTimeout(async () => {
-      try{
-        if(typeof supa !== "undefined" && supa) await supa.auth.signOut()
-        if(typeof toast === "function") toast("Session expirée — reconnectez-vous")
-        if(typeof go === "function") go("p-login")
-      }catch(e){}
-    }, TIMEOUT_MS)
+  function connected(){
+    try{ return typeof currentUser !== 'undefined' && !!currentUser }catch(e){ return false }
   }
 
-  const events = ["mousedown","keydown","touchstart","scroll","click"]
-  events.forEach(evt => document.addEventListener(evt, resetTimer, { passive: true }))
-  document.addEventListener("visibilitychange", () => { if(!document.hidden) resetTimer() })
-  window.addEventListener("load", resetTimer)
-  resetTimer()
+  function readLast(){
+    try{
+      const value = Number(localStorage.getItem(KEY))
+      return Number.isFinite(value) && value > 0 ? value : Date.now()
+    }catch(e){ return Date.now() }
+  }
+
+  function writeLast(value){
+    try{ localStorage.setItem(KEY,String(value)) }catch(e){}
+  }
+
+  async function expire(){
+    if(expiring || !connected()) return
+    expiring = true
+    clearTimeout(timer); clearTimeout(warnTimer)
+    try{
+      if(typeof revoquerNotifications === 'function') await revoquerNotifications()
+      if(typeof supa !== 'undefined' && supa) await supa.auth.signOut()
+      if(typeof toast === 'function') toast('Session expirée — reconnectez-vous')
+      if(typeof go === 'function') go('p-login',{replace:true})
+    }catch(e){}
+    finally{ expiring = false }
+  }
+
+  function schedule(){
+    clearTimeout(timer); clearTimeout(warnTimer)
+    if(!connected()) return
+    const remaining = TIMEOUT_MS - (Date.now() - readLast())
+    if(remaining <= 0){ expire(); return }
+    if(remaining > WARN_MS){
+      warnTimer = setTimeout(()=>{
+        if(typeof toast === 'function') toast('Déconnexion dans 2 minutes sans nouvelle activité')
+      },remaining-WARN_MS)
+    }
+    timer = setTimeout(expire,remaining)
+  }
+
+  function touch(){
+    if(!connected()) return
+    const now = Date.now()
+    if(now-lastTouchWrite < 4000) return
+    lastTouchWrite = now
+    writeLast(now)
+    schedule()
+  }
+
+  const events = ['pointerdown','keydown','touchstart']
+  events.forEach(evt=>document.addEventListener(evt,touch,{passive:true}))
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) schedule() })
+  window.addEventListener('storage',event=>{ if(event.key===KEY) schedule() })
+  window.addEventListener('clervio:navigated',touch)
+  window.addEventListener('load',()=>{
+    try{ if(connected() && !localStorage.getItem(KEY)) writeLast(Date.now()) }catch(e){}
+    schedule()
+  })
+  schedule()
 })()
 
 /* ══ SÉCURITÉ XSS ════════════════════════════════════ */
@@ -124,4 +164,3 @@ function hideFabMenu(id){
   if(overlay) overlay.style.display = 'none'
   if(icon) icon.style.transform = 'rotate(0deg)'
 }
-
